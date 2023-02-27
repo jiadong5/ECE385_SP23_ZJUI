@@ -1,0 +1,16 @@
+Fitter Status : Successful - Thu Feb 23 00:54:19 2023
+Quartus Prime Version : 18.0.0 Build 614 04/24/2018 SJ Lite Edition
+Revision Name : lab1
+Top-level Entity Name : lab1
+Family : Cyclone IV E
+Device : EP4CE75F29C7
+Timing Models : Final
+Total logic elements : 1 / 75,408 ( < 1 % )
+    Total combinational functions : 1 / 75,408 ( < 1 % )
+    Dedicated logic registers : 0 / 75,408 ( 0 % )
+Total registers : 0
+Total pins : 4 / 427 ( < 1 % )
+Total virtual pins : 0
+Total memory bits : 0 / 2,810,880 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 400 ( 0 % )
+Total PLLs : 0 / 4 ( 0 % )

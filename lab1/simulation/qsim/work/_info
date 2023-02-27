@@ -1,0 +1,73 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Jiadong Hong/Desktop/ECE385/lab1/simulation/qsim
+vhard_block
+Z1 !s110 1677118329
+!i10b 1
+!s100 Y9oi_5=F2;PW7_Oil_L]N2
+I8KJKJ<?HPIjzm9z?A2RHH0
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z3 w1677118328
+Z4 8lab1.vo
+Z5 Flab1.vo
+L0 135
+Z6 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z7 !s108 1677118329.000000
+Z8 !s107 lab1.vo|
+Z9 !s90 -work|work|lab1.vo|
+!i113 1
+Z10 o-work work
+Z11 tCvgOpt 0
+vlab1
+R1
+!i10b 1
+!s100 iU2NbWejPzBfBYSj3m1:d0
+IX5n[X88i3k1^3T^APm6aB2
+R2
+R0
+R3
+R4
+R5
+L0 31
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+vlab1_vlg_vec_tst
+R1
+!i10b 1
+!s100 =lcY:T^_78=hV]DcDQINR1
+IKkMkX0kgg9@ISgOD<N:am0
+R2
+R0
+w1677118327
+8Waveform1.vwf.vt
+FWaveform1.vwf.vt
+L0 29
+R6
+r1
+!s85 0
+31
+R7
+!s107 Waveform1.vwf.vt|
+!s90 -work|work|Waveform1.vwf.vt|
+!i113 1
+R10
+R11

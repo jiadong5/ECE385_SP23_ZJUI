@@ -1,0 +1,15 @@
+vendor_name = ModelSim
+source_file = 1, C:/Users/Jiadong Hong/Desktop/ECE385/lab1/lab1.bdf
+source_file = 1, C:/Users/Jiadong Hong/Desktop/ECE385/lab1/Waveform.vwf
+source_file = 1, C:/Users/Jiadong Hong/Desktop/ECE385/lab1/Waveform1.vwf
+source_file = 1, c:/intelfpga_lite/18.0/quartus/libraries/others/maxplus2/7400.bdf
+design_name = lab1
+instance = comp, \pin_name4~output , pin_name4~output, lab1, 1
+instance = comp, \B~input , B~input, lab1, 1
+instance = comp, \A~input , A~input, lab1, 1
+instance = comp, \C~input , C~input, lab1, 1
+instance = comp, \inst3|4~0 , inst3|4~0, lab1, 1
+design_name = hard_block
+instance = comp, \~ALTERA_ASDO_DATA1~~ibuf , ~ALTERA_ASDO_DATA1~~ibuf, hard_block, 1
+instance = comp, \~ALTERA_FLASH_nCE_nCSO~~ibuf , ~ALTERA_FLASH_nCE_nCSO~~ibuf, hard_block, 1
+instance = comp, \~ALTERA_DATA0~~ibuf , ~ALTERA_DATA0~~ibuf, hard_block, 1

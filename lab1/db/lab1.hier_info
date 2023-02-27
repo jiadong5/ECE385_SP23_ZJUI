@@ -1,0 +1,33 @@
+|lab1
+pin_name4 <= 7400:inst3.1
+C => 7400:inst.3
+B => 7400:inst4.3
+B => 7400:inst4.2
+B => 7400:inst2.3
+A => 7400:inst2.2
+
+
+|lab1|7400:inst3
+1 <= 4.DB_MAX_OUTPUT_PORT_TYPE
+2 => 4.IN0
+3 => 4.IN1
+
+
+|lab1|7400:inst
+1 <= 4.DB_MAX_OUTPUT_PORT_TYPE
+2 => 4.IN0
+3 => 4.IN1
+
+
+|lab1|7400:inst4
+1 <= 4.DB_MAX_OUTPUT_PORT_TYPE
+2 => 4.IN0
+3 => 4.IN1
+
+
+|lab1|7400:inst2
+1 <= 4.DB_MAX_OUTPUT_PORT_TYPE
+2 => 4.IN0
+3 => 4.IN1
+
+
