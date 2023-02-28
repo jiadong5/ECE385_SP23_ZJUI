@@ -1,16 +1,16 @@
 /*<simulation_settings>
-<ftestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off lab3 -c lab3 --vector_source="D:/ece385ta/lab3/Waveform.vwf" --testbench_file="D:/ece385ta/lab3/simulation/qsim/Waveform.vwf.vt"</ftestbench_cmd>
-<ttestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off lab3 -c lab3 --vector_source="F:/ZJUI2019SPRING/ECE385/lab 3/Waveform.vwf" --testbench_file="F:/ZJUI2019SPRING/ECE385/lab 3/simulation/qsim/Waveform.vwf.vt"</ttestbench_cmd>
-<fnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=on --flatten_buses=off --tool=modelsim_oem --format=verilog --output_directory="D:/ece385ta/lab3/simulation/qsim/" lab3 -c lab3</fnetlist_cmd>
-<tnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=off --flatten_buses=off --timescale=1ps --tool=modelsim_oem --format=verilog --output_directory="F:/ZJUI2019SPRING/ECE385/lab 3/simulation/qsim/" lab3 -c lab3</tnetlist_cmd>
+<ftestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=vhdl --write_settings_files=off lab3 -c lab3 --vector_source="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/Waveform.vwf" --testbench_file="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim/Waveform.vwf.vht"</ftestbench_cmd>
+<ttestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=vhdl --write_settings_files=off lab3 -c lab3 --vector_source="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/Waveform.vwf" --testbench_file="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim/Waveform.vwf.vht"</ttestbench_cmd>
+<fnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=on --flatten_buses=off --tool=modelsim_oem --format=vhdl --output_directory="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim/" lab3 -c lab3</fnetlist_cmd>
+<tnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=off --flatten_buses=off --timescale=1ps --tool=modelsim_oem --format=vhdl --output_directory="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim/" lab3 -c lab3</tnetlist_cmd>
 <modelsim_script>onerror {exit -code 1}
 vlib work
-vlog -work work lab3.vo
-vlog -work work Waveform.vwf.vt
-vsim -novopt -c -t 1ps -L cycloneive_ver -L altera_ver -L altera_mf_ver -L 220model_ver -L sgate_ver -L altera_lnsim_ver work.lab3_vlg_vec_tst
+vcom -work work lab3.vho
+vcom -work work Waveform.vwf.vht
+vsim -novopt -c -t 1ps -L cycloneiv -L altera -L altera_mf -L 220model -L sgate -L altera_lnsim work.lab3_vhd_vec_tst
 vcd file -direction lab3.msim.vcd
-vcd add -internal lab3_vlg_vec_tst/*
-vcd add -internal lab3_vlg_vec_tst/i1/*
+vcd add -internal lab3_vhd_vec_tst/*
+vcd add -internal lab3_vhd_vec_tst/i1/*
 proc simTimestamp {} {
     echo "Simulation time: $::now ps"
     if { [string equal running [runStatus]] } {
@@ -20,23 +20,18 @@ proc simTimestamp {} {
 after 2500 simTimestamp
 run -all
 quit -f
-
-
-
-
-
 
 
 
 </modelsim_script>
 <modelsim_script_timing>onerror {exit -code 1}
 vlib work
-vlog -work work lab3.vo
-vlog -work work Waveform.vwf.vt
-vsim -novopt -c -t 1ps -L cycloneive_ver -L altera_ver -L altera_mf_ver -L 220model_ver -L sgate_ver -L altera_lnsim_ver work.lab3_vlg_vec_tst
+vcom -work work lab3.vho
+vcom -work work Waveform.vwf.vht
+vsim -novopt -c -t 1ps -sdfmax lab3_vhd_vec_tst/i1=lab3_vhd.sdo -L cycloneiv -L altera -L altera_mf -L 220model -L sgate -L altera_lnsim work.lab3_vhd_vec_tst
 vcd file -direction lab3.msim.vcd
-vcd add -internal lab3_vlg_vec_tst/*
-vcd add -internal lab3_vlg_vec_tst/i1/*
+vcd add -internal lab3_vhd_vec_tst/*
+vcd add -internal lab3_vhd_vec_tst/i1/*
 proc simTimestamp {} {
     echo "Simulation time: $::now ps"
     if { [string equal running [runStatus]] } {
@@ -49,13 +44,8 @@ quit -f
 
 
 
-
-
-
-
-
 </modelsim_script_timing>
-<hdl_lang>verilog</hdl_lang>
+<hdl_lang>vhdl</hdl_lang>
 </simulation_settings>*/
 /*
 WARNING: Do NOT edit the input and output ports in this file in a text
@@ -487,13 +477,19 @@ TRANSITION_LIST("EXECUTE")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 500.0;
+		LEVEL 0 FOR 30.0;
+		LEVEL 1 FOR 40.0;
+		LEVEL 0 FOR 430.0;
+		LEVEL 1 FOR 100.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 20.0;
 		LEVEL 1 FOR 100.0;
 		LEVEL 0 FOR 100.0;
 		LEVEL 1 FOR 100.0;
-		LEVEL 0 FOR 100.0;
-		LEVEL 1 FOR 100.0;
-		LEVEL 0 FOR 100.0;
+		LEVEL 0 FOR 20.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
 		LEVEL 1 FOR 100.0;
 		LEVEL 0 FOR 100.0;
 		LEVEL 1 FOR 100.0;
@@ -567,8 +563,8 @@ TRANSITION_LIST("LOAD_A")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 30.0;
-		LEVEL 1 FOR 20.0;
-		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 40.0;
+		LEVEL 0 FOR 20.0;
 		LEVEL 1 FOR 20.0;
 		LEVEL 0 FOR 40.0;
 		LEVEL 1 FOR 20.0;
@@ -607,7 +603,9 @@ TRANSITION_LIST("LOAD_B")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 210.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 30.0;
+		LEVEL 0 FOR 140.0;
 		LEVEL 1 FOR 20.0;
 		LEVEL 0 FOR 40.0;
 		LEVEL 1 FOR 20.0;

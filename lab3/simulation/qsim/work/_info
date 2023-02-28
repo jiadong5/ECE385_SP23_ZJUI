@@ -1,0 +1,147 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim
+Ehard_block
+Z1 w1677507322
+Z2 DPx4 ieee 16 vital_primitives 0 22 G>kiXP8Q9dRClKfK1Zn7j1
+Z3 DPx9 cycloneiv 19 cycloneiv_atom_pack 0 22 SN3SlP9iZMX9:@emz7z0a0
+Z4 DPx4 ieee 12 vital_timing 0 22 J>EBealN09f8GzldA[z2>3
+Z5 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z6 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z7 DPx9 cycloneiv 20 cycloneiv_components 0 22 OCDZXX0C01z7oek?L^j043
+R0
+Z8 8lab3.vho
+Z9 Flab3.vho
+l0
+L34
+Vc_zG6gj]l9@McI1b^mKMk3
+!s100 ePBnogNIYclWVmd<QYN@33
+Z10 OV;C;10.5b;63
+32
+Z11 !s110 1677507322
+!i10b 1
+Z12 !s108 1677507322.000000
+Z13 !s90 -work|work|lab3.vho|
+Z14 !s107 lab3.vho|
+!i113 1
+Z15 o-work work
+Z16 tExplicit 1 CvgOpt 0
+Astructure
+R2
+R3
+R4
+R5
+R6
+R7
+DEx4 work 10 hard_block 0 22 c_zG6gj]l9@McI1b^mKMk3
+l64
+L50
+V^TJfMN143Hleg=oLnW2^A1
+!s100 9XRhD6F>^g=RX1;2c[R1L2
+R10
+32
+R11
+!i10b 1
+R12
+R13
+R14
+!i113 1
+R15
+R16
+Elab3
+R1
+R3
+R7
+R2
+Z17 DPx6 altera 11 dffeas_pack 0 22 Dg`GWTC`^Q8GNSMPeo22;3
+R4
+R5
+R6
+Z18 DPx6 altera 28 altera_primitives_components 0 22 _LNC5n6B?5VN@W;M4Dg@k1
+R0
+R8
+R9
+l0
+L79
+VEVFPDG3ZBJLiRZ6g=Q74E2
+!s100 MEGTlTfzUP^Q59CI9B=Fe2
+R10
+32
+R11
+!i10b 1
+R12
+R13
+R14
+!i113 1
+R15
+R16
+Astructure
+R3
+R7
+R2
+R17
+R4
+R5
+R6
+R18
+DEx4 work 4 lab3 0 22 EVFPDG3ZBJLiRZ6g=Q74E2
+l212
+L129
+VfALe9^YoLT:VjRR?SmkTg1
+!s100 Q@F;iLh`FlP?Go74>lQle2
+R10
+32
+R11
+!i10b 1
+R12
+R13
+R14
+!i113 1
+R15
+R16
+Elab3_vhd_vec_tst
+Z19 w1677507320
+R5
+R6
+R0
+Z20 8Waveform.vwf.vht
+Z21 FWaveform.vwf.vht
+l0
+L31
+VhT>=L[@b@EC6OQfQN2RZ30
+!s100 T@7g8Nc_DdC8;kFNIAf[`0
+R10
+32
+R11
+!i10b 1
+R12
+Z22 !s90 -work|work|Waveform.vwf.vht|
+Z23 !s107 Waveform.vwf.vht|
+!i113 1
+R15
+R16
+Alab3_arch
+R5
+R6
+Z24 DEx4 work 16 lab3_vhd_vec_tst 0 22 hT>=L[@b@EC6OQfQN2RZ30
+l82
+L33
+VbdLLkXT?a[__EPeQM1fJM0
+!s100 LD^9kjW`_OAhb19^^2^De2
+R10
+32
+R11
+!i10b 1
+R12
+R22
+R23
+!i113 1
+R15
+R16
