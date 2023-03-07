@@ -9,7 +9,7 @@ z2
 cModel Technology
 Z0 dC:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim
 Ehard_block
-Z1 w1677507322
+Z1 w1677580567
 Z2 DPx4 ieee 16 vital_primitives 0 22 G>kiXP8Q9dRClKfK1Zn7j1
 Z3 DPx9 cycloneiv 19 cycloneiv_atom_pack 0 22 SN3SlP9iZMX9:@emz7z0a0
 Z4 DPx4 ieee 12 vital_timing 0 22 J>EBealN09f8GzldA[z2>3
@@ -25,9 +25,9 @@ Vc_zG6gj]l9@McI1b^mKMk3
 !s100 ePBnogNIYclWVmd<QYN@33
 Z10 OV;C;10.5b;63
 32
-Z11 !s110 1677507322
+Z11 !s110 1677580568
 !i10b 1
-Z12 !s108 1677507322.000000
+Z12 !s108 1677580568.000000
 Z13 !s90 -work|work|lab3.vho|
 Z14 !s107 lab3.vho|
 !i113 1
@@ -70,8 +70,8 @@ R8
 R9
 l0
 L79
-VEVFPDG3ZBJLiRZ6g=Q74E2
-!s100 MEGTlTfzUP^Q59CI9B=Fe2
+VR;_TSH1<zZ9bJl[d_^8zl1
+!s100 lUUzZccAk7J;K:Jz0N0BX0
 R10
 32
 R11
@@ -91,11 +91,11 @@ R4
 R5
 R6
 R18
-DEx4 work 4 lab3 0 22 EVFPDG3ZBJLiRZ6g=Q74E2
-l212
-L129
-VfALe9^YoLT:VjRR?SmkTg1
-!s100 Q@F;iLh`FlP?Go74>lQle2
+DEx4 work 4 lab3 0 22 R;_TSH1<zZ9bJl[d_^8zl1
+l242
+L137
+V1PUcK4?P:>OQ`ig<;ES`?2
+!s100 oB:VDY=h;[8M1CUDG<dOj1
 R10
 32
 R11
@@ -107,7 +107,7 @@ R14
 R15
 R16
 Elab3_vhd_vec_tst
-Z19 w1677507320
+Z19 w1677580566
 R5
 R6
 R0
@@ -131,10 +131,10 @@ Alab3_arch
 R5
 R6
 Z24 DEx4 work 16 lab3_vhd_vec_tst 0 22 hT>=L[@b@EC6OQfQN2RZ30
-l82
+l90
 L33
-VbdLLkXT?a[__EPeQM1fJM0
-!s100 LD^9kjW`_OAhb19^^2^De2
+Z25 VlEdeGWa[ii<cld]0Uhz^50
+Z26 !s100 0;@NIi?BcV0E`>VHHd?ck1
 R10
 32
 R11

@@ -18,7 +18,7 @@
 -- the top level entity of the current Quartus project .The user can use this   
 -- testbench to simulate his design using a third-party simulation tool .       
 -- *****************************************************************************
--- Generated on "02/27/2023 22:15:20"
+-- Generated on "02/28/2023 18:36:06"
                                                              
 -- Vhdl Test Bench(with test vectors) for design  :          lab3
 -- 
@@ -33,6 +33,8 @@ END lab3_vhd_vec_tst;
 ARCHITECTURE lab3_arch OF lab3_vhd_vec_tst IS
 -- constants                                                 
 -- signals                                                   
+SIGNAL C0 : STD_LOGIC;
+SIGNAL C1 : STD_LOGIC;
 SIGNAL CLK : STD_LOGIC;
 SIGNAL D0 : STD_LOGIC;
 SIGNAL D1 : STD_LOGIC;
@@ -44,6 +46,7 @@ SIGNAL F1 : STD_LOGIC;
 SIGNAL F2 : STD_LOGIC;
 SIGNAL LOAD_A : STD_LOGIC;
 SIGNAL LOAD_B : STD_LOGIC;
+SIGNAL Q : STD_LOGIC;
 SIGNAL R0 : STD_LOGIC;
 SIGNAL R1 : STD_LOGIC;
 SIGNAL RA0 : STD_LOGIC;
@@ -54,8 +57,11 @@ SIGNAL RB0 : STD_LOGIC;
 SIGNAL RB1 : STD_LOGIC;
 SIGNAL RB2 : STD_LOGIC;
 SIGNAL RB3 : STD_LOGIC;
+SIGNAL S : STD_LOGIC;
 COMPONENT lab3
 	PORT (
+	C0 : OUT STD_LOGIC;
+	C1 : OUT STD_LOGIC;
 	CLK : IN STD_LOGIC;
 	D0 : IN STD_LOGIC;
 	D1 : IN STD_LOGIC;
@@ -67,6 +73,7 @@ COMPONENT lab3
 	F2 : IN STD_LOGIC;
 	LOAD_A : IN STD_LOGIC;
 	LOAD_B : IN STD_LOGIC;
+	Q : OUT STD_LOGIC;
 	R0 : IN STD_LOGIC;
 	R1 : IN STD_LOGIC;
 	RA0 : OUT STD_LOGIC;
@@ -76,13 +83,16 @@ COMPONENT lab3
 	RB0 : OUT STD_LOGIC;
 	RB1 : OUT STD_LOGIC;
 	RB2 : OUT STD_LOGIC;
-	RB3 : OUT STD_LOGIC
+	RB3 : OUT STD_LOGIC;
+	S : OUT STD_LOGIC
 	);
 END COMPONENT;
 BEGIN
 	i1 : lab3
 	PORT MAP (
 -- list connections between master ports and signals
+	C0 => C0,
+	C1 => C1,
 	CLK => CLK,
 	D0 => D0,
 	D1 => D1,
@@ -94,6 +104,7 @@ BEGIN
 	F2 => F2,
 	LOAD_A => LOAD_A,
 	LOAD_B => LOAD_B,
+	Q => Q,
 	R0 => R0,
 	R1 => R1,
 	RA0 => RA0,
@@ -103,7 +114,8 @@ BEGIN
 	RB0 => RB0,
 	RB1 => RB1,
 	RB2 => RB2,
-	RB3 => RB3
+	RB3 => RB3,
+	S => S
 	);
 
 -- CLK
@@ -469,19 +481,7 @@ END PROCESS t_prcs_R0;
 t_prcs_EXECUTE: PROCESS
 BEGIN
 	EXECUTE <= '0';
-	WAIT FOR 30000 ps;
-	EXECUTE <= '1';
-	WAIT FOR 40000 ps;
-	EXECUTE <= '0';
-	WAIT FOR 430000 ps;
-	EXECUTE <= '1';
-	WAIT FOR 100000 ps;
-	EXECUTE <= '0';
-	WAIT FOR 60000 ps;
-	EXECUTE <= '1';
-	WAIT FOR 20000 ps;
-	EXECUTE <= '0';
-	WAIT FOR 20000 ps;
+	WAIT FOR 500000 ps;
 	EXECUTE <= '1';
 	WAIT FOR 100000 ps;
 	EXECUTE <= '0';
@@ -489,11 +489,11 @@ BEGIN
 	EXECUTE <= '1';
 	WAIT FOR 100000 ps;
 	EXECUTE <= '0';
-	WAIT FOR 20000 ps;
+	WAIT FOR 100000 ps;
 	EXECUTE <= '1';
-	WAIT FOR 20000 ps;
+	WAIT FOR 100000 ps;
 	EXECUTE <= '0';
-	WAIT FOR 60000 ps;
+	WAIT FOR 100000 ps;
 	EXECUTE <= '1';
 	WAIT FOR 100000 ps;
 	EXECUTE <= '0';

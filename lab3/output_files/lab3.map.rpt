@@ -1,5 +1,5 @@
 Analysis & Synthesis report for lab3
-Tue Feb 28 09:16:42 2023
+Thu Mar 02 18:39:24 2023
 Quartus Prime Version 18.0.0 Build 614 04/24/2018 SJ Lite Edition
 
 
@@ -42,16 +42,16 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Tue Feb 28 09:16:42 2023       ;
+; Analysis & Synthesis Status        ; Successful - Thu Mar 02 18:39:24 2023       ;
 ; Quartus Prime Version              ; 18.0.0 Build 614 04/24/2018 SJ Lite Edition ;
 ; Revision Name                      ; lab3                                        ;
 ; Top-level Entity Name              ; lab3                                        ;
 ; Family                             ; Cyclone IV GX                               ;
-; Total logic elements               ; 13                                          ;
-;     Total combinational functions  ; 13                                          ;
-;     Dedicated logic registers      ; 8                                           ;
-; Total registers                    ; 8                                           ;
-; Total pins                         ; 21                                          ;
+; Total logic elements               ; 23                                          ;
+;     Total combinational functions  ; 23                                          ;
+;     Dedicated logic registers      ; 12                                          ;
+; Total registers                    ; 12                                          ;
+; Total pins                         ; 25                                          ;
 ; Total virtual pins                 ; 0                                           ;
 ; Total memory bits                  ; 0                                           ;
 ; Embedded Multiplier 9-bit elements ; 0                                           ;
@@ -174,6 +174,7 @@ refer to the applicable agreement for further details.
 ; 74194.bdf                        ; yes             ; Megafunction                       ; c:/intelfpga_lite/18.0/quartus/libraries/others/maxplus2/74194.bdf ;         ;
 ; 74153.bdf                        ; yes             ; Megafunction                       ; c:/intelfpga_lite/18.0/quartus/libraries/others/maxplus2/74153.bdf ;         ;
 ; 74157.bdf                        ; yes             ; Megafunction                       ; c:/intelfpga_lite/18.0/quartus/libraries/others/maxplus2/74157.bdf ;         ;
+; 7474.bdf                         ; yes             ; Megafunction                       ; c:/intelfpga_lite/18.0/quartus/libraries/others/maxplus2/7474.bdf  ;         ;
 +----------------------------------+-----------------+------------------------------------+--------------------------------------------------------------------+---------+
 
 
@@ -182,14 +183,14 @@ refer to the applicable agreement for further details.
 +--------------------------+------------------+
 ; Resource                 ; Usage            ;
 +--------------------------+------------------+
-; I/O pins                 ; 21               ;
+; I/O pins                 ; 25               ;
 ;                          ;                  ;
 ; DSP block 9-bit elements ; 0                ;
 ;                          ;                  ;
-; Maximum fan-out node     ; EXECUTE~input    ;
+; Maximum fan-out node     ; 7474:inst26|10   ;
 ; Maximum fan-out          ; 14               ;
-; Total fan-out            ; 101              ;
-; Average fan-out          ; 1.60             ;
+; Total fan-out            ; 145              ;
+; Average fan-out          ; 1.71             ;
 +--------------------------+------------------+
 
 
@@ -198,10 +199,12 @@ refer to the applicable agreement for further details.
 +----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+-----------+------+--------------+---------------------+-------------+--------------+
 ; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; DSP 36x36 ; Pins ; Virtual Pins ; Full Hierarchy Name ; Entity Name ; Library Name ;
 +----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+-----------+------+--------------+---------------------+-------------+--------------+
-; |lab3                      ; 13 (0)              ; 8 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 21   ; 0            ; |lab3               ; lab3        ; work         ;
-;    |74157:inst14|          ; 1 (1)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |lab3|74157:inst14  ; 74157       ; work         ;
-;    |74194:inst1|           ; 6 (6)               ; 4 (4)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |lab3|74194:inst1   ; 74194       ; work         ;
-;    |74194:inst|            ; 6 (6)               ; 4 (4)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |lab3|74194:inst    ; 74194       ; work         ;
+; |lab3                      ; 23 (3)              ; 12 (0)                    ; 0           ; 0            ; 0       ; 0         ; 0         ; 25   ; 0            ; |lab3               ; lab3        ; work         ;
+;    |74157:inst14|          ; 2 (2)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |lab3|74157:inst14  ; 74157       ; work         ;
+;    |74194:inst1|           ; 8 (8)               ; 4 (4)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |lab3|74194:inst1   ; 74194       ; work         ;
+;    |74194:inst|            ; 9 (9)               ; 4 (4)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |lab3|74194:inst    ; 74194       ; work         ;
+;    |7474:inst26|           ; 0 (0)               ; 2 (2)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |lab3|7474:inst26   ; 7474        ; work         ;
+;    |7474:inst39|           ; 1 (1)               ; 2 (2)                     ; 0           ; 0            ; 0       ; 0         ; 0         ; 0    ; 0            ; |lab3|7474:inst39   ; 7474        ; work         ;
 +----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+-----------+------+--------------+---------------------+-------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
@@ -211,7 +214,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 8     ;
+; Total registers                              ; 12    ;
 ; Number of registers using Synchronous Clear  ; 0     ;
 ; Number of registers using Synchronous Load   ; 0     ;
 ; Number of registers using Asynchronous Clear ; 0     ;
@@ -226,16 +229,18 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-----------------------+-----------------------------+
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
-; boundary_port         ; 21                          ;
-; cycloneiii_ff         ; 8                           ;
+; boundary_port         ; 25                          ;
+; cycloneiii_ff         ; 12                          ;
 ;     ENA               ; 8                           ;
-; cycloneiii_lcell_comb ; 13                          ;
-;     normal            ; 13                          ;
-;         3 data inputs ; 4                           ;
-;         4 data inputs ; 9                           ;
+;     plain             ; 4                           ;
+; cycloneiii_lcell_comb ; 23                          ;
+;     normal            ; 23                          ;
+;         2 data inputs ; 3                           ;
+;         3 data inputs ; 10                          ;
+;         4 data inputs ; 10                          ;
 ;                       ;                             ;
-; Max LUT depth         ; 4.00                        ;
-; Average LUT depth     ; 2.12                        ;
+; Max LUT depth         ; 3.00                        ;
+; Average LUT depth     ; 1.71                        ;
 +-----------------------+-----------------------------+
 
 
@@ -254,7 +259,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.0.0 Build 614 04/24/2018 SJ Lite Edition
-    Info: Processing started: Tue Feb 28 09:16:29 2023
+    Info: Processing started: Thu Mar 02 18:39:10 2023
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off lab3 -c lab3
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 14 of the 14 processors detected
@@ -267,17 +272,19 @@ Info (12128): Elaborating entity "74153" for hierarchy "74153:inst12"
 Info (12130): Elaborated megafunction instantiation "74153:inst12"
 Info (12128): Elaborating entity "74157" for hierarchy "74157:inst14"
 Info (12130): Elaborated megafunction instantiation "74157:inst14"
+Info (12128): Elaborating entity "7474" for hierarchy "7474:inst26"
+Info (12130): Elaborated megafunction instantiation "7474:inst26"
 Info (286030): Timing-Driven Synthesis is running
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 34 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 48 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 13 input pins
-    Info (21059): Implemented 8 output pins
-    Info (21061): Implemented 13 logic cells
+    Info (21059): Implemented 12 output pins
+    Info (21061): Implemented 23 logic cells
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 1 warning
     Info: Peak virtual memory: 4903 megabytes
-    Info: Processing ended: Tue Feb 28 09:16:42 2023
-    Info: Elapsed time: 00:00:13
-    Info: Total CPU time (on all processors): 00:00:09
+    Info: Processing ended: Thu Mar 02 18:39:24 2023
+    Info: Elapsed time: 00:00:14
+    Info: Total CPU time (on all processors): 00:00:08
 
 

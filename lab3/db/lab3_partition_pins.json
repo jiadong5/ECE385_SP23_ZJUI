@@ -36,11 +36,23 @@
 					"strict" : false
 				},
 				{
-					"name" : "D0",
+					"name" : "S",
 					"strict" : false
 				},
 				{
-					"name" : "LOAD_A",
+					"name" : "C0",
+					"strict" : false
+				},
+				{
+					"name" : "C1",
+					"strict" : false
+				},
+				{
+					"name" : "Q",
+					"strict" : false
+				},
+				{
+					"name" : "D0",
 					"strict" : false
 				},
 				{
@@ -48,7 +60,7 @@
 					"strict" : false
 				},
 				{
-					"name" : "EXECUTE",
+					"name" : "LOAD_A",
 					"strict" : false
 				},
 				{
@@ -60,10 +72,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "D3",
-					"strict" : false
-				},
-				{
 					"name" : "R1",
 					"strict" : false
 				},
@@ -72,7 +80,7 @@
 					"strict" : false
 				},
 				{
-					"name" : "F2",
+					"name" : "F1",
 					"strict" : false
 				},
 				{
@@ -80,11 +88,19 @@
 					"strict" : false
 				},
 				{
-					"name" : "F1",
+					"name" : "F2",
+					"strict" : false
+				},
+				{
+					"name" : "D3",
 					"strict" : false
 				},
 				{
 					"name" : "LOAD_B",
+					"strict" : false
+				},
+				{
+					"name" : "EXECUTE",
 					"strict" : false
 				}
 			]
