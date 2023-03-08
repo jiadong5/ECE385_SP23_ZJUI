@@ -9,7 +9,7 @@ z2
 cModel Technology
 Z0 dC:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim
 Ehard_block
-Z1 w1677580567
+Z1 w1678188529
 Z2 DPx4 ieee 16 vital_primitives 0 22 G>kiXP8Q9dRClKfK1Zn7j1
 Z3 DPx9 cycloneiv 19 cycloneiv_atom_pack 0 22 SN3SlP9iZMX9:@emz7z0a0
 Z4 DPx4 ieee 12 vital_timing 0 22 J>EBealN09f8GzldA[z2>3
@@ -25,9 +25,9 @@ Vc_zG6gj]l9@McI1b^mKMk3
 !s100 ePBnogNIYclWVmd<QYN@33
 Z10 OV;C;10.5b;63
 32
-Z11 !s110 1677580568
+Z11 !s110 1678188535
 !i10b 1
-Z12 !s108 1677580568.000000
+Z12 !s108 1678188535.000000
 Z13 !s90 -work|work|lab3.vho|
 Z14 !s107 lab3.vho|
 !i113 1
@@ -107,7 +107,7 @@ R14
 R15
 R16
 Elab3_vhd_vec_tst
-Z19 w1677580566
+Z19 w1678188527
 R5
 R6
 R0
@@ -137,7 +137,7 @@ Z25 VlEdeGWa[ii<cld]0Uhz^50
 Z26 !s100 0;@NIi?BcV0E`>VHHd?ck1
 R10
 32
-R11
+!s110 1678188536
 !i10b 1
 R12
 R22

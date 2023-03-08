@@ -1,7 +1,7 @@
 # do lab3.do
 # ** Warning: (vlib-34) Library already exists at "work".
 # Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
-# Start time: 18:36:08 on Feb 28,2023
+# Start time: 19:28:55 on Mar 07,2023
 # vcom -work work lab3.vho 
 # -- Loading package STANDARD
 # -- Loading package TEXTIO
@@ -16,20 +16,20 @@
 # -- Loading package altera_primitives_components
 # -- Compiling entity lab3
 # -- Compiling architecture structure of lab3
-# End time: 18:36:08 on Feb 28,2023, Elapsed time: 0:00:00
+# End time: 19:28:55 on Mar 07,2023, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
-# Start time: 18:36:08 on Feb 28,2023
+# Start time: 19:28:55 on Mar 07,2023
 # vcom -work work Waveform.vwf.vht 
 # -- Loading package STANDARD
 # -- Loading package TEXTIO
 # -- Loading package std_logic_1164
 # -- Compiling entity lab3_vhd_vec_tst
 # -- Compiling architecture lab3_arch of lab3_vhd_vec_tst
-# End time: 18:36:08 on Feb 28,2023, Elapsed time: 0:00:00
+# End time: 19:28:56 on Mar 07,2023, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # vsim -novopt -c -t 1ps -L cycloneiv -L altera -L altera_mf -L 220model -L sgate -L altera_lnsim work.lab3_vhd_vec_tst 
-# Start time: 18:36:08 on Feb 28,2023
+# Start time: 19:28:56 on Mar 07,2023
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
@@ -50,5 +50,5 @@
 # Loading cycloneiv.cycloneiv_lcell_comb(vital_lcell_comb)
 # Loading altera.dffeas(vital_dffeas)
 # after#35
-# End time: 18:36:08 on Feb 28,2023, Elapsed time: 0:00:00
+# End time: 19:28:56 on Mar 07,2023, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
