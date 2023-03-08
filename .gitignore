@@ -1,9 +1,12 @@
-*/simulation
-*/db
-*/incremental_db
-*/output_files
+*simulation/
+*db/
+*incremental_db/
+*output_files/
 *.bak
 *.qsf
 *.qpf
 *.qws
 *.rpt
+*.cnf.cdb
+*.cnf.hdb
+*.do.bak*
