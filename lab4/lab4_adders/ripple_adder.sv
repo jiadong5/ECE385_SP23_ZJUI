@@ -10,9 +10,9 @@ module ripple_adder
 		
     assign Cin[0] = 1'b0;
 
-	full_adder FA0(.A(A[0]), .B(B[0]), .Cin(Cin[0]), .Sum(Sum[0]), .CO(Cin[1]));
+	 full_adder FA0(.A(A[0]), .B(B[0]), .Cin(Cin[0]), .Sum(Sum[0]), .CO(Cin[1]));
     full_adder FA1(.A(A[1]), .B(B[1]), .Cin(Cin[1]), .Sum(Sum[1]), .CO(Cin[2]));
-	full_adder FA2(.A(A[2]), .B(B[2]), .Cin(Cin[2]), .Sum(Sum[2]), .CO(Cin[3]));
+	 full_adder FA2(.A(A[2]), .B(B[2]), .Cin(Cin[2]), .Sum(Sum[2]), .CO(Cin[3]));
     full_adder FA3(.A(A[3]), .B(B[3]), .Cin(Cin[3]), .Sum(Sum[3]), .CO(Cin[4]));
     full_adder FA4(.A(A[4]), .B(B[4]), .Cin(Cin[4]), .Sum(Sum[4]), .CO(Cin[5]));
     full_adder FA5(.A(A[5]), .B(B[5]), .Cin(Cin[5]), .Sum(Sum[5]), .CO(Cin[6]));

@@ -18,6 +18,6 @@ Sim dir               :  simulation\modelsim
 
 Info: Starting NativeLink simulation with ModelSim-Altera software
 Sourced NativeLink script d:/quartus/quartus/common/tcl/internal/nativelink/modelsim.tcl
-Warning: File lab4_adders_toplevel_run_msim_rtl_verilog.do already exists - backing up current file as lab4_adders_toplevel_run_msim_rtl_verilog.do.bak
+Warning: File lab4_adders_toplevel_run_msim_rtl_verilog.do already exists - backing up current file as lab4_adders_toplevel_run_msim_rtl_verilog.do.bak9
 Info: Spawning ModelSim-Altera Simulation software 
 Info: NativeLink simulation flow was successful

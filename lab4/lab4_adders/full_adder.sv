@@ -23,9 +23,9 @@ module full_adder4
     input logic Cin,
     output logic[3:0] Sum,
     output logic CO
-)
+);
 
-    logic[3:0] C;
+    logic [3:0] C;
     assign C[0] = Cin;
 
 	full_adder FA0(.A(A[0]), .B(B[0]), .Cin(C[0]), .Sum(Sum[0]), .CO(C[1]));
