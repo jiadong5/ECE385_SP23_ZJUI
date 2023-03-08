@@ -1,5 +1,5 @@
 Flow report for lab3
-Thu Mar 02 18:39:50 2023
+Tue Mar 07 19:28:49 2023
 Quartus Prime Version 18.0.0 Build 614 04/24/2018 SJ Lite Edition
 
 
@@ -40,7 +40,7 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Thu Mar 02 18:39:44 2023       ;
+; Flow Status                        ; Successful - Tue Mar 07 19:28:49 2023       ;
 ; Quartus Prime Version              ; 18.0.0 Build 614 04/24/2018 SJ Lite Edition ;
 ; Revision Name                      ; lab3                                        ;
 ; Top-level Entity Name              ; lab3                                        ;
@@ -96,7 +96,9 @@ refer to the applicable agreement for further details.
 ; Fitter               ; 00:00:11     ; 1.0                     ; 6361 MB             ; 00:00:05                           ;
 ; Assembler            ; 00:00:04     ; 1.0                     ; 4755 MB             ; 00:00:01                           ;
 ; Timing Analyzer      ; 00:00:04     ; 1.1                     ; 4857 MB             ; 00:00:01                           ;
-; Total                ; 00:00:33     ; --                      ; --                  ; 00:00:15                           ;
+; EDA Netlist Writer   ; 00:00:01     ; 1.0                     ; 4707 MB             ; 00:00:01                           ;
+; EDA Netlist Writer   ; 00:00:02     ; 1.0                     ; 4712 MB             ; 00:00:00                           ;
+; Total                ; 00:00:36     ; --                      ; --                  ; 00:00:16                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
@@ -109,6 +111,8 @@ refer to the applicable agreement for further details.
 ; Fitter               ; 楚河州的天选3    ; Windows 10 ; 10.0       ; x86_64         ;
 ; Assembler            ; 楚河州的天选3    ; Windows 10 ; 10.0       ; x86_64         ;
 ; Timing Analyzer      ; 楚河州的天选3    ; Windows 10 ; 10.0       ; x86_64         ;
+; EDA Netlist Writer   ; 楚河州的天选3    ; Windows 10 ; 10.0       ; x86_64         ;
+; EDA Netlist Writer   ; 楚河州的天选3    ; Windows 10 ; 10.0       ; x86_64         ;
 +----------------------+------------------+------------+------------+----------------+
 
 
@@ -119,6 +123,8 @@ quartus_map --read_settings_files=on --write_settings_files=off lab3 -c lab3
 quartus_fit --read_settings_files=off --write_settings_files=off lab3 -c lab3
 quartus_asm --read_settings_files=off --write_settings_files=off lab3 -c lab3
 quartus_sta lab3 -c lab3
+quartus_eda --gen_testbench --tool=modelsim_oem --format=vhdl --write_settings_files=off lab3 -c lab3 --vector_source="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/Waveform.vwf" --testbench_file="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim/Waveform.vwf.vht"
+quartus_eda --write_settings_files=off --simulation=on --functional=on --flatten_buses=off --tool=modelsim_oem --format=vhdl --output_directory="C:/Users/Jiadong Hong/Desktop/ECE385_SP23_ZJUI/lab3/simulation/qsim/" lab3 -c lab3
 
 
 
