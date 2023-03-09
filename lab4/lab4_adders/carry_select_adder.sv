@@ -33,7 +33,7 @@ module carry_select_adder
         C4[2] = C4[1] & Cout1[2] | Cout0[2];
         CO = C4[2] & Cout1[3] | Cout0[3];
 
-        // Decide on the sum
+        // Decide the sum based on C4,C8,C12
         Sum[3:0] = Sum0[3:0];
         unique case (C4[0]) 
             1'b0:  Sum[7:4] = Sum0[7:4];

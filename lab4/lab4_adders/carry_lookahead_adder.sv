@@ -80,6 +80,7 @@ module carry_lookahead_unit4
 
     CO = Cin & P[0] & P[1] & P[2] & P[3] | G[0] & P[1] & P[2] & P[3] | G[1] & P[2] & P[3] | G[2] & P[3] | G[3];
 
+    // 4 bit unit has additional output PG,GG
     PG = P[0] & P[1] & P[2] & P[3];
     GG = G[3] | G[2] & P[3] | G[1] & P[3] & P[2] | G[0] & P[3] & P[2] & P[1];
     end
