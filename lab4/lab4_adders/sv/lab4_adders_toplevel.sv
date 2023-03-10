@@ -105,13 +105,13 @@ module lab4_adders_toplevel
      * in the same way that you'd place a 74-series hex driver chip on your protoboard 
      * Make sure only *one* adder module (out of the three types) is instantiated*/
 	  
-	//  ripple_adder ripple_adder_inst
-    // (
-    //     .A,             // This is shorthand for .A(A) when both wires/registers have the same name
-    //     .B,
-    //     .Sum(Sum_comb), // Connects the Sum_comb wire in this file to the Sum wire in ripple_adder.sv
-    //     .CO(CO_comb)
-    // );
+//	ripple_adder ripple_adder_inst
+//    (
+//        .A,             // This is shorthand for .A(A) when both wires/registers have the same name
+//        .B,
+//        .Sum(Sum_comb), // Connects the Sum_comb wire in this file to the Sum wire in ripple_adder.sv
+//        .CO(CO_comb)
+//    );
 	 
 //    carry_lookahead_adder carry_lookahead_adder_inst
 //    (
