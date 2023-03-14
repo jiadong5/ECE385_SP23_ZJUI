@@ -4,7 +4,7 @@
  * Credits belong to Hanggang Zhu and Jiadong Hong
  */
 
-module lab5_multiplier_toplevel
+module lab5_toplevel
 (
     input logic[7:0] S,
     input logic Clk,
@@ -18,6 +18,19 @@ module lab5_multiplier_toplevel
 
 );
 
+    // Test the add_sub9 module
+    // logic[7:0] A,B;
+    // logic fn;
+    // logic[8:0] Sum;
+
+
+    // add_sub9 add_sub9_inst
+    // (
+    //     .A(A),
+    //     .B(B),
+    //     .fn(fn),
+    //     .S(Sum)
+    // );
 
 
 endmodule

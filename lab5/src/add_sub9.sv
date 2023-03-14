@@ -29,7 +29,7 @@ module add_sub9
     logic[7:0] BB;      // Internal B or NOT(B)
     logic A8, BB8;      // Internal sign extension bits
 
-    assign BB = (B ^ (8(fn)));
+    assign BB = (B ^ {8{fn}});
     assign A8 = A[7];
     assign BB8 = BB[7]; 
 
