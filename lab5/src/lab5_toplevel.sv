@@ -47,12 +47,11 @@ module lab5_toplevel
     assign  Aval = A;
     assign  Bval = B;
     assign  Ld_A = Add^Sub;
-    assign  Ld_B = ClearA_LoadB;
     assign  fn = Sub;
     assign  AShift_Out = BShift_In;
     assign  Q = AShift_In;
     assign  D_X = A[7];
-    assign  Reset_A = ClearA_LoadB | Reset;
+    assign  Reset_A = Ld_B | Reset;
     
     // Initialize the register units
     reg_8   reg_A(
