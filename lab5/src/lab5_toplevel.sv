@@ -28,6 +28,7 @@ module lab5_toplevel
                 Shift_En,
                 AShift_Out, 
                 BShift_out,
+                ClearA,
                 Reset_A;
     logic[7:0]  A;
     logic[7:0]  newA;
@@ -51,7 +52,7 @@ module lab5_toplevel
     assign  BShift_In = AShift_Out;
     assign  AShift_In = X;
     assign  D_X = A[7];
-    assign  Reset_A = (Ld_B) | ~Reset;
+    assign  Reset_A = (Ld_B) | ~Reset | ClearA;
     
     // Initialize the register units
     reg_8   reg_A(
@@ -99,6 +100,7 @@ module lab5_toplevel
         .Run(~Run),
         .M(BShift_out),
         .Clr_LD(Ld_B),
+        .ClearA(ClearA),
         .Shift(Shift_En),
         .Add(Add),
         .Sub(Sub)

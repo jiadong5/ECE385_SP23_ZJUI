@@ -31,13 +31,14 @@ module control
     input logic Run,            // Start multiplication, ClearA_LoadB should already be release
     input logic M,                    // B[0] from register B
 
-    output logic Clr_LD,              
+    output logic Clr_LD,
+    output logic ClearA,              
     output logic Shift,               // start shift operation
     output logic Add,                 // start add operation (A + S -> A)
     output logic Sub                  // start subtract operation (A - S -> A)
 );
 
-    enum logic[4:0] {S_1,S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16} curr_state, next_state;
+    enum logic[4:0] {S_1,S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18} curr_state, next_state;
 
 
     always_ff @ (posedge Clk)
@@ -73,9 +74,13 @@ module control
             S14 : next_state = S15;
             S15 : next_state = S16;
             S16 : if (!Run)
-                    next_state = S_1;
+                    next_state = S17;
+            S17 : if (Run)
+                    next_state = S18;
+            S18: next_state = S0;
         endcase
         // Output logic
+        ClearA = 1'b0;
         Clr_LD = 1'b0;
         Add = 1'b0;
         Sub = 1'b0;
@@ -192,6 +197,27 @@ module control
                     Add = 1'b0;
                     Sub = 1'b0;
 
+                end
+            S17 : 
+                begin
+                    if (ClearA_LoadB)
+                    begin
+                        Clr_LD = 1'b1;
+                    end
+                    Shift = 1'b0;
+                    Add = 1'b0;
+                    Sub = 1'b0;
+                end
+            S18 :
+                begin   
+                    if (ClearA_LoadB)
+                    begin
+                        Clr_LD = 1'b1;
+                    end
+                    Shift = 1'b0;
+                    Add = 1'b0;
+                    Sub = 1'b0;
+                    ClearA = 1'b1;
                 end
 
             // Default shift state
