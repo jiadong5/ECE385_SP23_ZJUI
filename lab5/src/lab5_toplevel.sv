@@ -17,6 +17,7 @@ module lab5_toplevel
     output logic X
 
 );
+    
     // local logic variables go here
     logic       AShift_In, 
                 BShift_In,
@@ -51,12 +52,12 @@ module lab5_toplevel
     assign  AShift_Out = BShift_In;
     assign  Q = AShift_In;
     assign  D_X = A[7];
-    assign  Reset_A = Ld_B | Reset;
+    assign  Reset_A = (~Ld_B) | Reset;
     
     // Initialize the register units
     reg_8   reg_A(
         .Clk(Clk),
-        .Reset(Reset_A),
+        .Reset(~Reset_A),
         .Shift_In(AShift_In),
         .Load(Ld_A),
         .Shift_En(Shift_En),
@@ -68,11 +69,11 @@ module lab5_toplevel
 
     reg_8   reg_B(
         .Clk(Clk),
-        .Reset(Reset),
+        .Reset(~Reset),
         .Shift_In(BShift_In),
         .Load(Ld_B),
         .Shift_En(Shift_En),
-        .D(B),
+        .D(S),
         .Shift_Out(BShift_out),
         .Data_Out(newB)
     );
@@ -80,7 +81,7 @@ module lab5_toplevel
     dreg    reg_x(
         .Clk(Clk),
         .Load(Ld_X),
-        .Reset(Reset),
+        .Reset(~Reset),
         .D(D_X),
         .Q(Q)
     );
@@ -94,9 +95,9 @@ module lab5_toplevel
     );
     control     control_unit(
         .Clk(Clk),
-        .Reset(Reset),
-        .ClearA_LoadB(ClearA_LoadB),
-        .Run(Run),
+        .Reset(~Reset),
+        .ClearA_LoadB(~ClearA_LoadB),
+        .Run(~Run),
         .M(BShift_out),
         .Clr_LD(Ld_B),
         .Shift(Shift_En),
