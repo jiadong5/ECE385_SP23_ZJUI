@@ -29,12 +29,12 @@ module control
     input logic Reset,          // Reset to initial state
     input logic ClearA_LoadB,   // Enable store S into register B
     input logic Run,            // Start multiplication, ClearA_LoadB should already be release
-    input M,                    // B[0] from register B
+    input logic M,                    // B[0] from register B
 
-    output Clr_LD,              
-    output Shift,               // start shift operation
-    output Add,                 // start add operation (A + S -> A)
-    output Sub                  // start subtract operation (A - S -> A)
+    output logic Clr_LD,              
+    output logic Shift,               // start shift operation
+    output logic Add,                 // start add operation (A + S -> A)
+    output logic Sub                  // start subtract operation (A - S -> A)
 );
 
     enum logic[4:0] {S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16} curr_state, next_state;
