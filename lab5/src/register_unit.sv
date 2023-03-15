@@ -28,7 +28,7 @@ endmodule
 module dreg (input Clk, Load, Reset, D,
              output logic Q);
     
-    always_ff @ (postedge Clk)
+    always_ff @ (posedge Clk)
     begin
         if (Reset)
             Q <= 1'b0;
