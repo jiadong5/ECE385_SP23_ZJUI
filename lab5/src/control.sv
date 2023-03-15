@@ -37,13 +37,13 @@ module control
     output logic Sub                  // start subtract operation (A - S -> A)
 );
 
-    enum logic[4:0] {S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16} curr_state, next_state;
+    enum logic[4:0] {S_1,S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16} curr_state, next_state;
 
 
     always_ff @ (posedge Clk)
     begin
         if (Reset)
-            curr_state <= S16;
+            curr_state <= S_1;
         else
             curr_state <= next_state;
     end
@@ -54,6 +54,8 @@ module control
         next_state = curr_state;
 
         unique case (curr_state)
+            S_1: if (Run)
+                    next_state = S0;
             S0 : next_state = S1;
             S1 : next_state = S2;
             S2 : next_state = S3;
@@ -70,14 +72,26 @@ module control
             S13 : next_state = S14;
             S14 : next_state = S15;
             S15 : next_state = S16;
-            S16 : if (Run)
-                    next_state = S0;
+            S16 : if (!Run)
+                    next_state = S_1;
         endcase
         // Output logic
         Clr_LD = 1'b0;
         Add = 1'b0;
         Sub = 1'b0;
         case (curr_state)
+        
+            S_1:
+                begin
+                    if (ClearA_LoadB)
+                    begin
+                        Clr_LD = 1'b1;
+                    end
+                    Shift = 1'b0;
+                    Add = 1'b0;
+                    Sub = 1'b0;
+
+                end
 
             // Add/Sub state
             S0: 

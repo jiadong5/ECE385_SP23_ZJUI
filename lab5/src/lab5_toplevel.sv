@@ -28,10 +28,8 @@ module lab5_toplevel
                 Shift_En,
                 AShift_Out, 
                 BShift_out,
-                Q,
                 Reset_A;
     logic[7:0]  A;
-    logic[7:0]  B;
     logic[7:0]  newA;
     logic[7:0]  newB;
 
@@ -45,19 +43,20 @@ module lab5_toplevel
     logic       fn;
     
     // Assign values of settings
-    assign  Aval = A;
-    assign  Bval = B;
+    assign  Aval = newA;
+    assign  Bval = newB;
     assign  Ld_A = Add^Sub;
+    assign  Ld_X = Ld_A;
     assign  fn = Sub;
-    assign  AShift_Out = BShift_In;
-    assign  Q = AShift_In;
+    assign  BShift_In = AShift_Out;
+    assign  AShift_In = X;
     assign  D_X = A[7];
-    assign  Reset_A = (~Ld_B) | Reset;
+    assign  Reset_A = (Ld_B) | ~Reset;
     
     // Initialize the register units
     reg_8   reg_A(
         .Clk(Clk),
-        .Reset(~Reset_A),
+        .Reset(Reset_A),
         .Shift_In(AShift_In),
         .Load(Ld_A),
         .Shift_En(Shift_En),
@@ -81,15 +80,15 @@ module lab5_toplevel
     dreg    reg_x(
         .Clk(Clk),
         .Load(Ld_X),
-        .Reset(~Reset),
+        .Reset(Reset_A),
         .D(D_X),
-        .Q(Q)
+        .Q(X)
     );
 
     // Execution.
     add_sub9    add_unit(
-        .A(S),
-        .B(newA),
+        .A(newA),
+        .B(S),
         .fn(fn),
         .S(A)
     );
@@ -105,10 +104,10 @@ module lab5_toplevel
         .Sub(Sub)
     );
 
-    HexDriver   HexAL(.In0(A[3:0]), .Out0(AhexL));
-    HexDriver   HexBL(.In0(B[3:0]), .Out0(BhexL));
-    HexDriver   HexAU(.In0(A[7:4]), .Out0(AhexU));
-    HexDriver   HexBU(.In0(B[7:4]), .Out0(BhexU));
+    HexDriver   HexAL(.In0(newA[3:0]), .Out0(AhexL));
+    HexDriver   HexBL(.In0(newB[3:0]), .Out0(BhexL));
+    HexDriver   HexAU(.In0(newA[7:4]), .Out0(AhexU));
+    HexDriver   HexBU(.In0(newB[7:4]), .Out0(BhexU));
     // Test the add_sub9 module
     // logic[7:0] A,B;
     // logic fn;
