@@ -52,6 +52,7 @@ module control
     begin
         // Next state logic
         next_state = curr_state;
+
         unique case (curr_state)
             S0 : next_state = S1;
             S1 : next_state = S2;
@@ -72,85 +73,107 @@ module control
             S16 : if (Run)
                     next_state = S0;
         endcase
-
         // Output logic
-        unique case (curr_state)
+        Clr_LD = 1'b0;
+        Add = 1'b0;
+        Sub = 1'b0;
+        case (curr_state)
 
             // Add/Sub state
-            S0 :
-                begin
+            S0: 
+             begin
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
-                    if (M)
+                    if(M)
+                    begin
                         Add = 1'b1;
                         Sub = 1'b0;
-                end
+                    end
+             end
             S2 :
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
-                    if (M)
+                    if(M)
+                    begin 
                         Add = 1'b1;
                         Sub = 1'b0;
+                    end
                 end
             S4 :
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
-                    if (M)
+                    if(M)
+                    begin
                         Add = 1'b1;
                         Sub = 1'b0;
+                    end
                 end
 
             S6 :
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
-                    if (M)
+                    if(M)
+                    begin
                         Add = 1'b1;
                         Sub = 1'b0;
+                    end
                 end
 
             S8 :
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
-                    if (M)
+                    if(M)
+                    begin
                         Add = 1'b1;
                         Sub = 1'b0;
+                    end
                 end
 
             S10 :
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
-                    if (M)
+                    if(M)
+                    begin
                         Add = 1'b1;
                         Sub = 1'b0;
+                    end
                 end
 
             S12 :
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
-                    if (M)
+                    if(M)
+                    begin
                         Add = 1'b1;
                         Sub = 1'b0;
+                    end
+
                 end
             S14 :
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
-                    if (M)
+                    if(M)
+                    begin
                         Add = 1'b0;
                         Sub = 1'b1;
+                    end
+
                 end
 
             // Wait state
             S16 :
                 begin
-                   if (ClearA_LoadB) 
+                    if (ClearA_LoadB)
+                    begin
                         Clr_LD = 1'b1;
+                    end
                     Shift = 1'b0;
                     Add = 1'b0;
                     Sub = 1'b0;
