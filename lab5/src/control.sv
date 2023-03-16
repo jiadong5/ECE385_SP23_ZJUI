@@ -4,6 +4,7 @@
 /*
  * Moore State Machine lookup table
  * S_start: initial state, wait until Run is set to 1
+ * S_clear: Clear XA
  * S0: XA <- A + MS (bit 0) (fn = 0, If M= 1 add S to partial product)
  * S1: Shfit XAB
  * S2: XA <- A + MS (bit 1)
@@ -39,7 +40,7 @@ module control
     output logic Sub                  // start subtract operation (A - S -> A)
 );
 
-    enum logic[4:0] {S_start,S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S_wait} curr_state, next_state;
+    enum logic[4:0] {S_start,S_clear,S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S_wait} curr_state, next_state;
 
 
     always_ff @ (posedge Clk)
@@ -57,7 +58,8 @@ module control
 
         unique case (curr_state)
             S_start: if (Run)
-                    next_state = S0;
+                    next_state = S_clear;
+            S_clear: next_state = S0;
             S0 : next_state = S1;
             S1 : next_state = S2;
             S2 : next_state = S3;
@@ -92,6 +94,15 @@ module control
                     Shift = 1'b0;
                     Add = 1'b0;
                     Sub = 1'b0;
+                end
+
+            S_clear:
+                begin
+                    Shift = 1'b0;
+                    ClearA = 1'b1;     
+                    Add = 1'b0;
+                    Sub = 1'b0;
+                    Clr_LD = 1'b0;
                 end
             
             // Add/Sub state
