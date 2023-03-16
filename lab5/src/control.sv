@@ -3,6 +3,8 @@
 
 /*
  * Moore State Machine lookup table
+ * S_start: initial state, wait until Run is set to 1
+ * S_clear: Clear XA
  * S0: XA <- A + MS (bit 0) (fn = 0, If M= 1 add S to partial product)
  * S1: Shfit XAB
  * S2: XA <- A + MS (bit 1)
@@ -19,7 +21,7 @@
  * S13: Shift XAB
  * S14: XA <- A + MS (bit 7) (fn = 1 if M = 1)
  * S15: Shift XAB
- * S16: Wait until Run Swith returns to 0
+ * S_wait: Wait until Run Swith returns to 0
  */
 
 
@@ -38,13 +40,13 @@ module control
     output logic Sub                  // start subtract operation (A - S -> A)
 );
 
-    enum logic[4:0] {S_1,S_clear,S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18} curr_state, next_state;
+    enum logic[4:0] {S_start,S_clear,S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S_wait} curr_state, next_state;
 
 
     always_ff @ (posedge Clk)
     begin
         if (Reset)
-            curr_state <= S_1;
+            curr_state <= S_start;
         else
             curr_state <= next_state;
     end
@@ -55,7 +57,7 @@ module control
         next_state = curr_state;
 
         unique case (curr_state)
-            S_1: if (Run)
+            S_start: if (Run)
                     next_state = S_clear;
             S_clear: next_state = S0;
             S0 : next_state = S1;
@@ -73,52 +75,50 @@ module control
             S12 : next_state = S13;
             S13 : next_state = S14;
             S14 : next_state = S15;
-            S15 : next_state = S16;
-            S16 : if (!Run)
-                    next_state = S_1;
+            S15 : next_state = S_wait;
+            S_wait : if (!Run)
+                    next_state = S_start;
 
         endcase
         // Output logic
-        ClearA = 1'b0;
         Clr_LD = 1'b0;
         Add = 1'b0;
         Sub = 1'b0;
         case (curr_state)
         
-            S_1:
+            S_start:
                 begin
                     if (ClearA_LoadB)
-                    begin
                         Clr_LD = 1'b1;
-                    end
+                    ClearA = 1'b0;
                     Shift = 1'b0;
                     Add = 1'b0;
                     Sub = 1'b0;
-
                 end
             
             S_clear:
                 begin
                     Shift = 1'b0;
                     ClearA = 1'b1;
-
                 end
 
             // Add/Sub state
             S0: 
-             begin
+                begin
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
+                    ClearA = 1'b0;
                     if(M)
                     begin
                         Add = 1'b1;
                         Sub = 1'b0;
                     end
-             end
+                end
             S2 :
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
+                    ClearA = 1'b0;
                     if(M)
                     begin 
                         Add = 1'b1;
@@ -129,6 +129,7 @@ module control
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
+                    ClearA = 1'b0;
                     if(M)
                     begin
                         Add = 1'b1;
@@ -140,6 +141,7 @@ module control
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
+                    ClearA = 1'b0;
                     if(M)
                     begin
                         Add = 1'b1;
@@ -151,6 +153,7 @@ module control
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
+                    ClearA = 1'b0;
                     if(M)
                     begin
                         Add = 1'b1;
@@ -162,6 +165,7 @@ module control
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
+                    ClearA = 1'b0;
                     if(M)
                     begin
                         Add = 1'b1;
@@ -173,6 +177,7 @@ module control
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
+                    ClearA = 1'b0;
                     if(M)
                     begin
                         Add = 1'b1;
@@ -184,6 +189,7 @@ module control
                 begin 
                     Clr_LD = 1'b0;
                     Shift = 1'b0;
+                    ClearA = 1'b0;
                     if(M)
                     begin
                         Add = 1'b0;
@@ -193,12 +199,11 @@ module control
                 end
 
             // Wait state
-            S16 :
+            S_wait :
                 begin
                     if (ClearA_LoadB)
-                    begin
                         Clr_LD = 1'b1;
-                    end
+                    ClearA = 1'b0;
                     Shift = 1'b0;
                     Add = 1'b0;
                     Sub = 1'b0;
@@ -209,6 +214,7 @@ module control
             // Default shift state
             default:
                 begin
+                    ClearA = 1'b0;
                     Clr_LD = 1'b0;
                     Shift = 1'b1;
                     Add = 1'b0;
