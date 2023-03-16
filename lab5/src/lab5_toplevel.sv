@@ -42,6 +42,7 @@ module lab5_toplevel
     logic       Sub;
     // local vars used for add_sub9.
     logic       fn;
+    logic[8:0] Sum;
     
     // Assign values of settings
     assign  Aval = newA;
@@ -51,8 +52,9 @@ module lab5_toplevel
     assign  fn = Sub;
     assign  BShift_In = AShift_Out;
     assign  AShift_In = X;
-    assign  D_X = A[7];
+    assign  D_X = Sum[8];
     assign  Reset_A = (Ld_B) | ~Reset | ClearA;
+    assign A = Sum[7:0];
     
     // Initialize the register units
     reg_8   reg_A(
@@ -91,7 +93,7 @@ module lab5_toplevel
         .A(newA),
         .B(S),
         .fn(fn),
-        .S(A)
+        .S(Sum)
     );
     control     control_unit(
         .Clk(Clk),

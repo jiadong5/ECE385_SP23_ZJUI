@@ -145,6 +145,25 @@ initial begin
 		ErrorCnt++;
 	
 	
+	// Test 4: -7 * -59 = 413
+	#10 S = 8'b01100011; // -7
+
+	#2 ClearA_LoadB = 0; 
+	#2 ClearA_LoadB = 1;
+
+	#10 S = 8'b01100011; // -59
+
+	#2 Run = 0;
+
+	#40 Run = 1;
+
+	//answer = 413
+	ans_a = 8'h26;
+	ans_b = 8'h49;
+
+	if (Aval != ans_a || Bval != ans_b)
+		ErrorCnt++;
+
 	if (ErrorCnt == 0)
 		$display("Success!");
 	else
