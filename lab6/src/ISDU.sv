@@ -55,7 +55,7 @@ module ISDU (   input logic         Clk,
 									Mem_WE
 				);
 
-	enum logic [3:0] {  Halted, 
+	enum logic [4:0] {  Halted, 
 						PauseIR1, 
 						PauseIR2, 
 						S_18, 
@@ -63,7 +63,22 @@ module ISDU (   input logic         Clk,
 						S_33_2, 
 						S_35, 
 						S_32, 
-						S_01}   State, Next_state;   // Internal state logic
+						S_01,
+						S_04,
+						S_05,
+						S_06,
+						S_07,
+						S_09,
+						S_12,
+						S_16_1,
+						S_16_2,
+						S_20,
+						S_21,
+						S_22,
+						S_23,
+						S_25_1,
+						S_25_2,
+						S_27}   State, Next_state;   // Internal state logic
 		
 	always_ff @ (posedge Clk)
 	begin
