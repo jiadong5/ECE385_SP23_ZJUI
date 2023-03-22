@@ -16,6 +16,9 @@ module datapath(
 
 /*--Define local variables--*/
 
+// used in Data Bus MUX
+logic[15:0] Data_ALU;
+logic[3:0]  BUS_TICKET;
 // used in MEM2IO
 logic[15:0] Data_Bus,
             MDR_Input,
@@ -30,26 +33,30 @@ logic[15:0] PC_Input;
 
 /*--Ckt assignments--*/
 
+// assign variables in Data Bus.
+assign BUS_TICKET[3] = GatePC;
+assign BUS_TICKET[2] = GateMDR;
+assign BUS_TICKET[1] = GateALU;
+assign BUS_TICKET[0] = GateMARMUX;
+
 // assign circuits in MEM2IO
-assign Data_to_CPU = MDR_In
-assign Data_Bus = MDR;
+assign Data_to_CPU = MDR_In;
 assign MAR_Input = Data_Bus;
 assign Data_from_CPU = MDR;
 
 // assign circuits in PC
-assign Data_Bus = PC;
 assign PCPP = PC + 1;
-assign Data_Bus = Data_Calc;
 
 /*--Define Registers and MUXes.--*/
 
 // Registers
-register #(.N(16)) MDR_reg(.*, .load(LD_MDR), .Data_In(MDR_Input), .Data_Out(MDR));
-register #(.N(16)) MAR_reg(.*, .load(LD_MAR), .Data_In(MAR_Input), .Data_Out(MAR));
-register #(.N(16)) PC_reg(.*, .load(LD_PC), .Data_In(PC_Input), .Data_Out(PC));
+register #(.N(16)) MDR_reg(.*, .Load(LD_MDR), .Din(MDR_Input), .data_out(MDR));
+register #(.N(16)) MAR_reg(.*, .Load(LD_MAR), .Din(MAR_Input), .data_out(MAR));
+register #(.N(16)) PC_reg(.*, .Load(LD_PC), .Din(PC_Input), .data_out(PC));
+register #(.N(16)) IR_reg(.*, .Load(LD_IR), .Din(Data_Bus), .data_out(IR));
 
 // MUXes
 MUX_IO MUX_to_MDR(.*);
 MUX_PC MUX_to_PCR(.*);
-
+MUX_Data_Bus MUX_for_BUS(.*);
 endmodule
