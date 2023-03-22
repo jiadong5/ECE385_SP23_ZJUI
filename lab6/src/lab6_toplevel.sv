@@ -23,46 +23,4 @@ slc3 my_slc(.*);
 // Test memory is to play the role of physical SRAM in simulation.
 test_memory my_test_memory(.Reset(~Reset), .I_O(Data), .A(ADDR), .*);
 
-// define the local controls
-// Gate Control: 
-logic       GateALU;
-logic       GateMDR;
-logic       GateMARMUX;
-logic       GatePC;
-// Load Control:
-logic       LD_BEN;
-logic       LD_CC;
-logic       LD_IR;
-logic       LD_MAR;
-logic       LD_MDR;
-logic       LD_REG;
-logic       LD_PC;
-logic       LD_LED;
-// Mux control
-logic       MIO_EN
-logic[3:0]  Opcode;
-logic       IR_5;
-logic       IR_11;
-logic       BEN;
-logic[1:0]  PCMUX;
-logic       DRMUX,
-			SR1MUX,
-			SR2MUX,
-			ADDR1MUX;
-logic[1:0]  ADDR2MUX,
-			ALUK;
-logic       Mem_CE,
-			Mem_UB,
-			Mem_LB,
-			Mem_OE,
-			Mem_WE;
-
-// Circuit flow Assignments
-// TODO: To implement LC-3 Circuit Diagram.
-
-// Module control execution:
-// File: ISDU.sv 
-// The Finite State Machine Part
-
-
 endmodule
