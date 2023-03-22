@@ -39,7 +39,7 @@ logic       LD_REG;
 logic       LD_PC;
 logic       LD_LED;
 // Mux control
-logic       MIO_EN
+logic       MIO_EN;
 logic[3:0]  Opcode;
 logic       IR_5;
 logic       IR_11;
