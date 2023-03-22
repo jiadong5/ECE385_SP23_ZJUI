@@ -20,6 +20,7 @@ timeprecision 1ns;
 	logic [11:0] LED;
 	logic [6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7;
 	logic CE, UB, LB, OE, WE;
+	logic [1:0]  PCMUX;
 	logic [19:0] ADDR;
 	wire [15:0] Data;
 	
@@ -46,7 +47,7 @@ timeprecision 1ns;
 	PC = test.my_slc.d0.PC;
 	MAR = test.my_slc.d0.MAR_reg.data_out;
 	MDR = test.my_slc.d0.MDR_reg.data_out;
-	IR = test.my_slc.d0.IR_reg.data_out;	
+	IR = test.my_slc.d0.IR_reg.data_out;
 	end
 	
 	// set clock rule
@@ -71,6 +72,7 @@ timeprecision 1ns;
 	
 	// run again to see if fetch automatically halts
 	#10 Continue = 0;
+
 	#5 Continue = 1;
 	   S = 16'd0075;
 	#5 Continue = 0;
