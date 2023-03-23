@@ -54,6 +54,7 @@ register #(.N(16)) MDR_reg(.*, .Load(LD_MDR), .Din(MDR_Input), .data_out(MDR));
 register #(.N(16)) MAR_reg(.*, .Load(LD_MAR), .Din(MAR_Input), .data_out(MAR));
 register #(.N(16)) PC_reg(.*, .Load(LD_PC), .Din(PC_Input), .data_out(PC));
 register #(.N(16)) IR_reg(.*, .Load(LD_IR), .Din(Data_Bus), .data_out(IR));
+register #(.N(12)) LED_reg(.*, .Load(LD_LED), .Din(IR[11:0]), .data_out(LED));
 
 // MUXes
 MUX_IO MUX_to_MDR(.*);
