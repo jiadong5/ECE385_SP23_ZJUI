@@ -88,8 +88,8 @@ module MUX_SR1(
 always_comb
 begin
     case(SR1MUX)
-        1b'0: SR1 = IR_11_9;
-        1b'1: SR1 = IR_8_6;
+        1'b0: SR1 = IR_11_9;
+        1'b1: SR1 = IR_8_6;
     endcase
 end
 endmodule
@@ -102,7 +102,7 @@ module MUX_RegFile_Write(
 always_comb
 begin
     case(DR)
-        3b'000:
+        3'b000:
             begin
                 LD_R0 = 1;
                 LD_R1 = 0;
@@ -113,7 +113,7 @@ begin
                 LD_R6 = 0;
                 LD_R7 = 0;
             end
-        3b'001:
+        3'b001:
             begin
                 LD_R0 = 0;
                 LD_R1 = 1;
@@ -124,7 +124,7 @@ begin
                 LD_R6 = 0;
                 LD_R7 = 0;
             end
-        3b'010:
+        3'b010:
             begin
                 LD_R0 = 0;
                 LD_R1 = 0;
@@ -135,7 +135,7 @@ begin
                 LD_R6 = 0;
                 LD_R7 = 0;
             end
-        3b'011:
+        3'b011:
             begin
                 LD_R0 = 0;
                 LD_R1 = 0;
@@ -146,7 +146,7 @@ begin
                 LD_R6 = 0;
                 LD_R7 = 0;
             end
-        3b'100:
+        3'b100:
             begin
                 LD_R0 = 0;
                 LD_R1 = 0;
@@ -157,7 +157,7 @@ begin
                 LD_R6 = 0;
                 LD_R7 = 0;
             end
-        3b'101:
+        3'b101:
             begin
                 LD_R0 = 0;
                 LD_R1 = 0;
@@ -168,7 +168,7 @@ begin
                 LD_R6 = 0;
                 LD_R7 = 0;
             end
-        3b'110:
+        3'b110:
             begin
                 LD_R0 = 0;
                 LD_R1 = 0;
@@ -179,7 +179,7 @@ begin
                 LD_R6 = 1;
                 LD_R7 = 0;
             end
-        3b'111:
+        3'b111:
             begin
                 LD_R0 = 0;
                 LD_R1 = 0;
@@ -208,10 +208,10 @@ module MUX_For_ADDR2(
 always_comb
 begin
     case(ADDR2MUX)
-        2b'00: ADDR1_to_Adder = IR_10_0_SEXT;
-        2b'01: ADDR1_to_Adder = IR_8_0_SEXT;
-        2b'10: ADDR1_to_Adder = IR_5_0_SEXT;
-        2b'11: ADDR1_to_Adder = 16'h0000;
+        2'b00: ADDR1_to_Adder = IR_10_0_SEXT;
+        2'b01: ADDR1_to_Adder = IR_8_0_SEXT;
+        2'b10: ADDR1_to_Adder = IR_5_0_SEXT;
+        2'b11: ADDR1_to_Adder = 16'h0000;
     endcase
 end
 endmodule
@@ -226,8 +226,8 @@ module MUX_For_ADDR1(
 always_comb
 begin
     case(ADDR1MUX)
-        1b'0: ADDR1_to_Adder = SR1OUT;
-        1b'1: ADDR1_to_Adder = PC_next;
+        1'b0: ADDR1_to_Adder = SR1OUT;
+        1'b1: ADDR1_to_Adder = PC_next;
     endcase
 end
 endmodule
@@ -241,8 +241,8 @@ module MUX_SEXT_10(
 always_comb
 begin
     case(IR_10_0[10])
-        1'b0: IR_10_0_SEXT = {5b'00000, IR_10_0};
-        1'b1: IR_10_0_SEXT = {5b'11111, IR_10_0};
+        1'b0: IR_10_0_SEXT = {5'b00000, IR_10_0};
+        1'b1: IR_10_0_SEXT = {5'b11111, IR_10_0};
     endcase
 end
 endmodule
@@ -255,8 +255,8 @@ module MUX_SEXT_8(
 always_comb
 begin
     case(IR_8_0[8])
-        1'b0: IR_8_0_SEXT = {7b'0000000, IR_8_0};
-        1'b1: IR_8_0_SEXT = {7b'1111111, IR_8_0};
+        1'b0: IR_8_0_SEXT = {7'b0000000, IR_8_0};
+        1'b1: IR_8_0_SEXT = {7'b1111111, IR_8_0};
     endcase
 end
 endmodule
@@ -269,8 +269,8 @@ module MUX_SEXT_5(
 always_comb
 begin
     case(IR_5_0[5])
-        1'b0: IR_5_0_SEXT = {10b'0000000000, IR_5_0};
-        1'b1: IR_5_0_SEXT = {10b'1111111111, IR_5_0};
+        1'b0: IR_5_0_SEXT = {10'b0000000000, IR_5_0};
+        1'b1: IR_5_0_SEXT = {10'b1111111111, IR_5_0};
     endcase
 end
 endmodule
@@ -283,7 +283,7 @@ module MUX_For_NZP(
 
 always_comb
 begin
-    if (Data_Bus == 16h'0000)
+    if (Data_Bus == 16'h0000)
         NZP_In = 3'b010;
     else if (Data_Bus[15] == 0)
         NZP_In = 3'b001;
@@ -305,7 +305,7 @@ assign LogicAnd = NZP_Out & IR_11_9;
 always_comb
 begin
     case(LogicAnd)
-        default: BEN_In = 1b'1;
+        default: BEN_In = 1'b1;
         3'b000: BEN_In = 1'b0;
     endcase
 end
@@ -320,8 +320,8 @@ module MUX_SEXT_4(
 always_comb
 begin
     case(IR_4_0[4])
-        1'b0: IR_4_0_SEXT = {11b'00000000000, IR_4_0};
-        1'b1: IR_4_0_SEXT = {11b'11111111111, IR_4_0};
+        1'b0: IR_4_0_SEXT = {11'b00000000000, IR_4_0};
+        1'b1: IR_4_0_SEXT = {11'b11111111111, IR_4_0};
     endcase
 end
 endmodule

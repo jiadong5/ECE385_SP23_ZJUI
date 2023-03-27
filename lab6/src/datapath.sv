@@ -116,7 +116,7 @@ Reg_RegFile_Read Reg_For_SR2(.*, .SR(SR2), .data_out(SR2OUT));
 
 // used in NZP
 register #(.N(3)) NZP_reg(.*, .Load(LD_CC), .Din(NZP_In), .data_out(NZP_Out));
-register #(.N(1)) BEN_reg(.*, .Load(LD_BEN), .Din(BEN_In), .data_out(BEN))
+register #(.N(1)) BEN_reg(.*, .Load(LD_BEN), .Din(BEN_In), .data_out(BEN));
 
 /*--MUXes--*/
 MUX_IO MUX_to_MDR(.*);
