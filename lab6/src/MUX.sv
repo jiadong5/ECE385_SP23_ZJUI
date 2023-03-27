@@ -193,3 +193,41 @@ begin
     endcase
 end
 endmodule
+
+/*--ADDR part--*/
+//
+//
+module MUX_For_ADDR2(
+    input logic[15:0] IR_10_0_SEXT,
+    input logic[15:0] IR_8_0_SEXT,
+    input logic[15:0] IR_5_0_SEXT,
+    input logic[1:0] ADDR2MUX,
+    output logic[15:0] ADDR2_to_Adder
+);
+
+always_comb
+begin
+    case(ADDR2MUX)
+        2b'00:
+        2b'01:
+        2b'10:
+        2b'11:
+    endcase
+end
+endmodule
+
+module MUX_For_ADDR1(
+    input logic[15:0] SR1OUT,
+    input logic[15:0] PC_next,
+    input logic ADDR1MUX,
+    output logic ADDR1_to_Adder
+);
+
+always_comb
+begin
+    case(ADDR1MUX)
+        1b'0:
+        1b'1:
+    endcase
+end
+endmodule

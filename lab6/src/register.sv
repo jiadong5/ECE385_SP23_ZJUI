@@ -32,7 +32,7 @@ always_ff @ (posedge Clk)
     begin
         if (Reset)
                 data_out <= {16'b0};
-        else if(Load)
+        else if(LD_REG)
             begin 
                 case(SR)
                     3b'000: data_out <= R0_Out;
