@@ -58,27 +58,29 @@ module ISDU (   input logic         Clk,
 	enum logic [4:0] {  Halted, 
 						PauseIR1, 
 						PauseIR2, 
-						S_18, 
-						S_33_1, 
-						S_33_2, 
-						S_35, 
-						S_32, 
-						S_01,
-						S_04,
-						S_05,
-						S_06,
-						S_07,
-						S_09,
-						S_12,
-						S_16_1,
-						S_16_2,
-						S_20,
-						S_21,
-						S_22,
-						S_23,
-						S_25_1,
-						S_25_2,
-						S_27}   State, Next_state;   // Internal state logic
+						S_18, 		// Start state
+						S_33_1, 	// MDR <= M
+						S_33_2, 	// MDR <- M
+						S_35, 		// IR <- MDR
+						S_32, 		// BEN <- nzp & IR[11:9]
+						S_01,		// ADD
+						S_05,		// AND
+						S_09,		// NOT
+						S_00, 		// BR1:
+						S_22,		// BR2: PC <- PC + off9
+						S_12,		// JMP: PC <- BaseR
+						S_04,		// JSR1: R7 <- PC
+						S_21,		// JSR2.1: PC <- PC + off11
+						S_20,		// JSR2.2: PC <- BaseR, not used
+						S_06,		// LDR1: MAR <- BaseR + off6
+						S_25_1,		// LDR2.1: MDR <- M[MAR]
+						S_25_2,		// LDR2.2: MDR <- M[MAR]
+						S_27		// LDR3: DR <- MDR
+						S_07,		// STR1: MAR <- PC + off9
+						S_23,		// STR2: MDR <- SR
+						S_16_1,		// STR3.1: M[MAR] <- MDR
+						S_16_2,		// STR3.2: M[MAR] <- MDR
+						}   State, Next_state;   // Internal state logic
 		
 	always_ff @ (posedge Clk)
 	begin
