@@ -208,10 +208,10 @@ module MUX_For_ADDR2(
 always_comb
 begin
     case(ADDR2MUX)
-        2b'00:
-        2b'01:
-        2b'10:
-        2b'11:
+        2b'00: ADDR1_to_Adder = IR_10_0_SEXT;
+        2b'01: ADDR1_to_Adder = IR_8_0_SEXT;
+        2b'10: ADDR1_to_Adder = IR_5_0_SEXT;
+        2b'11: ADDR1_to_Adder = 16'h0000;
     endcase
 end
 endmodule
@@ -226,8 +226,8 @@ module MUX_For_ADDR1(
 always_comb
 begin
     case(ADDR1MUX)
-        1b'0:
-        1b'1:
+        1b'0: ADDR1_to_Adder = SR1OUT;
+        1b'1: ADDR1_to_Adder = PC_next;
     endcase
 end
 endmodule
