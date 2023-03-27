@@ -96,6 +96,7 @@ endmodule
 
 module MUX_RegFile_Write(
     input logic[2:0] DR,
+    input logic LD_REG,
     output logic LD_R0, LD_R1, LD_R2, LD_R3, LD_R4, LD_R5, LD_R6, LD_R7
 );
 
@@ -104,7 +105,7 @@ begin
     case(DR)
         3'b000:
             begin
-                LD_R0 = 1;
+                LD_R0 = 1 & LD_REG;
                 LD_R1 = 0;
                 LD_R2 = 0;
                 LD_R3 = 0;
@@ -116,7 +117,7 @@ begin
         3'b001:
             begin
                 LD_R0 = 0;
-                LD_R1 = 1;
+                LD_R1 = 1 & LD_REG;
                 LD_R2 = 0;
                 LD_R3 = 0;
                 LD_R4 = 0;
@@ -128,7 +129,7 @@ begin
             begin
                 LD_R0 = 0;
                 LD_R1 = 0;
-                LD_R2 = 1;
+                LD_R2 = 1 & LD_REG;
                 LD_R3 = 0;
                 LD_R4 = 0;
                 LD_R5 = 0;
@@ -140,7 +141,7 @@ begin
                 LD_R0 = 0;
                 LD_R1 = 0;
                 LD_R2 = 0;
-                LD_R3 = 1;
+                LD_R3 = 1 & LD_REG;
                 LD_R4 = 0;
                 LD_R5 = 0;
                 LD_R6 = 0;
@@ -152,7 +153,7 @@ begin
                 LD_R1 = 0;
                 LD_R2 = 0;
                 LD_R3 = 0;
-                LD_R4 = 1;
+                LD_R4 = 1 & LD_REG;
                 LD_R5 = 0;
                 LD_R6 = 0;
                 LD_R7 = 0;
@@ -164,7 +165,7 @@ begin
                 LD_R2 = 0;
                 LD_R3 = 0;
                 LD_R4 = 0;
-                LD_R5 = 1;
+                LD_R5 = 1 & LD_REG;
                 LD_R6 = 0;
                 LD_R7 = 0;
             end
@@ -176,7 +177,7 @@ begin
                 LD_R3 = 0;
                 LD_R4 = 0;
                 LD_R5 = 0;
-                LD_R6 = 1;
+                LD_R6 = 1 & LD_REG;
                 LD_R7 = 0;
             end
         3'b111:
@@ -188,11 +189,42 @@ begin
                 LD_R4 = 0;
                 LD_R5 = 0;
                 LD_R6 = 0;
-                LD_R7 = 1;
+                LD_R7 = 1 & LD_REG;
             end
     endcase
 end
 endmodule
+
+
+module MUX_RegFile_Read(
+    input logic Clk, Reset,
+    input logic[2:0] SR,
+    input logic[15:0] R0_Out,
+    input logic[15:0] R1_Out,
+    input logic[15:0] R2_Out,
+    input logic[15:0] R3_Out,
+    input logic[15:0] R4_Out,
+    input logic[15:0] R5_Out,
+    input logic[15:0] R6_Out,
+    input logic[15:0] R7_Out,
+    output logic[15:0] data_out 
+);
+
+always_comb
+    begin
+        case(SR)
+            3'b000: data_out = R0_Out;
+            3'b001: data_out = R1_Out;
+            3'b010: data_out = R2_Out;
+            3'b011: data_out = R3_Out;
+            3'b100: data_out = R4_Out;
+            3'b101: data_out = R5_Out;
+            3'b110: data_out = R6_Out;
+            3'b111: data_out = R7_Out;
+        endcase
+    end
+endmodule
+
 
 /*--ADDR part--*/
 //

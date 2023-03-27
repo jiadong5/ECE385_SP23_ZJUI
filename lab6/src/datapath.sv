@@ -119,8 +119,8 @@ register #(.N(16)) R4(.*, .Load(LD_R4), .Din(Data_Bus), .data_out(R4_Out));
 register #(.N(16)) R5(.*, .Load(LD_R5), .Din(Data_Bus), .data_out(R5_Out));
 register #(.N(16)) R6(.*, .Load(LD_R6), .Din(Data_Bus), .data_out(R6_Out));
 register #(.N(16)) R7(.*, .Load(LD_R7), .Din(Data_Bus), .data_out(R7_Out));
-Reg_RegFile_Read Reg_For_SR1(.*, .SR(SR1), .data_out(SR1OUT));
-Reg_RegFile_Read Reg_For_SR2(.*, .SR(SR2), .data_out(SR2OUT));
+MUX_RegFile_Read Reg_For_SR1(.*, .SR(SR1), .data_out(SR1OUT));
+MUX_RegFile_Read Reg_For_SR2(.*, .SR(SR2), .data_out(SR2OUT));
 
 // used in NZP
 register #(.N(3)) NZP_reg(.*, .Load(LD_CC), .Din(NZP_In), .data_out(NZP_Out));
