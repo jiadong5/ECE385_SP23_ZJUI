@@ -49,7 +49,14 @@ logic[15:0] SR1OUT;
 logic[15:0] SR2OUT;
 
 // used in ADDR part.
-
+logic[10:0] IR_10_0;
+logic[8:0] IR_8_0;
+logic[5:0] IR_5_0;
+logic[15:0] IR_10_0_SEXT,
+            IR_8_0_SEXT,
+            IR_5_0_SEXT,
+            ADDR2_to_Adder,
+            ADDR1_to_Adder;
 
 /*--Ckt assignments--*/
 
@@ -93,6 +100,7 @@ register #(.N(16)) R6(.*, .Load(LD_R6), .Din(Data_Bus), .data_out(R6_Out));
 register #(.N(16)) R7(.*, .Load(LD_R7), .Din(Data_Bus), .data_out(R7_Out));
 Reg_RegFile_Read Reg_For_SR1(.*, .SR(SR1), .data_out(SR1OUT));
 Reg_RegFile_Read Reg_For_SR2(.*, .SR(SR2), .data_out(SR2OUT));
+
 /*--MUXes--*/
 MUX_IO MUX_to_MDR(.*);
 MUX_PC MUX_to_PCR(.*);
