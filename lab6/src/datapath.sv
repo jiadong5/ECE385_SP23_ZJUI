@@ -47,6 +47,14 @@ logic      LD_R0,
            LD_R7;
 logic[15:0] SR1OUT;
 logic[15:0] SR2OUT;
+logic[15:0] R0_Out;
+logic[15:0] R1_Out;
+logic[15:0] R2_Out;
+logic[15:0] R3_Out;
+logic[15:0] R4_Out;
+logic[15:0] R5_Out;
+logic[15:0] R6_Out;
+logic[15:0] R7_Out;
 
 // used in ADDR part.
 logic[10:0] IR_10_0;

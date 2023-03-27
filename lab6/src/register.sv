@@ -38,7 +38,7 @@ always_ff @ (posedge Clk)
                     3'b000: data_out <= R0_Out;
                     3'b001: data_out <= R1_Out;
                     3'b010: data_out <= R2_Out;
-                    3'b011: data_out <= R3_out;
+                    3'b011: data_out <= R3_Out;
                     3'b100: data_out <= R4_Out;
                     3'b101: data_out <= R5_Out;
                     3'b110: data_out <= R6_Out;

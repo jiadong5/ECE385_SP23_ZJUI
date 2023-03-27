@@ -208,10 +208,10 @@ module MUX_For_ADDR2(
 always_comb
 begin
     case(ADDR2MUX)
-        2'b00: ADDR1_to_Adder = IR_10_0_SEXT;
-        2'b01: ADDR1_to_Adder = IR_8_0_SEXT;
-        2'b10: ADDR1_to_Adder = IR_5_0_SEXT;
-        2'b11: ADDR1_to_Adder = 16'h0000;
+        2'b00: ADDR2_to_Adder = IR_10_0_SEXT;
+        2'b01: ADDR2_to_Adder = IR_8_0_SEXT;
+        2'b10: ADDR2_to_Adder = IR_5_0_SEXT;
+        2'b11: ADDR2_to_Adder = 16'h0000;
     endcase
 end
 endmodule
@@ -283,7 +283,7 @@ module MUX_For_NZP(
 
 always_comb
 begin
-    if (Data_Bus == 16'h0000)
+    if (Data_Bus == {16'h0000})
         NZP_In = 3'b010;
     else if (Data_Bus[15] == 0)
         NZP_In = 3'b001;
@@ -362,7 +362,8 @@ begin
     case(ALUK)
         2'b00: Data_ALU = Add_Out;
         2'b01: Data_ALU = And_Out;
-        2'b11: Data_ALU = Not_Out;
+        2'b11: Data_ALU = SR1OUT;
+        2'b10: Data_ALU = Not_Out;
     endcase
 end
 endmodule
