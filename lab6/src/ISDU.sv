@@ -76,7 +76,7 @@ module ISDU (   input logic         Clk,
 						S_25_1,		// LDR2.1: MDR <- M[MAR]
 						S_25_2,		// LDR2.2: MDR <- M[MAR]
 						S_27		// LDR3: DR <- MDR
-						S_07,		// STR1: MAR <- PC + off9
+						S_07,		// STR1: MAR <- BaseR + off6
 						S_23,		// STR2: MDR <- SR
 						S_16_1,		// STR3.1: M[MAR] <- MDR
 						S_16_2,		// STR3.2: M[MAR] <- MDR
@@ -190,7 +190,7 @@ module ISDU (   input logic         Clk,
 				if (IR_11)
 					Next_state = S_21;
 				else
-					Next_state = S_20;
+					Next_state = S_20; // won't happen
 			S_21 : // JSR2.1
 				Next_state = S_18;
 			S_20 : // JSR2.2
@@ -222,7 +222,7 @@ module ISDU (   input logic         Clk,
 				begin 
 					GatePC = 1'b1;
 					LD_MAR = 1'b1;
-					PCMUX = 2'b00;
+					PCMUX = 2'b00;	 // PC <- PC + 1
 					LD_PC = 1'b1;
 				end
 			S_33_1 : 
@@ -241,17 +241,102 @@ module ISDU (   input logic         Clk,
 			PauseIR2: ;
 			S_32 : 
 				LD_BEN = 1'b1;
-			S_01 : 
+			S_01 :  // ADD: DR <- SR1 + OP2
 				begin 
-					SR2MUX = IR_5;
+					SR2MUX = IR_5;	// ADD or ADDi
+					DRMUX = 1'b1; 	// DR<- IR[11:9]
+					SR1MUX = 1'b1; 	// SR1 <= IR[8:6]
 					ALUK = 2'b00;
 					GateALU = 1'b1;
 					LD_REG = 1'b1;
-					// incomplete...
+				end
+			
+			S_05 : // AND: DR <- SR1 & OP2
+				begin
+					SR2MUX = IR_5;	// AND or ANDi
+					DRMUX = 1'b1; 	// DR<- IR[11:9]
+					SR1MUX = 1'b1; 	// SR1 <= IR[8:6]
+					ALUK = 2'b01;
+					GateALU = 1'b1;
+					LD_REG = 1'b1;
 				end
 
-			// You need to finish the rest of states.....
+			S_09 : // NOT: DR <- NOT(SR)
+					DRMUX = 1'b1; 	// DR <- IR[11:9]
+					SR1MUX = 1'b1; 	// SR1 <- IR[8:6]
+					ALUK = 2'b10;
+					GateALU = 1'b1;
+					LD_REG = 1'b1;
+				
+			S_00 : // BR1: Evaluate BEN
+					;
+			S_22 : // BR2: PC <- PC + off9	
+					ADDR1MUX = 1'b1; 	// PC
+					ADDR2MUX = 2'b01;	// SEXT 9
+					PCMUX = 1'b10;		// From Calc
+					LD_PC = 1'b1;
+			
+			S_12 : // JMP: PC <- BaseR
+					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
+					ADDR1MUX = 1'b0;	// BaseR
+					ADDR2MUX = 2'b11;	// 0
+					PCMUX = 1'b10;		// From Calc
+					LD_PC = 1'b1;
+			
+			S_04 : // JSR1: R7 <- PC
+					DRMUX = 1'b0;		// 111(R7)
+					GatePC = 1'b1;
+					LD_REG = 1'b1;
+			
+			S_21 : // JSR2.1: PC <- PC + off11
+					ADDR1MUX = 1'b1;	// PC
+					ADDR2MUX = 1'b00; 	// SEXT 11
+					PCMUX = 2'b10;		// From Calc
+					LD_PC = 1'b1;
+			
+			S_20 : // JSR2.2: PC <- BaseR, not used
+					;
+			
+			S_06 : // LDR1: MAR <- BaseR + off6
+					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
+					ADDR1MUX = 1'b0;	// BaseR
+					ADDR2MUX = 1'b10;	// SEXT 6
+					GateMARMUX = 1'b1;
+					LD_MAR = 1'b1;
+			S_25_1: // LDR2.1: MDR <- M[MAR]
+					Mem_OE = 1'b0;
+			S_25_2: // LDR2.2: MDR <= M[MAR]
+					Mem_OE = 1'b0;
+					LD_MDR = 1'b1;
+			S_27 : // LDR3: DR <- MDR
+					DRMUX = 1'b1;	// DR <- IR[11:9]
+					GateMDR = 1'b1;
+					LD_REG = 1'b1;
+			
+			S_07 : // STR1: MAR <- BaseR + off6
+					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
+					ADDR1MUX = 1'b0;	// BaseR
+					ADDR2MUX = 1'b10;	// SEXT 6
+					GateMARMUX = 1'b1;
+					LD_MAR = 1'b1;
+			S_23 : // STR2: MDR <- SR
+					SR1MUX = 1'b0; 		// SR <- IR[11:9]
+					ADDR1MUX = 1'b1;	// SR
+					ADDR2MUX = 1'b11;	// 0
+					GateMARMUX = 1'b1;
+					LD_MDR = 1'b1;
+			S_16_1: // M[MAR] <- MDR
+					// TODO, write may need 3 cycles?
+					Mem_WE = 1'b1;
+					Mem_CE = 1'b1;
+			S_16_2:	// M[MAR] <- MDR
+					Mem_WE = 1'b1;
+					Mem_CE = 1'b1;
 
+
+					
+
+				
 			default : ;
 		endcase
 	end 
