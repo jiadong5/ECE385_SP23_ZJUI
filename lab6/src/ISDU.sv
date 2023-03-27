@@ -222,7 +222,7 @@ module ISDU (   input logic         Clk,
 				begin 
 					GatePC = 1'b1;
 					LD_MAR = 1'b1;
-					PCMUX = 2'b00;
+					PCMUX = 2'b00;	 // PC <- PC + 1
 					LD_PC = 1'b1;
 				end
 			S_33_1 : 
@@ -241,17 +241,32 @@ module ISDU (   input logic         Clk,
 			PauseIR2: ;
 			S_32 : 
 				LD_BEN = 1'b1;
-			S_01 : 
+			S_01 :  // ADD: DR <- SR1 + OP2
 				begin 
-					SR2MUX = IR_5;
+					SR2MUX = IR_5;	// ADD or ADDi
+					DRMUX = 1'b1; 	// DR<- IR[11:9]
+					SR1MUX = 1'b1; 	// SR1 <= IR[8:6]
 					ALUK = 2'b00;
 					GateALU = 1'b1;
 					LD_REG = 1'b1;
-					// incomplete...
+				end
+			
+			S_05 : // AND: DR <- SR1 & OP2
+				begin
+					SR2MUX = IR_5;	// AND or ANDi
+					DRMUX = 1'b1; 	// DR<- IR[11:9]
+					SR1MUX = 1'b1; 	// SR1 <= IR[8:6]
+					ALUK = 2'b01;
+					GateALU = 1'b1;
+					LD_REG = 1'b1;
 				end
 
-			// You need to finish the rest of states.....
-
+			S_09 : // NOT: DR <- NOT(SR)
+					DRMUX = 1'b1; 	// DR <- IR[11:9]
+					SR1MUX = 1'b1; 	// SR1 <- IR[8:6]
+					ALUK = 2'b10;
+					GateALU = 1'b1;
+					LD_REG = 1'b1;
 			default : ;
 		endcase
 	end 
