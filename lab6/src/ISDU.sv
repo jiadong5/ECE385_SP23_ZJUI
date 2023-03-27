@@ -286,7 +286,7 @@ module ISDU (   input logic         Clk,
 				begin
 					ADDR1MUX = 1'b1; 	// PC
 					ADDR2MUX = 2'b01;	// SEXT 9
-					PCMUX = 1'b10;		// From Calc
+					PCMUX = 2'b10;		// From Calc
 					LD_PC = 1'b1;
 				end
 			
@@ -295,7 +295,7 @@ module ISDU (   input logic         Clk,
 					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
 					ADDR1MUX = 1'b0;	// BaseR
 					ADDR2MUX = 2'b11;	// 0
-					PCMUX = 1'b10;		// From Calc
+					PCMUX = 2'b10;		// From Calc
 					LD_PC = 1'b1;
 				end
 			
@@ -309,7 +309,7 @@ module ISDU (   input logic         Clk,
 			S_21 : // JSR2.1: PC <- PC + off11
 				begin
 					ADDR1MUX = 1'b1;	// PC
-					ADDR2MUX = 1'b00; 	// SEXT 11
+					ADDR2MUX = 2'b00; 	// SEXT 11
 					PCMUX = 2'b10;		// From Calc
 					LD_PC = 1'b1;
 				end
@@ -321,7 +321,7 @@ module ISDU (   input logic         Clk,
 				begin
 					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
 					ADDR1MUX = 1'b0;	// BaseR
-					ADDR2MUX = 1'b10;	// SEXT 6
+					ADDR2MUX = 2'b10;	// SEXT 6
 					GateMARMUX = 1'b1;
 					LD_MAR = 1'b1;
 				end
@@ -345,7 +345,7 @@ module ISDU (   input logic         Clk,
 				begin
 					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
 					ADDR1MUX = 1'b0;	// BaseR
-					ADDR2MUX = 1'b10;	// SEXT 6
+					ADDR2MUX = 2'b10;	// SEXT 6
 					GateMARMUX = 1'b1;
 					LD_MAR = 1'b1;
 				end
@@ -353,7 +353,7 @@ module ISDU (   input logic         Clk,
 				begin
 					SR1MUX = 1'b0; 		// SR <- IR[11:9]
 					ADDR1MUX = 1'b1;	// SR
-					ADDR2MUX = 1'b11;	// 0
+					ADDR2MUX = 2'b11;	// 0
 					GateMARMUX = 1'b1;
 					LD_MDR = 1'b1;
 				end
