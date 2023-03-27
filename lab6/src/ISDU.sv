@@ -269,74 +269,100 @@ module ISDU (   input logic         Clk,
 				end
 
 			S_09 : // NOT: DR <- NOT(SR)
+				begin
 					DRMUX = 1'b1; 	// DR <- IR[11:9]
 					SR1MUX = 1'b1; 	// SR1 <- IR[8:6]
 					ALUK = 2'b10;
 					GateALU = 1'b1;
 					LD_REG = 1'b1;
+				end
 				
 			S_00 : // BR1: Evaluate BEN
 					;
 			S_22 : // BR2: PC <- PC + off9	
+				begin
 					ADDR1MUX = 1'b1; 	// PC
 					ADDR2MUX = 2'b01;	// SEXT 9
 					PCMUX = 1'b10;		// From Calc
 					LD_PC = 1'b1;
+				end
 			
 			S_12 : // JMP: PC <- BaseR
+				begin
 					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
 					ADDR1MUX = 1'b0;	// BaseR
 					ADDR2MUX = 2'b11;	// 0
 					PCMUX = 1'b10;		// From Calc
 					LD_PC = 1'b1;
+				end
 			
 			S_04 : // JSR1: R7 <- PC
+				begin
 					DRMUX = 1'b0;		// 111(R7)
 					GatePC = 1'b1;
 					LD_REG = 1'b1;
+				end
 			
 			S_21 : // JSR2.1: PC <- PC + off11
+				begin
 					ADDR1MUX = 1'b1;	// PC
 					ADDR2MUX = 1'b00; 	// SEXT 11
 					PCMUX = 2'b10;		// From Calc
 					LD_PC = 1'b1;
+				end
 			
 			S_20 : // JSR2.2: PC <- BaseR, not used
 					;
 			
 			S_06 : // LDR1: MAR <- BaseR + off6
+				begin
 					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
 					ADDR1MUX = 1'b0;	// BaseR
 					ADDR2MUX = 1'b10;	// SEXT 6
 					GateMARMUX = 1'b1;
 					LD_MAR = 1'b1;
+				end
 			S_25_1: // LDR2.1: MDR <- M[MAR]
+				begin
 					Mem_OE = 1'b0;
+				end
 			S_25_2: // LDR2.2: MDR <= M[MAR]
+				begin
 					Mem_OE = 1'b0;
 					LD_MDR = 1'b1;
+				end
 			S_27 : // LDR3: DR <- MDR
+				begin
 					DRMUX = 1'b1;	// DR <- IR[11:9]
 					GateMDR = 1'b1;
 					LD_REG = 1'b1;
+				end
 			
 			S_07 : // STR1: MAR <- BaseR + off6
+				begin
 					SR1MUX = 1'b1;		// BaseR <- IR[8:6]
 					ADDR1MUX = 1'b0;	// BaseR
 					ADDR2MUX = 1'b10;	// SEXT 6
 					GateMARMUX = 1'b1;
 					LD_MAR = 1'b1;
+				end
 			S_23 : // STR2: MDR <- SR
+				begin
 					SR1MUX = 1'b0; 		// SR <- IR[11:9]
 					ADDR1MUX = 1'b1;	// SR
 					ADDR2MUX = 1'b11;	// 0
 					GateMARMUX = 1'b1;
 					LD_MDR = 1'b1;
+				end
 			S_16_1: // M[MAR] <- MDR
 					// TODO, write may need 3 cycles?
+				begin
 					Mem_WE = 1'b0;
+				end
 			S_16_2:	// M[MAR] <- MDR
+				begin
 					Mem_WE = 1'b0;
+				end
 
 			default : ;
 		endcase
