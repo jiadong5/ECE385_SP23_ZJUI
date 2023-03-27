@@ -75,11 +75,11 @@ module ISDU (   input logic         Clk,
 						S_06,		// LDR1: MAR <- BaseR + off6
 						S_25_1,		// LDR2.1: MDR <- M[MAR]
 						S_25_2,		// LDR2.2: MDR <- M[MAR]
-						S_27		// LDR3: DR <- MDR
+						S_27,		// LDR3: DR <- MDR
 						S_07,		// STR1: MAR <- BaseR + off6
 						S_23,		// STR2: MDR <- SR
 						S_16_1,		// STR3.1: M[MAR] <- MDR
-						S_16_2,		// STR3.2: M[MAR] <- MDR
+						S_16_2		// STR3.2: M[MAR] <- MDR
 						}   State, Next_state;   // Internal state logic
 		
 	always_ff @ (posedge Clk)
