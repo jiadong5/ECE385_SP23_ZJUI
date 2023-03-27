@@ -237,8 +237,15 @@ module ISDU (   input logic         Clk,
 					GateMDR = 1'b1;
 					LD_IR = 1'b1;
 				end
-			PauseIR1: ;
-			PauseIR2: ;
+			PauseIR1:
+				begin
+					LD_LED = 1'b1;
+				end 
+			PauseIR2:
+				begin
+					LD_LED = 1'b1;
+				end
+
 			S_32 : 
 				LD_BEN = 1'b1;
 			S_01 :  // ADD: DR <- SR1 + OP2
@@ -327,16 +334,10 @@ module ISDU (   input logic         Clk,
 					LD_MDR = 1'b1;
 			S_16_1: // M[MAR] <- MDR
 					// TODO, write may need 3 cycles?
-					Mem_WE = 1'b1;
-					Mem_CE = 1'b1;
+					Mem_WE = 1'b0;
 			S_16_2:	// M[MAR] <- MDR
-					Mem_WE = 1'b1;
-					Mem_CE = 1'b1;
+					Mem_WE = 1'b0;
 
-
-					
-
-				
 			default : ;
 		endcase
 	end 
