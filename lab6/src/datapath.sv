@@ -133,7 +133,8 @@ MUX_Data_Bus MUX_for_BUS(.*);
 
 // used in RegFile
 MUX_SR1 MUX_SR1_Choice(.*);
-MUX_RegFile_Write MUX_For_DR(.*);
+MUX_For_DR MUX_DR(.*);
+MUX_RegFile_Write MUX_DR_Write(.*);
 
 // used in ADDR
 MUX_SEXT_10 SEXT10(.*);
