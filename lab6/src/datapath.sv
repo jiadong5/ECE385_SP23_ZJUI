@@ -58,6 +58,16 @@ logic[15:0] IR_10_0_SEXT,
             ADDR2_to_Adder,
             ADDR1_to_Adder;
 
+// used in NZP part
+logic[2:0] NZP_In;
+logic[2:0] NZP_Out;
+logic BEN_In;
+
+// used in ALU part
+logic[4:0] IR_4_0;
+logic[15:0] IR_4_0_SEXT;
+logic[15:0] ALU_In_B; 
+
 /*--Ckt assignments--*/
 
 // assign variables in Data Bus.
@@ -78,8 +88,11 @@ assign PC_next = PC + 1;
 assign IR_11_9 = IR[11:9];
 assign IR_8_6 = IR[8:6];
 
-
-
+// assign ADDR part
+assign IR_10_0 = IR[10:0];
+assign IR_8_0 = IR[8:0];
+assign IR_5_0 = IR[5:0];
+assign Data_Calc = ADDR1_to_Adder + ADDR2_to_Adder;
 
 /*--Define Registers and MUXes.--*/
 
@@ -101,6 +114,10 @@ register #(.N(16)) R7(.*, .Load(LD_R7), .Din(Data_Bus), .data_out(R7_Out));
 Reg_RegFile_Read Reg_For_SR1(.*, .SR(SR1), .data_out(SR1OUT));
 Reg_RegFile_Read Reg_For_SR2(.*, .SR(SR2), .data_out(SR2OUT));
 
+// used in NZP
+register #(.N(3)) NZP_reg(.*, .Load(LD_CC), .Din(NZP_In), .data_out(NZP_Out));
+register #(.N(1)) BEN_reg(.*, .Load(LD_BEN), .Din(BEN_In), .data_out(BEN))
+
 /*--MUXes--*/
 MUX_IO MUX_to_MDR(.*);
 MUX_PC MUX_to_PCR(.*);
@@ -109,5 +126,21 @@ MUX_Data_Bus MUX_for_BUS(.*);
 // used in RegFile
 MUX_SR1 MUX_SR1_Choice(.*);
 MUX_RegFile_Write MUX_For_DR(.*);
+
+// used in ADDR
+MUX_SEXT_10 SEXT10(.*);
+MUX_SEXT_5 SEXT5(.*);
+MUX_SEXT_8 SEXT8(.*);
+MUX_For_ADDR1 MUX_ADDR1(.*);
+MUX_For_ADDR2 MUX_ADDR2(.*);
+
+// used in NZP
+MUX_For_NZP MUX_NZP(.*);
+MUX_For_BEN MUX_BEN(.*);
+
+// used in ALU
+MUX_SEXT_4 SEXT4(.*);
+MUX_For_SR2 MUX_SR2(.*);
+MUX_For_ALU MUX_ALU(.*);
 
 endmodule

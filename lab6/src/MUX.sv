@@ -220,7 +220,7 @@ module MUX_For_ADDR1(
     input logic[15:0] SR1OUT,
     input logic[15:0] PC_next,
     input logic ADDR1MUX,
-    output logic ADDR1_to_Adder
+    output logic[15:0] ADDR1_to_Adder
 );
 
 always_comb
@@ -228,6 +228,141 @@ begin
     case(ADDR1MUX)
         1b'0: ADDR1_to_Adder = SR1OUT;
         1b'1: ADDR1_to_Adder = PC_next;
+    endcase
+end
+endmodule
+
+// MUX for SEXT.
+module MUX_SEXT_10(
+    input logic[10:0] IR_10_0,
+    output logic[15:0] IR_10_0_SEXT
+);
+
+always_comb
+begin
+    case(IR_10_0[10])
+        1'b0: IR_10_0_SEXT = {5b'00000, IR_10_0};
+        1'b1: IR_10_0_SEXT = {5b'11111, IR_10_0};
+    endcase
+end
+endmodule
+
+module MUX_SEXT_8(
+    input logic[8:0] IR_8_0,
+    output logic[15:0] IR_8_0_SEXT
+);
+
+always_comb
+begin
+    case(IR_8_0[8])
+        1'b0: IR_8_0_SEXT = {7b'0000000, IR_8_0};
+        1'b1: IR_8_0_SEXT = {7b'1111111, IR_8_0};
+    endcase
+end
+endmodule
+
+module MUX_SEXT_5(
+    input logic[5:0] IR_5_0,
+    output logic[15:0] IR_5_0_SEXT
+);
+
+always_comb
+begin
+    case(IR_5_0[5])
+        1'b0: IR_5_0_SEXT = {10b'0000000000, IR_5_0};
+        1'b1: IR_5_0_SEXT = {10b'1111111111, IR_5_0};
+    endcase
+end
+endmodule
+
+/*--NZP part--*/
+module MUX_For_NZP(
+    input logic[15:0] Data_Bus,
+    output logic[2:0] NZP_In
+);
+
+always_comb
+begin
+    if (Data_Bus == 16h'0000)
+        NZP_In = 3'b010;
+    else if (Data_Bus[15] == 0)
+        NZP_In = 3'b001;
+    else
+        NZP_In = 3'b000;
+end
+endmodule
+
+// a mux that not so mux.
+module MUX_For_BEN(
+    input logic[2:0] NZP_Out,
+    input logic[2:0] IR_11_9,
+    output logic BEN_In
+);
+
+logic LogicAnd;
+assign LogicAnd = NZP_Out & IR_11_9;
+
+always_comb
+begin
+    case(LogicAnd)
+        default: BEN_In = 1b'1;
+        3'b000: BEN_In = 1'b0;
+    endcase
+end
+endmodule
+
+/*--ALU Part--*/
+module MUX_SEXT_4(
+    input logic[4:0] IR_4_0,
+    output logic[15:0] IR_4_0_SEXT
+);
+
+always_comb
+begin
+    case(IR_4_0[4])
+        1'b0: IR_4_0_SEXT = {11b'00000000000, IR_4_0};
+        1'b1: IR_4_0_SEXT = {11b'11111111111, IR_4_0};
+    endcase
+end
+endmodule
+
+module MUX_For_SR2(
+    input logic[15:0] IR_4_0_SEXT,
+    input logic[15:0] SR2OUT,
+    input logic SR2MUX,
+    output logic[15:0] ALU_In_B
+);
+
+always_comb
+begin
+    case(SR2MUX)
+        1'b1: ALU_In_B = IR_4_0_SEXT;
+        1'b0: ALU_In_B = SR2OUT;
+    endcase
+end
+endmodule
+
+module MUX_For_ALU(
+    input logic[15:0] ALU_In_B,
+    input logic[15:0] SR1OUT,
+    input logic[1:0] ALUK,
+    output logic[15:0] Data_ALU
+);
+
+logic[15:0] And_Out;
+logic[15:0] Add_Out;
+logic[15:0] Not_Out;
+
+assign And_Out = ALU_In_B & SR1OUT;
+assign Add_Out = ALU_In_B + SR1OUT;
+assign Not_Out = ~SR1OUT;
+
+always_comb
+begin
+    case(ALUK)
+        2'b00: Data_ALU = Add_Out;
+        2'b01: Data_ALU = And_Out;
+        2'b11: Data_ALU = Not_Out;
     endcase
 end
 endmodule
