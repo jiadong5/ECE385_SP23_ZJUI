@@ -180,9 +180,9 @@ module ISDU (   input logic         Clk,
 				Next_state = S_18;
 			S_00 : // BR1
 				if (BEN)
-					Next_state = S_18;
-				else
 					Next_state = S_22;
+				else
+					Next_state = S_18;
 			S_22 : // BR2
 				Next_state = S_18;		
 			S_12 : // JMP
