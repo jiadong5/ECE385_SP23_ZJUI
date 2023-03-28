@@ -27,14 +27,14 @@ task memory_contents(output logic[15:0] mem_array[0:size-1]);
 // Note that if you do this, remember to turn "init_external" in test_memory.sv to 1 for 
 // any of your modifications to take effect.
 
-   mem_array[   0 ] =    opCLR(R0)                ;       // Clear the register so it can be used as a base 0101
-   mem_array[   1 ] =    opLDR(R1, R0, inSW)      ;       // Load switches 0110
-   mem_array[   2 ] =    opJMP(R1)                ;       // Jump to the start of a program 1100
+   mem_array[   0 ] =    opCLR(R0)                ;       // Clear the register so it can be used as a base 0101 000 000 1 00000
+   mem_array[   1 ] =    opLDR(R1, R0, inSW)      ;       // Load switches 0110 001 000 111111 (R1 <- M[0xFFFF])
+   mem_array[   2 ] =    opJMP(R1)                ;       // Jump to the start of a program 1100 xxx...
    
                                                           // Basic I/O test 1
-   mem_array[   3 ] =    opLDR(R1, R0, inSW)      ;       // Load switche 0110
-   mem_array[   4 ] =    opSTR(R1, R0, outHEX)    ;       // Output 0111
-   mem_array[   5 ] =    opBR(nzp, -3)            ;       // Repeat 0000
+   mem_array[   3 ] =    opLDR(R1, R0, inSW)      ;       // Load switche 0110 001 000 11111 (R1 <- M[0xFFFF])
+   mem_array[   4 ] =    opSTR(R1, R0, outHEX)    ;       // Output 0111 001 000 11111 (M[0xFFFF] <- R1)
+   mem_array[   5 ] =    opBR(nzp, -3)            ;       // Repeat 0000 111 (-3)
                                       
                                                           // Basic I/O test 2
    mem_array[   6 ] =    opPSE(12'h801)           ;       // Checkpoint 1 - prepare to input 1101

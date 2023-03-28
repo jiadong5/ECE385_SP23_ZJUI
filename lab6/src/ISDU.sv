@@ -259,6 +259,7 @@ module ISDU (   input logic         Clk,
 					ALUK = 2'b00;
 					GateALU = 1'b1;
 					LD_REG = 1'b1;
+                    LD_CC = 1'b1;
 				end
 			
 			S_05 : // AND: DR <- SR1 & OP2
@@ -269,6 +270,7 @@ module ISDU (   input logic         Clk,
 					ALUK = 2'b01;
 					GateALU = 1'b1;
 					LD_REG = 1'b1;
+					LD_CC = 1'b1;
 				end
 
 			S_09 : // NOT: DR <- NOT(SR)
@@ -278,6 +280,7 @@ module ISDU (   input logic         Clk,
 					ALUK = 2'b10;
 					GateALU = 1'b1;
 					LD_REG = 1'b1;
+					LD_CC = 1'b1;
 				end
 				
 			S_00 : // BR1: Evaluate BEN
@@ -339,6 +342,7 @@ module ISDU (   input logic         Clk,
 					DRMUX = 1'b1;	// DR <- IR[11:9]
 					GateMDR = 1'b1;
 					LD_REG = 1'b1;
+					LD_CC = 1'b1;
 				end
 			
 			S_07 : // STR1: MAR <- BaseR + off6
