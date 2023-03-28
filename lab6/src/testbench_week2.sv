@@ -100,16 +100,16 @@ timeprecision 1ns;
 		Run = 1;
 		
 	
-	// Basic I/O Test 1		
-	#2 Reset = 1;
-	#2 Run = 0;
-	   S = 16'h0003;
-	// change switch values to see if hex display is correct
-	#100 S = 16'hFFFF;
-   #100 S = 16'h0000;	
-	// reset program
-	#100 Reset = 0;
-	   Run = 1;
+// 	// Basic I/O Test 1		
+// 	#2 Reset = 1;
+// 	#2 Run = 0;
+// 	   S = 16'h0003;
+// 	// change switch values to see if hex display is correct
+// 	#100 S = 16'hFFFF;
+//    #100 S = 16'h0000;	
+// 	// reset program
+// 	#100 Reset = 0;
+// 	   Run = 1;
 	
 	
 	
@@ -148,23 +148,23 @@ timeprecision 1ns;
 //		
 //	
 //	
-//	// XOR Test
-//	#10 Reset = 1;
-//   #10 Continue = 1;
-//		Run = 0;
-//		S = 16'h0014;
-//	// XOR xEEEE and x1111, and the result should be xFFFF
-//	// enter xEEEE
-//	#100 S = 16'hEEEE;
-//	   Continue = 0;
-//	#10 Continue = 1;
-//	// enter x1111
-//	#100 S = 16'h1111;
-//	   Continue = 0;
-//	#10 Continue = 1;
-//	// reset program
-//	#200 Reset = 0;
-//	   Run = 1;
+	// XOR Test
+	#10 Reset = 1;
+  #10 Continue = 1;
+		Run = 0;
+		S = 16'h0014;
+	// XOR xEEEE and x1111, and the result should be xFFFF
+	// enter xEEEE
+	#100 S = 16'hEEEE;
+	   Continue = 0;
+	#10 Continue = 1;
+	// enter x1111
+	#100 S = 16'h1111;
+	   Continue = 0;
+	#10 Continue = 1;
+	// reset program
+	#200 Reset = 0;
+	   Run = 1;
 //	
 //	
 //	
