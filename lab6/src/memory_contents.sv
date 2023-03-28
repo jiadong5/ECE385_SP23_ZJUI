@@ -27,14 +27,14 @@ task memory_contents(output logic[15:0] mem_array[0:size-1]);
 // Note that if you do this, remember to turn "init_external" in test_memory.sv to 1 for 
 // any of your modifications to take effect.
 
-   mem_array[   0 ] =    opCLR(R0)                ;       // Clear the register so it can be used as a base 0101
-   mem_array[   1 ] =    opLDR(R1, R0, inSW)      ;       // Load switches 0110
-   mem_array[   2 ] =    opJMP(R1)                ;       // Jump to the start of a program 1100
+   mem_array[   0 ] =    opCLR(R0)                ;       // Clear the register so it can be used as a base 0101 000 000 1 00000
+   mem_array[   1 ] =    opLDR(R1, R0, inSW)      ;       // Load switches 0110 001 000 111111 (R1 <- M[0xFFFF])
+   mem_array[   2 ] =    opJMP(R1)                ;       // Jump to the start of a program 1100 xxx...
    
                                                           // Basic I/O test 1
-   mem_array[   3 ] =    opLDR(R1, R0, inSW)      ;       // Load switche 0110
-   mem_array[   4 ] =    opSTR(R1, R0, outHEX)    ;       // Output 0111
-   mem_array[   5 ] =    opBR(nzp, -3)            ;       // Repeat 0000
+   mem_array[   3 ] =    opLDR(R1, R0, inSW)      ;       // Load switche 0110 001 000 11111 (R1 <- M[0xFFFF])
+   mem_array[   4 ] =    opSTR(R1, R0, outHEX)    ;       // Output 0111 001 000 11111 (M[0xFFFF] <- R1)
+   mem_array[   5 ] =    opBR(nzp, -3)            ;       // Repeat 0000 111 (-3)
                                       
                                                           // Basic I/O test 2
    mem_array[   6 ] =    opPSE(12'h801)           ;       // Checkpoint 1 - prepare to input 1101
@@ -44,15 +44,15 @@ task memory_contents(output logic[15:0] mem_array[0:size-1]);
    mem_array[  10 ] =    opBR(nzp, -4)            ;       // Repeat 0000
                                           
                                                           // Basic I/O test 3 (Self-modifying code)
-   mem_array[  11 ] =    opPSE(12'h801)           ;       // Checkpoint 1 - prepare to input 1101
-   mem_array[  12 ] =    opJSR(0)                 ;       // Get PC address 0100 
-   mem_array[  13 ] =    opLDR(R2,R7,3)           ;       // Load pause instruction as data 0110
-   mem_array[  14 ] =    opLDR(R1, R0, inSW)      ;       // Load switches 0110
-   mem_array[  15 ] =    opSTR(R1, R0, outHEX)    ;       // Output 0111
-   mem_array[  16 ] =    opPSE(12'hC02)           ;       // Checkpoint 2 - read output, prepare to input 1101 
-   mem_array[  17 ] =    opINC(R2)                ;       // Increment checkpoint number 0001
-   mem_array[  18 ] =    opSTR(R2,R7,3)           ;       // Store new checkpoint instruction (self-modifying code) 0111
-   mem_array[  19 ] =    opBR(nzp, -6)            ;       // Repeat 0000
+   mem_array[  11 ] =    opPSE(12'h801)           ;       // Checkpoint 1 - prepare to input                            1101 at 720ns
+   mem_array[  12 ] =    opJSR(0)                 ;       // Get PC address                         (R7 <- PC)          0100                
+   mem_array[  13 ] =    opLDR(R2,R7,3)           ;       // Load pause instruction as data         (R2 <- M[16])       0110    
+   mem_array[  14 ] =    opLDR(R1, R0, inSW)      ;       // Load switches                          (R1 <- M[0xFFFF])   0110                    
+   mem_array[  15 ] =    opSTR(R1, R0, outHEX)    ;       // Output                                 (M[0xFFFF] <- R1)   0111                            
+   mem_array[  16 ] =    opPSE(12'hC02)           ;       // Checkpoint 2 - read output, prepare to input               1101  
+   mem_array[  17 ] =    opINC(R2)                ;       // Increment checkpoint number                                0001
+   mem_array[  18 ] =    opSTR(R2,R7,3)           ;       // Store new checkpoint instruction (self-modifying code)    (M[R7 + 3] <- R2)     0111
+   mem_array[  19 ] =    opBR(nzp, -6)            ;       // Repeat 0000                            (Go to M[14])       0000
                                     
    mem_array[  20 ] =    opCLR(R0)                ;       // XOR test
    mem_array[  21 ] =    opPSE(12'h801)           ;       // Checkpoint 1 - prepare to input (A)
