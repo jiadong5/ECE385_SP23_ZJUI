@@ -129,126 +129,126 @@ timeprecision 1ns;
 //
 //		
 //
-	// Self-Modifying Code Test
-	#10 Reset = 1;
-	#10 Continue = 1;
-		Run = 0;
-		S = 16'h000B;
-	// see if the hex display increment by 1 each time continue is hit
-	#100 Continue = 0;
-	#10 Continue = 1;
-	#100 Continue = 0;
-	#10 Continue = 1;
-	#100 Continue = 0;
-	#10 Continue = 1;
-	// reset program
-	#100 Reset = 0;
-	   Run = 1;
+	// // Self-Modifying Code Test
+	// #10 Reset = 1;
+	// #10 Continue = 1;
+	// 	Run = 0;
+	// 	S = 16'h000B;
+	// // see if the hex display increment by 1 each time continue is hit
+	// #100 Continue = 0;
+	// #10 Continue = 1;
+	// #100 Continue = 0;
+	// #10 Continue = 1;
+	// #100 Continue = 0;
+	// #10 Continue = 1;
+	// // reset program
+	// #100 Reset = 0;
+	//    Run = 1;
 //
 //		
 //	
 //	
-	// XOR Test
+// 	// XOR Test
+// 	#10 Reset = 1;
+//   #10 Continue = 1;
+// 		Run = 0;
+// 		S = 16'h0014;
+// 	// XOR xEEEE and x1111, and the result should be xFFFF
+// 	// enter xEEEE
+// 	#100 S = 16'hEEEE;
+// 	   Continue = 0;
+// 	#10 Continue = 1;
+// 	// enter x1111
+// 	#100 S = 16'h1111;
+// 	   Continue = 0;
+// 	#10 Continue = 1;
+// 	// reset program
+// 	#200 Reset = 0;
+// 	   Run = 1;
+//	
+//	
+//	
+	// // Multiplication Test
+	// #10 Reset = 1;
+	// #10 Continue = 1;
+	// 	Run = 0;
+	// 	S = 16'h0031;
+	// // x2020 multiplies x0005, and the result should be xA0A0
+	// // enter x0005
+	// #200 S = 16'h0005;
+	//    Continue = 0;
+	// #10 Continue = 1;
+	// // enter x2020
+	// #150 S = 16'h2020;
+	//    Continue = 0;
+	// #10 Continue = 1;
+	// // reset program
+	// #1000 Reset = 0;
+	//    Run = 1;
+//		
+//		
+//		
+	// Sort Test
 	#10 Reset = 1;
-  #10 Continue = 1;
+	#10 Continue = 1;
+		S = 16'h005A;
 		Run = 0;
-		S = 16'h0014;
-	// XOR xEEEE and x1111, and the result should be xFFFF
-	// enter xEEEE
-	#100 S = 16'hEEEE;
+	// choose "sort" command
+	#100 S = 16'h0002;
 	   Continue = 0;
 	#10 Continue = 1;
-	// enter x1111
-	#100 S = 16'h1111;
+	#21000 S = 16'h0003;
 	   Continue = 0;
+	// after sort, index 0 should be x0001
+	#10 Continue = 1;
+	// index 1 should be x0003
+	#300 Continue = 0;
+	#10 Continue = 1;
+	// index 2 should be x0007
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 3 should be x000D
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 4 should be x001B
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 5 should be x001F
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 6 should be x0046
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 7 should be x0047
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 8 should be x004E
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 9 should be x006B
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 10 should be x008C
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 11 should be x00B8
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 12 should be x00DB
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 13 should be x00EF
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 14 should be x00F8
+	#200 Continue = 0;
+	#10 Continue = 1;
+	// index 15 should be x00FA
+	#200 Continue = 0;
 	#10 Continue = 1;
 	// reset program
-	#200 Reset = 0;
+	#250 Reset = 0;
 	   Run = 1;
-//	
-//	
-//	
-//	// Multiplication Test
-//	#10 Reset = 1;
-//	#10 Continue = 1;
-//		Run = 0;
-//		S = 16'h0031;
-//	// x2020 multiplies x0005, and the result should be xA0A0
-//	// enter x0005
-//	#200 S = 16'h0005;
-//	   Continue = 0;
-//	#10 Continue = 1;
-//	// enter x2020
-//	#150 S = 16'h2020;
-//	   Continue = 0;
-//	#10 Continue = 1;
-//	// reset program
-//	#1000 Reset = 0;
-//	   Run = 1;
-//		
-//		
-//		
-//	// Sort Test
-//	#10 Reset = 1;
-//	#10 Continue = 1;
-//		S = 16'h005A;
-//		Run = 0;
-//	// choose "sort" command
-//	#100 S = 16'h0002;
-//	   Continue = 0;
-//	#10 Continue = 1;
-//	#21000 S = 16'h0003;
-//	   Continue = 0;
-//	// after sort, index 0 should be x0001
-//	#10 Continue = 1;
-//	// index 1 should be x0003
-//	#300 Continue = 0;
-//	#10 Continue = 1;
-//	// index 2 should be x0007
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 3 should be x000D
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 4 should be x001B
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 5 should be x001F
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 6 should be x0046
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 7 should be x0047
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 8 should be x004E
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 9 should be x006B
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 10 should be x008C
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 11 should be x00B8
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 12 should be x00DB
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 13 should be x00EF
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 14 should be x00F8
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// index 15 should be x00FA
-//	#200 Continue = 0;
-//	#10 Continue = 1;
-//	// reset program
-//	#250 Reset = 0;
-//	   Run = 1;
 //		
 //		
 //		
