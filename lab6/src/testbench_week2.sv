@@ -113,37 +113,37 @@ timeprecision 1ns;
 	
 	
 	
-//	// Basic I/O Test 2
-//	#10 Reset = 1;
+// 	// Basic I/O Test 2
+// 	#10 Reset = 1;
 //   #10 Continue = 0;
-//		Run = 0;
-//	   S = 16'h0006;
-//	// see if the hex displays values after continue is hit
+// 		Run = 0;
+// 	   S = 16'h0006;
+// 	// see if the hex displays values after continue is hit
 //   #100 Continue = 1;
-//	// hit continue
+// 	// hit continue
 //   #10 Continue = 0;
-//	#10 Continue = 1;
-//	// reset program
+// 	#10 Continue = 1;
+// 	// reset program
 // 	#100	Reset = 0;
-//	   Run = 1;
+// 	   Run = 1;
 //
 //		
 //
-//	// Self-Modifying Code Test
-//	#10 Reset = 1;
-//	#10 Continue = 1;
-//		Run = 0;
-//		S = 16'h000B;
-//	// see if the hex display increment by 1 each time continue is hit
-//	#100 Continue = 0;
-//	#10 Continue = 1;
-//	#100 Continue = 0;
-//	#10 Continue = 1;
-//	#100 Continue = 0;
-//	#10 Continue = 1;
-//	// reset program
-//	#100 Reset = 0;
-//	   Run = 1;
+	// // Self-Modifying Code Test
+	// #10 Reset = 1;
+	// #10 Continue = 1;
+	// 	Run = 0;
+	// 	S = 16'h000B;
+	// // see if the hex display increment by 1 each time continue is hit
+	// #100 Continue = 0;
+	// #10 Continue = 1;
+	// #100 Continue = 0;
+	// #10 Continue = 1;
+	// #100 Continue = 0;
+	// #10 Continue = 1;
+	// // reset program
+	// #100 Reset = 0;
+	//    Run = 1;
 //
 //		
 //	
