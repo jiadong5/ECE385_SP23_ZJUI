@@ -250,7 +250,7 @@ endmodule
 
 module MUX_For_ADDR1(
     input logic[15:0] SR1OUT,
-    input logic[15:0] PC_next,
+    input logic[15:0] PC,
     input logic ADDR1MUX,
     output logic[15:0] ADDR1_to_Adder
 );
@@ -259,7 +259,7 @@ always_comb
 begin
     case(ADDR1MUX)
         1'b0: ADDR1_to_Adder = SR1OUT;
-        1'b1: ADDR1_to_Adder = PC_next;
+        1'b1: ADDR1_to_Adder = PC;
     endcase
 end
 endmodule
