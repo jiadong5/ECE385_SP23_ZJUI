@@ -352,7 +352,7 @@ module ISDU (   input logic         Clk,
 			S_23 : // STR2: MDR <- SR
 				begin
 					SR1MUX = 1'b0; 		// SR <- IR[11:9]
-					ADDR1MUX = 1'b1;	// SR
+					ADDR1MUX = 1'b0;	// SR
 					ADDR2MUX = 2'b11;	// 0
 					GateMARMUX = 1'b1;
 					LD_MDR = 1'b1;
