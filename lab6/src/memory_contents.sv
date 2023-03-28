@@ -87,26 +87,26 @@ task memory_contents(output logic[15:0] mem_array[0:size-1]);
                                  
    mem_array[  49 ] =    opCLR(R0)                ;       // Multiplier Program                         0001
    mem_array[  50 ] =    opJSR(0)                 ;       // R7 <- PC (for loading bit test mask)       0100
-   mem_array[  51 ] =    opLDR(R3, R7, 22)        ;       // load mask;                                 0110
+   mem_array[  51 ] =    opLDR(R3, R7, 22)        ;       // load mask;                                 0110 (R3 <- 0x0080)
    mem_array[  52 ] =    opCLR(R4)                ;       // clear R4 (iteration tracker),  ; START     0001
    mem_array[  53 ] =    opCLR(R5)                ;       // R5 (running total)                         0001
    mem_array[  54 ] =    opPSE(12'h801)           ;       // Checkpoint 1 - prepare to input            1101
-   mem_array[  55 ] =    opLDR(R1, R0, inSW)      ;       // Input operand 1                            0110
+   mem_array[  55 ] =    opLDR(R1, R0, inSW)      ;       // Input operand 1                            0110 (R1 <- M[0xFFFF]) (0x0005)
    mem_array[  56 ] =    opPSE(12'h802)           ;       // Checkpoint 2 - prepare to input            1101
-   mem_array[  57 ] =    opLDR(R2, R0, inSW)      ;       // Input operand 2                            0110
+   mem_array[  57 ] =    opLDR(R2, R0, inSW)      ;       // Input operand 2                            0110 (R2 <- M[0xFFFF]) (0x2020)
    mem_array[  58 ] =    opADD(R5, R5, R5)        ;       // shift running total; LOOP DEST             0001
    mem_array[  59 ] =    opAND(R7, R3, R1)        ;       // apply mask                                 0101
-   mem_array[  60 ] =    opBR(z, 1)               ;       // test bit and jump over...                  0000
-   mem_array[  61 ] =    opADD(R5, R5, R2)        ;       // ... the addition                           0001
+   mem_array[  60 ] =    opBR(z, 1)               ;       // test bit and jump over...                  0000 if R7(R1 & R3) zero, go to 62
+   mem_array[  61 ] =    opADD(R5, R5, R2)        ;       // ... the addition                           0001 
    mem_array[  62 ] =    opADDi(R4, R4, 0)        ;       // test iteration == 0 (first iteration)      0001
-   mem_array[  63 ] =    opBR(p,2)                ;       // if not first iteration, jump over negation 0000
+   mem_array[  63 ] =    opBR(p,2)                ;       // if not first iteration, jump over negation 0000 if R4 is positive, go to 66
    mem_array[  64 ] =    opNOT(R5, R5)            ;       // 2's compliment negate R5                   1001
    mem_array[  65 ] =    opINC(R5)                ;       //   (part of above)                          0001
    mem_array[  66 ] =    opINC(R4)                ;       // increment iteration                        0001
    mem_array[  67 ] =    opADD(R1, R1, R1)        ;       // shift operand 1 for mask comparisons       0001
    mem_array[  68 ] =    opADDi(R7, R4, -8)       ;       // test for last iteration                    0001
-   mem_array[  69 ] =    opBR(n, -12)             ;       // branch back to LOOP DEST if iteration < 7  0000
-   mem_array[  70 ] =    opSTR(R5, R0, outHEX)    ;       // Output result                              0111
+   mem_array[  69 ] =    opBR(n, -12)             ;       // branch back to LOOP DEST if iteration < 7  0000 if R4 < 8, go to 58
+   mem_array[  70 ] =    opSTR(R5, R0, outHEX)    ;       // Output result                              0111 (M[0xFFFF] <- R5)
    mem_array[  71 ] =    opPSE(12'h403)           ;       // Checkpoint 3 - read output                 1101
    mem_array[  72 ] =    opBR(nzp, -21)           ;       // loop back to start                         0000
    mem_array[  73 ] =    16'h0080                 ;       // bit test mask
