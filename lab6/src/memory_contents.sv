@@ -128,63 +128,63 @@ task memory_contents(output logic[15:0] mem_array[0:size-1]);
    mem_array[  88 ] =    16'h00f8                  ;       
    mem_array[  89 ] =    16'h0007                  ;       
    mem_array[  90 ] =    opCLR(R0)                ;       // Bubblesort Program start                               0101
-   mem_array[  91 ] =    opJSR(0)                 ;                                                                 0100
-   mem_array[  92 ] =    opADDi(R6, R7, -16)      ;       // Store data location in R6                              0001
-   mem_array[  93 ] =    opADDi(R6, R6, -2)       ;       //   (data location is 18 above the address from JSR)     0001
+   mem_array[  91 ] =    opJSR(0)                 ;       //                                                        0100 (R7 <- PC + 1)
+   mem_array[  92 ] =    opADDi(R6, R7, -16)      ;       // Store data location in R6                              0001 (R6 <- 76)
+   mem_array[  93 ] =    opADDi(R6, R6, -2)       ;       //   (data location is 18 above the address from JSR)     0001 (R6 <- 74)
    mem_array[  94 ] =    opPSE(12'h3FF)           ;       // Checkpoint -1 - select function; LOOP DEST             1101
-   mem_array[  95 ] =    opLDR(R1, R0, inSW)      ;                                                                 0110
-   mem_array[  96 ] =    opBR(z, -3)              ;       // If 0, retry                                            0000
-   mem_array[  97 ] =    opDEC(R1)                ;                                                                 0001
-   mem_array[  98 ] =    opBR(np, 2)              ;       // if selection wasn't 1, jump over�                     0000
+   mem_array[  95 ] =    opLDR(R1, R0, inSW)      ;       //                                                        0110 (R1 <- Switch) (R1 <- 0x0002)
+   mem_array[  96 ] =    opBR(z, -3)              ;       // If 0, retry                                            0000 If R1 = 3
+   mem_array[  97 ] =    opDEC(R1)                ;       //                                                        0001 
+   mem_array[  98 ] =    opBR(np, 2)              ;       // if selection wasn't 1, jump over�                     0000 If R1 - 1 != 2
    mem_array[  99 ] =    opJSR(9)                 ;       //   ...call to entry function                            0100
-   mem_array[ 100 ] =    opBR(nzp, -7)            ;                                                                 0000
-   mem_array[ 101 ] =    opDEC(R1)                ;                                                                 0001
+   mem_array[ 100 ] =    opBR(nzp, -7)            ;       //                                                        0000
+   mem_array[ 101 ] =    opDEC(R1)                ;       //                                                        0001
    mem_array[ 102 ] =    opBR(np, 2)              ;       // if selection wasn't 2, jump over�                     0000
    mem_array[ 103 ] =    opJSR(15)                ;       //   ...call to sort function                             0100
-   mem_array[ 104 ] =    opBR(nzp, -11)           ;                                                                 0000
-   mem_array[ 105 ] =    opDEC(R1)                ;                                                                 0001
+   mem_array[ 104 ] =    opBR(nzp, -11)           ;       //                                                        0000
+   mem_array[ 105 ] =    opDEC(R1)                ;       //                                                        0001
    mem_array[ 106 ] =    opBR(np, -13)            ;       // if selection wasn't 3, retry                           0000
    mem_array[ 107 ] =    opJSR(29)                ;       //   call to display function                             0100
    mem_array[ 108 ] =    opBR(nzp, -15)           ;       // repeat menu                                            0000
-   mem_array[ 109 ] =    opCLR(R1)                ;       // ENTRY FUNCTION                                         0101
-   mem_array[ 110 ] =    opSTR(R1, R0, outHEX)    ;       // R5 is temporary index into data; R1 is counter; LOOP DEST  0111
-   mem_array[ 111 ] =    opPSE(12'hC01)           ;       // Checkpoint 1 - read data (index) and write new value   1101
-   mem_array[ 112 ] =    opLDR(R2, R0, inSW)      ;                                                                 0110
+   mem_array[ 109 ] =    opCLR(R1)                ;       // ENTRY FUNCTION                                         0101 
+   mem_array[ 110 ] =    opSTR(R1, R0, outHEX)    ;       // R5 is temporary index into data; R1 is counter; LOOP DEST  0111  (M[0xFFFF] <- R1)
+   mem_array[ 111 ] =    opPSE(12'hC01)           ;       // Checkpoint 1 - read data (index) and write new value   1101 
+   mem_array[ 112 ] =    opLDR(R2, R0, inSW)      ;       //                                                        0110 (R2 <- Switch) (R2 <- 0x0003)
    mem_array[ 113 ] =    opADD(R5, R6, R1)        ;       // generate pointer to data                               0001
    mem_array[ 114 ] =    opSTR(R2, R5, 0)         ;       // store data                                             0111
    mem_array[ 115 ] =    opINC(R1)                ;       // increment counter                                      0001
    mem_array[ 116 ] =    opADDi(R3, R1, -16)      ;       // test for counter == 16                                 0001
    mem_array[ 117 ] =    opBR(n, -8)              ;       // less than 16, repeat                                   0000
-   mem_array[ 118 ] =    opRET()                   ;       // ENTRY FUNCTION RETURN                                 1100
+   mem_array[ 118 ] =    opRET()                   ;      // ENTRY FUNCTION RETURN                                  1100 PC <- R7
    mem_array[ 119 ] =    opADDi(R1, R0, -16)      ;       // i = -16; SORT FUNCTION                                 0001
    mem_array[ 120 ] =    opADDi(R2, R0, 1)        ;       // j = 1; OUTER LOOP DEST                                 0001
    mem_array[ 121 ] =    opADD(R3, R6, R2)        ;       // generate pointer to data; INNER LOOP DEST              0001
    mem_array[ 122 ] =    opLDR(R4, R3, -1)        ;       // R4 = data[j-1]                                         0110
    mem_array[ 123 ] =    opLDR(R5, R3, 0)         ;       // R5 = data[j]                                           0110
-   mem_array[ 124 ] =    opNOT(R5, R5)            ;                                                                 1001
+   mem_array[ 124 ] =    opNOT(R5, R5)            ;       //                                                        1001
    mem_array[ 125 ] =    opADDi(R5, R5, 1)        ;       // R5 = -data[j]                                          0001
    mem_array[ 126 ] =    opADD(R5, R4, R5)        ;       // R5 = data[j-1]-data[j]                                 0001
    mem_array[ 127 ] =    opBR(nz, 3)              ;       // if data[j-1] > data[j]                                 0000
    mem_array[ 128 ] =    opLDR(R5, R3, 0)         ;       // { R5 = data[j]                                         0110
    mem_array[ 129 ] =    opSTR(R5, R3, -1)        ;       //   data[j-1] = data[j]                                  0111
    mem_array[ 130 ] =    opSTR(R4, R3, 0)         ;       //   data[j] = R4 } // old data[j-1]                      0111
-   mem_array[ 131 ] =    opINC(R2)                ;                                                                 0001
+   mem_array[ 131 ] =    opINC(R2)                ;       //                                                        0001
    mem_array[ 132 ] =    opADD(R3, R1, R2)        ;       // Compare i and j                                        0001
    mem_array[ 133 ] =    opBR(n, -13)             ;       // INNER LOOP BACK                                        0000
-   mem_array[ 134 ] =    opINC(R1)                ;                                                                 0001
+   mem_array[ 134 ] =    opINC(R1)                ;       //                                                        0001
    mem_array[ 135 ] =    opBR(n, -16)             ;       // OUTER LOOP BACK                                        0000
-   mem_array[ 136 ] =    opRET()                   ;       // SORT FUNCTION RETURN                                  1100
+   mem_array[ 136 ] =    opRET()                   ;      // SORT FUNCTION RETURN                                   1100
    mem_array[ 137 ] =    opCLR(R1)                ;       // DISPLAY FUNCTION                                       0101
    mem_array[ 138 ] =    opADD(R4, R7, R0)        ;       // JSR shuffle to get PC value in R5                      0001
-   mem_array[ 139 ] =    opJSR(0)                 ;                                                                 0100
-   mem_array[ 140 ] =    opADD(R5, R7, R0)        ;                                                                 0001
+   mem_array[ 139 ] =    opJSR(0)                 ;       //                                                        0100
+   mem_array[ 140 ] =    opADD(R5, R7, R0)        ;       //                                                        0001
    mem_array[ 141 ] =    opADD(R7, R4, R0)        ;       // shuffle done                                           0001
    mem_array[ 142 ] =    opLDR(R3, R5, 15)        ;       // R3 = opPSE(12'b802)                                    0110
-   mem_array[ 143 ] =    opADDi(R2, R0, 8)        ;                                                                 0001
+   mem_array[ 143 ] =    opADDi(R2, R0, 8)        ;       //                                                        0001
    mem_array[ 144 ] =    opADD(R2, R2, R2)        ;       // R2 = 16                                                0001
    mem_array[ 145 ] =    opADD(R4, R6, R1)        ;       // generate pointer to data; LOOP DEST                    0001
    mem_array[ 146 ] =    opLDR(R4, R4, 0)         ;       // load data                                              0110
-   mem_array[ 147 ] =    opSTR(R4, R0, outHEX)    ;       // display data                                           0111
+   mem_array[ 147 ] =    opSTR(R4, R0, outHEX)    ;       // display data                                           0111 (M[0xFFFF] <- R4)
    mem_array[ 148 ] =    opPSE(12'h802)           ;       // Checkpoint 2 - read data (self-modified instruction)   1101
    mem_array[ 149 ] =    opADD(R3, R3, R2)        ;       // modify register with code                              0001
    mem_array[ 150 ] =    opSTR(R3, R5, 8)         ;       // store modified code                                    0111
