@@ -385,9 +385,9 @@ logic[15:0] And_Out;
 logic[15:0] Add_Out;
 logic[15:0] Not_Out;
 
-assign And_Out = ALU_In_B & SR1OUT;
-assign Add_Out = ALU_In_B + SR1OUT;
-assign Not_Out = ~SR1OUT;
+assign And_Out = {ALU_In_B & SR1OUT};
+assign Add_Out = {ALU_In_B + SR1OUT};
+assign Not_Out = {~SR1OUT};
 
 always_comb
 begin

@@ -96,6 +96,7 @@ assign PC_next = PC + 1;
 assign IR_11_9 = IR[11:9];
 assign IR_8_6 = IR[8:6];
 assign IR_4_0 = IR[4:0];
+assign SR2 = IR[2:0];
 
 // assign ADDR part
 assign IR_10_0 = IR[10:0];

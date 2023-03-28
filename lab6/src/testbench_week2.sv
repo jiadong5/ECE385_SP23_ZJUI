@@ -129,21 +129,21 @@ timeprecision 1ns;
 //
 //		
 //
-	// // Self-Modifying Code Test
-	// #10 Reset = 1;
-	// #10 Continue = 1;
-	// 	Run = 0;
-	// 	S = 16'h000B;
-	// // see if the hex display increment by 1 each time continue is hit
-	// #100 Continue = 0;
-	// #10 Continue = 1;
-	// #100 Continue = 0;
-	// #10 Continue = 1;
-	// #100 Continue = 0;
-	// #10 Continue = 1;
-	// // reset program
-	// #100 Reset = 0;
-	//    Run = 1;
+	// Self-Modifying Code Test
+	#10 Reset = 1;
+	#10 Continue = 1;
+		Run = 0;
+		S = 16'h000B;
+	// see if the hex display increment by 1 each time continue is hit
+	#100 Continue = 0;
+	#10 Continue = 1;
+	#100 Continue = 0;
+	#10 Continue = 1;
+	#100 Continue = 0;
+	#10 Continue = 1;
+	// reset program
+	#100 Reset = 0;
+	   Run = 1;
 //
 //		
 //	
