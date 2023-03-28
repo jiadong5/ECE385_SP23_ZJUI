@@ -331,7 +331,7 @@ module MUX_For_BEN(
     output logic BEN_In
 );
 
-logic LogicAnd;
+logic[2:0] LogicAnd;
 assign LogicAnd = NZP_Out & IR_11_9;
 
 always_comb
