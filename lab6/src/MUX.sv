@@ -320,7 +320,7 @@ begin
     else if (Data_Bus[15] == 0)
         NZP_In = 3'b001;
     else
-        NZP_In = 3'b000;
+        NZP_In = 3'b100;
 end
 endmodule
 
