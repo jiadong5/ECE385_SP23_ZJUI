@@ -61,6 +61,7 @@ module ISDU (   input logic         Clk,
 						S_18, 		// Start state
 						S_33_1, 	// MDR <= M
 						S_33_2, 	// MDR <- M
+						S_33_3,		// State 3 for sync
 						S_35, 		// IR <- MDR
 						S_32, 		// BEN <- nzp & IR[11:9]
 						S_01,		// ADD
@@ -75,6 +76,7 @@ module ISDU (   input logic         Clk,
 						S_06,		// LDR1: MAR <- BaseR + off6
 						S_25_1,		// LDR2.1: MDR <- M[MAR]
 						S_25_2,		// LDR2.2: MDR <- M[MAR]
+						S_25_3, 	// State 3 for sync
 						S_27,		// LDR3: DR <- MDR
 						S_07,		// STR1: MAR <- BaseR + off6
 						S_23,		// STR2: MDR <- SR
@@ -134,6 +136,9 @@ module ISDU (   input logic         Clk,
 			S_33_1 : 
 				Next_state = S_33_2;
 			S_33_2 : 
+				// Next_state = S_35;
+				Next_state = S_33_3;
+			S_33_3 :
 				Next_state = S_35;
 			S_35 : 
 				Next_state = S_32;
@@ -200,6 +205,9 @@ module ISDU (   input logic         Clk,
 			S_25_1: // LDR2.1
 				Next_state = S_25_2;
 			S_25_2: // LDR2.2
+				// Next_state = S_27;
+				Next_state = S_25_3;
+			S_25_3:
 				Next_state = S_27;
 			S_27: // LDR3
 				Next_state = S_18;
@@ -230,6 +238,11 @@ module ISDU (   input logic         Clk,
 				Mem_OE = 1'b0;
 			S_33_2 : 
 				begin 
+					Mem_OE = 1'b0;
+					// LD_MDR = 1'b1;
+				end
+			S_33_3 :
+				begin
 					Mem_OE = 1'b0;
 					LD_MDR = 1'b1;
 				end
@@ -332,6 +345,11 @@ module ISDU (   input logic         Clk,
 					Mem_OE = 1'b0;
 				end
 			S_25_2: // LDR2.2: MDR <= M[MAR]
+				begin
+					Mem_OE = 1'b0;
+					// LD_MDR = 1'b1;
+				end
+			S_25_3:
 				begin
 					Mem_OE = 1'b0;
 					LD_MDR = 1'b1;
