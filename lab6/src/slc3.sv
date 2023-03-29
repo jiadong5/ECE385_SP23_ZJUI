@@ -33,10 +33,10 @@ module slc3(
 // assign Run_ah = ~Run;
 
 
-logic CE_S, OE_S, WE_S;
-sync WE_sync (.Clk(Clk), .d(WE), .q(WE_S));
-sync OE_sync (.Clk(Clk), .d(OE), .q(OE_S));
-sync CE_sync (.Clk(Clk), .d(CE), .q(CE_S));
+// logic CE_S, OE_S, WE_S;
+// sync WE_sync (.Clk(Clk), .d(WE), .q(WE_S));
+// sync OE_sync (.Clk(Clk), .d(OE), .q(OE_S));
+// sync CE_sync (.Clk(Clk), .d(CE), .q(CE_S));
 
 // Internal connections
 logic BEN;
@@ -75,7 +75,8 @@ HexDriver hex_driver4 (PC[3:0], HEX4);
 // MEM2IO will determine what gets put onto Data_CPU (which serves as a potential
 // input into MDR)
 assign ADDR = { 4'b00, MAR }; //Note, our external SRAM chip is 1Mx16, but address space is only 64Kx16
-assign MIO_EN = ~OE_S;
+assign MIO_EN = ~OE;
+// assign MIO_EN = ~OE_S;
 
 // You need to make your own datapath module and connect everything to the datapath
 // Be careful about whether Reset is active high or low
@@ -87,12 +88,14 @@ Mem2IO memory_subsystem(
     .HEX0(hex_4[0][3:0]), .HEX1(hex_4[1][3:0]), .HEX2(hex_4[2][3:0]), .HEX3(hex_4[3][3:0]),
     .Data_from_CPU(MDR), .Data_to_CPU(MDR_In),
     .Data_from_SRAM(Data_from_SRAM), .Data_to_SRAM(Data_to_SRAM),
-    .CE(CE_S), .OE(OE_S), .WE(WE_S)
+    .CE(CE), .OE(OE), .WE(WE)
+    // .CE(CE_S), .OE(OE_S), .WE(WE_S)
 );
 
 // The tri-state buffer serves as the interface between Mem2IO and SRAM
 tristate #(.N(16)) tr0(
-    .Clk(Clk), .tristate_output_enable(~WE_S), .Data_write(Data_to_SRAM), .Data_read(Data_from_SRAM), .Data(Data)
+    .Clk(Clk), .tristate_output_enable(~WE), .Data_write(Data_to_SRAM), .Data_read(Data_from_SRAM), .Data(Data)
+    // , .tristate_output_enable(~WE_S)
 );
 
 // State machine and control signals
