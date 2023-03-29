@@ -27,10 +27,10 @@ module slc3(
 );
 
 // Declaration of push button active high signals
-logic Reset_ah, Continue_ah, Run_ah;
-assign Reset_ah = ~Reset;
-assign Continue_ah = ~Continue;
-assign Run_ah = ~Run;
+// logic Reset_ah, Continue_ah, Run_ah;
+// assign Reset_ah = ~Reset;
+// assign Continue_ah = ~Continue;
+// assign Run_ah = ~Run;
 
 
 logic CE_S, OE_S, WE_S;
@@ -75,15 +75,15 @@ HexDriver hex_driver4 (PC[3:0], HEX4);
 // MEM2IO will determine what gets put onto Data_CPU (which serves as a potential
 // input into MDR)
 assign ADDR = { 4'b00, MAR }; //Note, our external SRAM chip is 1Mx16, but address space is only 64Kx16
-assign MIO_EN = ~OE;
+assign MIO_EN = ~OE_S;
 
 // You need to make your own datapath module and connect everything to the datapath
 // Be careful about whether Reset is active high or low
-datapath d0 (.*, .Reset(Reset_ah));
+datapath d0 (.*, .Reset(Reset));
 
 // Our SRAM and I/O controller
 Mem2IO memory_subsystem(
-    .*, .Reset(Reset_ah), .ADDR(ADDR), .Switches(S),
+    .*, .Reset(Reset), .ADDR(ADDR), .Switches(S),
     .HEX0(hex_4[0][3:0]), .HEX1(hex_4[1][3:0]), .HEX2(hex_4[2][3:0]), .HEX3(hex_4[3][3:0]),
     .Data_from_CPU(MDR), .Data_to_CPU(MDR_In),
     .Data_from_SRAM(Data_from_SRAM), .Data_to_SRAM(Data_to_SRAM),
@@ -97,7 +97,7 @@ tristate #(.N(16)) tr0(
 
 // State machine and control signals
 ISDU state_controller(
-    .*, .Reset(Reset_ah), .Run(Run_ah), .Continue(Continue_ah),
+    .*, .Reset(Reset), .Run(Run), .Continue(Continue),
     .Opcode(IR[15:12]), .IR_5(IR[5]), .IR_11(IR[11]),
     .Mem_CE(CE), .Mem_UB(UB), .Mem_LB(LB), .Mem_OE(OE), .Mem_WE(WE)
 );
