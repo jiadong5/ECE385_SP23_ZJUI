@@ -28,10 +28,15 @@ module slc3(
 
 // Declaration of push button active high signals
 logic Reset_ah, Continue_ah, Run_ah;
-
 assign Reset_ah = ~Reset;
 assign Continue_ah = ~Continue;
 assign Run_ah = ~Run;
+
+
+logic CE_S, OE_S, WE_S;
+sync WE_sync (.Clk(Clk), .d(WE), .q(WE_S));
+sync OE_sync (.Clk(Clk), .d(OE), .q(OE_S));
+sync CE_sync (.Clk(Clk), .d(CE), .q(CE_S));
 
 // Internal connections
 logic BEN;
@@ -81,12 +86,13 @@ Mem2IO memory_subsystem(
     .*, .Reset(Reset_ah), .ADDR(ADDR), .Switches(S),
     .HEX0(hex_4[0][3:0]), .HEX1(hex_4[1][3:0]), .HEX2(hex_4[2][3:0]), .HEX3(hex_4[3][3:0]),
     .Data_from_CPU(MDR), .Data_to_CPU(MDR_In),
-    .Data_from_SRAM(Data_from_SRAM), .Data_to_SRAM(Data_to_SRAM)
+    .Data_from_SRAM(Data_from_SRAM), .Data_to_SRAM(Data_to_SRAM),
+    .CE(CE_S), .OE(OE_S), .WE(WE_S)
 );
 
 // The tri-state buffer serves as the interface between Mem2IO and SRAM
 tristate #(.N(16)) tr0(
-    .Clk(Clk), .tristate_output_enable(~WE), .Data_write(Data_to_SRAM), .Data_read(Data_from_SRAM), .Data(Data)
+    .Clk(Clk), .tristate_output_enable(~WE_S), .Data_write(Data_to_SRAM), .Data_read(Data_from_SRAM), .Data(Data)
 );
 
 // State machine and control signals

@@ -224,6 +224,7 @@ module ISDU (   input logic         Clk,
 					LD_MAR = 1'b1;
 					PCMUX = 2'b00;	 // PC <- PC + 1
 					LD_PC = 1'b1;
+					Mem_OE = 1'b0;	 // For 3 states read
 				end
 			S_33_1 : 
 				Mem_OE = 1'b0;
@@ -324,6 +325,7 @@ module ISDU (   input logic         Clk,
 					ADDR2MUX = 2'b10;	// SEXT 6
 					GateMARMUX = 1'b1;
 					LD_MAR = 1'b1;
+					Mem_OE = 1'b0;
 				end
 			S_25_1: // LDR2.1: MDR <- M[MAR]
 				begin
