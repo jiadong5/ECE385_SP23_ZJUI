@@ -79,8 +79,7 @@ module ISDU (   input logic         Clk,
 						S_07,		// STR1: MAR <- BaseR + off6
 						S_23,		// STR2: MDR <- SR
 						S_16_1,		// STR3.1: M[MAR] <- MDR
-						S_16_2,		// STR3.2: M[MAR] <- MDR
-						S_16_3		// STR3.3: M[MAR] <- MDR
+						S_16_2		// STR3.2: M[MAR] <- MDR
 						}   State, Next_state;   // Internal state logic
 		
 	always_ff @ (posedge Clk)
@@ -211,8 +210,6 @@ module ISDU (   input logic         Clk,
 			S_16_1: // STR3.1
 				Next_state = S_16_2;
 			S_16_2: // STR3.2
-				Next_state = S_16_3;
-			S_16_3: // STR3.3
 				Next_state = S_18;
 			default : ;
 
@@ -367,10 +364,6 @@ module ISDU (   input logic         Clk,
 					Mem_WE = 1'b0;
 				end
 			S_16_2:	// M[MAR] <- MDR
-				begin
-					Mem_WE = 1'b0;
-				end
-			S_16_3: // M[MAR] <- MDR
 				begin
 					Mem_WE = 1'b0;
 				end
