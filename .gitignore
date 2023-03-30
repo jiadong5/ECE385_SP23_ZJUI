@@ -11,3 +11,4 @@
 *.cnf.hdb
 *.do.bak*
 !*DE2_115.qsf
+*work
