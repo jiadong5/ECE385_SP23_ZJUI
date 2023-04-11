@@ -57,6 +57,10 @@ module lab8( input               CLOCK_50,
     logic [1:0] hpi_addr;
     logic [15:0] hpi_data_in, hpi_data_out;
     logic hpi_r, hpi_w, hpi_cs, hpi_reset;
+
+    logic is_ball;
+    logic [9:0] DrawX, DrawY;
+
     
     // Interface between NIOS II and EZ-OTG chip
     hpi_io_intf hpi_io_inst(
@@ -108,12 +112,42 @@ module lab8( input               CLOCK_50,
     vga_clk vga_clk_instance(.inclk0(Clk), .c0(VGA_CLK));
     
     // TODO: Fill in the connections for the rest of the modules 
-    VGA_controller vga_controller_instance();
+    VGA_controller vga_controller_instance(
+                                            // Input 
+                                            .Clk(Clk),
+                                            .Reset(Reset_h),
+                                            .VGA_CLK(VGA_CLK),
+                                            // Output
+                                            .VGA_HS(VGA_HS),
+                                            .VGA_VS(VGA_VS),
+                                            .VGA_BLANK_N(VGA_BLANK_N),
+                                            .VGA_SYNC_N(VGA_SYNC_N),
+                                            .DrawX(DrawX),
+                                            .DrawY(DrawY)
+        );
     
     // Which signal should be frame_clk?
-    ball ball_instance();
+    ball ball_instance(
+                       // Input
+                       .Clk(Clk),
+                       .frame_clk(VGA_CLK),
+                       .Reset(Reset_h),
+                       .DrawX(DrawX),
+                       .DrawY(DrawY),
+                       // Output
+                       .is_ball(is_ball)
+    );
     
-    color_mapper color_instance();
+    color_mapper color_instance(
+                                // Input
+                                .is_ball(is_ball),
+                                .DrawX(DrawX),
+                                .DrawY(DrawY),
+                                // Output
+                                .VGA_R(VGA_R),
+                                .VGA_G(VGA_G),
+                                .VGA_B(VGA_B)
+        );
     
     // Display keycode on hex display
     HexDriver hex_inst_0 (keycode[3:0], HEX0);
