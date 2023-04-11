@@ -63,7 +63,7 @@ alt_u16 UsbRead(alt_u16 Address)
     alt_u16 temp;
 
     IO_write(HPI_ADDR, Address);
-    temp = IO_read(HPI_ADDR);
+    temp = IO_read(HPI_DATA);
 
     return temp;
 }
