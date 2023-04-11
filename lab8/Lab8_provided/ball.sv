@@ -17,6 +17,7 @@
 module  ball ( input         Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
                              frame_clk,          // The clock indicating a new frame (~60Hz)
+               input [7:0]   keycode,
                input [9:0]   DrawX, DrawY,       // Current pixel coordinates
                output logic  is_ball             // Whether current pixel belongs to ball or background
               );
@@ -73,6 +74,30 @@ module  ball ( input         Clk,                // 50 MHz clock
         // Update position and motion only at rising edge of frame clock
         if (frame_clk_rising_edge)
         begin
+            // Handle keypress
+            case(keycode)
+            10'd26: // Up W
+                    begin
+                    Ball_Y_Motion_in = (~(Ball_Y_Step) + 1'b1);
+                    Ball_X_Motion_in = 1'b0;
+                    end
+            10'd22: // Down S
+                    begin
+                    Ball_Y_Motion_in = Ball_Y_Step;
+                    Ball_X_Motion_in = 1'b0;
+                    end
+            10'd4:  // Left A
+                    begin
+                    Ball_X_Motion_in = (~(Ball_X_Step) + 1'b1);
+                    Ball_Y_Motion_in = 1'b0;
+                    end
+            10'd7:  // Right D
+                    begin
+                    Ball_X_Motion_in = Ball_X_Step;
+                    Ball_Y_Motion_in = 1'b0;
+                    end
+            endcase
+
             // Be careful when using comparators with "logic" datatype because compiler treats 
             //   both sides of the operator as UNSIGNED numbers.
             // e.g. Ball_Y_Pos - Ball_Size <= Ball_Y_Min 
@@ -83,12 +108,10 @@ module  ball ( input         Clk,                // 50 MHz clock
                 Ball_Y_Motion_in = Ball_Y_Step;
             // TODO: Add other boundary detections and handle keypress here.
             if ( Ball_X_Pos + Ball_Size >= Ball_X_Max) // Ball is at the right edge, BOUNCE!
-                Ball_X_Motion_in = (~(Ball_X_Step + 1'b1));
-            else if ( Ball_X_Pos <= Ball_X_Min + Ball_Size) // Ball is at the left edge, BOUNCE!
+                Ball_X_Motion_in = (~(Ball_X_Step) + 1'b1);
+            else if ( Ball_X_Pos <= Ball_X_Min + Ball_Size ) // Ball is at the left edge, BOUNCE!
                 Ball_X_Motion_in = Ball_X_Step;
 
-            // Handle keypress
-        
         
             // Update the ball's position with its motion
             Ball_X_Pos_in = Ball_X_Pos + Ball_X_Motion;

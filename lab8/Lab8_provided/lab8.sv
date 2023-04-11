@@ -134,6 +134,7 @@ module lab8( input               CLOCK_50,
                        .Reset(Reset_h),
                        .DrawX(DrawX),
                        .DrawY(DrawY),
+                       .keycode(keycode),
                        // Output
                        .is_ball(is_ball)
     );
