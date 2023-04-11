@@ -130,7 +130,7 @@ module lab8( input               CLOCK_50,
     ball ball_instance(
                        // Input
                        .Clk(Clk),
-                       .frame_clk(VGA_CLK),
+                       .frame_clk(VGA_VS),
                        .Reset(Reset_h),
                        .DrawX(DrawX),
                        .DrawY(DrawY),
