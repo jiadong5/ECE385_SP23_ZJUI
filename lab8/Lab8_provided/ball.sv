@@ -31,8 +31,8 @@ module  ball ( input         Clk,                // 50 MHz clock
     parameter [9:0] Ball_Y_Step = 10'd1;      // Step size on the Y axis
     parameter [9:0] Ball_Size = 10'd4;        // Ball size
     
-    logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion;
-    logic [9:0] Ball_X_Pos_in, Ball_X_Motion_in, Ball_Y_Pos_in, Ball_Y_Motion_in;
+    logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion; // Current position
+    logic [9:0] Ball_X_Pos_in, Ball_X_Motion_in, Ball_Y_Pos_in, Ball_Y_Motion_in; // Next position
     
     //////// Do not modify the always_ff blocks. ////////
     // Detect rising edge of frame_clk
@@ -82,6 +82,12 @@ module  ball ( input         Clk,                // 50 MHz clock
             else if ( Ball_Y_Pos <= Ball_Y_Min + Ball_Size )  // Ball is at the top edge, BOUNCE!
                 Ball_Y_Motion_in = Ball_Y_Step;
             // TODO: Add other boundary detections and handle keypress here.
+            if ( Ball_X_Pos + Ball_Size >= Ball_X_Max) // Ball is at the right edge, BOUNCE!
+                Ball_X_Motion_in = (~(Ball_X_Step + 1'b1));
+            else if ( Ball_X_Pos <= Ball_X_Min + Ball_Size) // Ball is at the left edge, BOUNCE!
+                Ball_X_Motion_in = Ball_X_Step;
+
+            // Handle keypress
         
         
             // Update the ball's position with its motion
