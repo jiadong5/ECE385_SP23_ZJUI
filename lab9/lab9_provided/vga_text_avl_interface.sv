@@ -107,11 +107,11 @@ module vga_text_avl_interface (
     assign DrawData = LOCAL_REG[DrawX >> 5 + (DrawY >> 4) * 20]; // Dx / 32 + (Dy / 16) * 20
     // The following can be optimized
     always_comb begin
-        if (0 <= DrawX[4:0] <= 7)
+        if (DrawX[4:0] <= 7)
             DrawChar = DrawData[31:24];
-        else if (8 <= DrawX <= 15)
+        else if (DrawX <= 15)
             DrawChar = DrawData[23:16];
-        else if (16 <= DrawX <= 23)
+        else if (DrawX <= 23)
             DrawChar = DrawData[15:8];
         else
             DrawChar = DrawData[7:0];
@@ -121,25 +121,25 @@ module vga_text_avl_interface (
     assign InvChar = DrawChar[7];
     always_comb begin
         // If is inverted
-        if (InvChar)
-        begin
-            // If need to draw
-            if (DrawRow[DrawX[2:0]]) 
-            begin
-                red = BKG_R;
-                green = BKG_G;
-                blue = BKG_B;
-            end
-            else
-            begin
-                red = FGD_R;
-                green = FGD_G;
-                blue = FGD_B;
-            end
-        end
+        // if (DrawChar[7])
+        // begin
+        //     // If need to draw
+        //     if (DrawRow[DrawX[2:0]]) 
+        //     begin
+        //         red = BKG_R;
+        //         green = BKG_G;
+        //         blue = BKG_B;
+        //     end
+        //     else
+        //     begin
+        //         red = FGD_R;
+        //         green = FGD_G;
+        //         blue = FGD_B;
+        //     end
+        // end
         // If is not inverted
-        else
-        begin
+        // else
+        // begin
             // If need to draw
             if (DrawRow[DrawX[2:0]]) 
             begin
@@ -153,7 +153,7 @@ module vga_text_avl_interface (
                 green = BKG_G;
                 blue = BKG_B;
             end
-        end
+        // end
     end
 		
 

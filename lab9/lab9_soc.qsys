@@ -167,10 +167,15 @@
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
  <interface name="sdram_clk" internal="sdram_pll.c1" type="clock" dir="start" />
  <interface name="sdram_wire" internal="sdram.wire" type="conduit" dir="end" />
+ <interface
+   name="vga_port"
+   internal="VGA_text_mode_controller_0.VGA_port"
+   type="conduit"
+   dir="end" />
  <module
    name="VGA_text_mode_controller_0"
    kind="VGA_text_mode_controller"
-   version="1.0"
+   version="1.1"
    enabled="1" />
  <module name="clk_0" kind="clock_source" version="18.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
