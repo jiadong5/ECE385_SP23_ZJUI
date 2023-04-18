@@ -52,36 +52,48 @@ module vga_text_avl_interface (
 
     // Local variables
     logic [31:0] LOCAL_REG       [`NUM_REGS]; // Registers
-    logic [9:0] DrawX, DrawY;
+
+    logic [9:0] DrawX, DrawY;           // Current pixel coordinate
+    logic [7:0] DrawChar;               // Current character being drawn
+    logic [31:0] DrawData;              // VRAM[DrawChar's address in VRAM]
+
+    logic InvChar;                      // Bit 7 of DrawChar
+    logic [7:0] DrawRow;                // Current row in font_rom
     logic [3:0] FGD_R, FDG_G, FDG_B;
     logic [3:0] BKG_R, BKG_G, BKG_B;
 
 
     //Declare submodules..e.g. VGA controller, ROMS, etc
     vga_controller vga_controller_inst(
-                                    .*,
-                                    .DrawX(DrawX),
-                                    .DrawY(DrawY))
+        .*,
+        .DrawX(DrawX),
+        .DrawY(DrawY)
+    );
 
-    font_rom font_rom_inst()	
+    font_rom font_rom_inst(
+        .addr(DrawChar[6:0] >> 4 + DrawY[3:0]), // DrawChar[6:0] * 16 + DrawY % 16 to get the address in ROM
+        .data(DrawRow)
+    );
    
     // Read and write from AVL interface to register block, note that READ waitstate = 1, so this should be in always_ff
     always_ff @(posedge CLK) begin
         if (AVL_READ & AVL_CS)
-            AVL_READDATA <= LOCAL_REG(AVL_ADDR)
+            AVL_READDATA <= LOCAL_REG(AVL_ADDR);
     end
     
     always_comb begin
         if (AVL_WRITE & AVL_CS)
         begin
-            LOCAL_REG[AVL_ADDR][7:0] = AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : LOCAL_REG[AVL_ADDR][7:0]
-            LOCAL_REG[AVL_ADDR][15:8] = AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : LOCAL_REG[AVL_ADDR][15:8]
-            LOCAL_REG[AVL_ADDR][23:16] = AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : LOCAL_REG[AVL_ADDR][23:16]
-            LOCAL_REG[AVL_ADDR][31:24] = AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : LOCAL_REG[AVL_ADDR][31:24]
+            LOCAL_REG[AVL_ADDR][7:0] = AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : LOCAL_REG[AVL_ADDR][7:0];
+            LOCAL_REG[AVL_ADDR][15:8] = AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : LOCAL_REG[AVL_ADDR][15:8];
+            LOCAL_REG[AVL_ADDR][23:16] = AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : LOCAL_REG[AVL_ADDR][23:16];
+            LOCAL_REG[AVL_ADDR][31:24] = AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : LOCAL_REG[AVL_ADDR][31:24];
         end
     end
 
     //handle drawing (may either be combinational or sequential - or both).
+
+    // Get Foreground and background colors
     assign FGD_R = LOCAL_REG[CTRL_REG][24:21];
     assign FGD_G = LOCAL_REG[CTRL_REG][20:17];
     assign FGD_B = LOCAL_REG[CTRL_REG][16:13];
@@ -89,7 +101,58 @@ module vga_text_avl_interface (
     assign BKG_G = LOCAL_REG[CTRL_REG][8:5];
     assign BKG_B = LOCAL_REG[CTRL_REG][4:1];
 
+    // Get DrawChar
+    assign DrawData = LOCAL_REG[DrawX >> 5 + (DrawY >> 4) * 20]; // Dx / 32 + (Dy / 16) * 20
+    // The following can be optimized
+    always_comb begin
+        if 0 <= DrawX[4:0] <= 7
+            DrawChar = DrawData[31:24];
+        else if 8 <= DrawX <= 15
+            DrawChar = DrawData[23:16];
+        else if 16 <= DrawX <= 23
+            DrawChar = DrawData[15:8];
+        else
+            DrawChar = DrawData[7:0];
+    end
 
+    // Set the color
+    assign InvChar = DrawChar[7];
+    always_comb begin
+        // If is inverted
+        if (InvChar)
+        begin
+            // If need to draw
+            if (DrawRow(DrawX[2:0])) 
+            begin
+                red = BKG_R;
+                green = BKG_G;
+                blue = BKG_B;
+            end
+            else
+            begin
+                red = FGD_R;
+                green = FGD_G;
+                blue = FGD_B;
+            end
+        end
+        // If is not inverted
+        else
+        begin
+            // If need to draw
+            if (DrawRow(DrawX[2:0])) 
+            begin
+                red = FGD_R;
+                green = FGD_G;
+                blue = FGD_B;
+            end
+            else
+            begin
+                red = BKG_R;
+                green = BKG_G;
+                blue = BKG_B;
+            end
+        end
+    end
 		
 
 endmodule
