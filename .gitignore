@@ -14,6 +14,9 @@
 *work
 *RemoteSystemsTempFiles
 *.metadata
+*.qsys_edit
+lab9/lab9_soc
 
 !lab8/Lab8_provided/*.qpf
 !Lab8/Lab8_provided/*.qsf
+

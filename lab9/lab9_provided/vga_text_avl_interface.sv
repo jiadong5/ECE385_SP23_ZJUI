@@ -32,7 +32,7 @@ module vga_text_avl_interface (
 	// We can put a clock divider here in the future to make this IP more generalizable
 	input logic CLK,
 	
-	// Avalon Reset Input
+	// Avalon Reset Input, active high
 	input logic RESET,
 	
 	// Avalon-MM Slave Signals
@@ -50,20 +50,46 @@ module vga_text_avl_interface (
 	output logic sync, blank, pixel_clk		// Required by DE2-115 video encoder
 );
 
-logic [31:0] LOCAL_REG       [`NUM_REGS]; // Registers
-//put other local variables here
+    // Local variables
+    logic [31:0] LOCAL_REG       [`NUM_REGS]; // Registers
+    logic [9:0] DrawX, DrawY;
+    logic [3:0] FGD_R, FDG_G, FDG_B;
+    logic [3:0] BKG_R, BKG_G, BKG_B;
 
 
-//Declare submodules..e.g. VGA controller, ROMS, etc
-	
+    //Declare submodules..e.g. VGA controller, ROMS, etc
+    vga_controller vga_controller_inst(
+                                    .*,
+                                    .DrawX(DrawX),
+                                    .DrawY(DrawY))
+
+    font_rom font_rom_inst()	
    
-// Read and write from AVL interface to register block, note that READ waitstate = 1, so this should be in always_ff
-always_ff @(posedge CLK) begin
+    // Read and write from AVL interface to register block, note that READ waitstate = 1, so this should be in always_ff
+    always_ff @(posedge CLK) begin
+        if (AVL_READ & AVL_CS)
+            AVL_READDATA <= LOCAL_REG(AVL_ADDR)
+    end
+    
+    always_comb begin
+        if (AVL_WRITE & AVL_CS)
+        begin
+            LOCAL_REG[AVL_ADDR][7:0] = AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : LOCAL_REG[AVL_ADDR][7:0]
+            LOCAL_REG[AVL_ADDR][15:8] = AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : LOCAL_REG[AVL_ADDR][15:8]
+            LOCAL_REG[AVL_ADDR][23:16] = AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : LOCAL_REG[AVL_ADDR][23:16]
+            LOCAL_REG[AVL_ADDR][31:24] = AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : LOCAL_REG[AVL_ADDR][31:24]
+        end
+    end
 
-end
+    //handle drawing (may either be combinational or sequential - or both).
+    assign FGD_R = LOCAL_REG[CTRL_REG][24:21];
+    assign FGD_G = LOCAL_REG[CTRL_REG][20:17];
+    assign FGD_B = LOCAL_REG[CTRL_REG][16:13];
+    assign BKG_R = LOCAL_REG[CTRL_REG][12:9];
+    assign BKG_G = LOCAL_REG[CTRL_REG][8:5];
+    assign BKG_B = LOCAL_REG[CTRL_REG][4:1];
 
 
-//handle drawing (may either be combinational or sequential - or both).
 		
 
 endmodule
