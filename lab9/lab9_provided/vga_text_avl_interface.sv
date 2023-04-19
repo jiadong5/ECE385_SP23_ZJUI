@@ -57,7 +57,6 @@ module vga_text_avl_interface (
     logic [7:0] DrawChar;               // Current character being drawn
     logic [31:0] DrawData;              // VRAM[DrawChar's address in VRAM]
 
-    logic InvChar;                      // Bit 7 of DrawChar
     logic [7:0] DrawRow;                // Current row in font_rom
     logic [3:0] FGD_R, FGD_G, FGD_B;
     logic [3:0] BKG_R, BKG_G, BKG_B;
@@ -86,10 +85,18 @@ module vga_text_avl_interface (
     always_comb begin
         if (AVL_WRITE & AVL_CS)
         begin
-            LOCAL_REG[AVL_ADDR][7:0] = AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : LOCAL_REG[AVL_ADDR][7:0];
-            LOCAL_REG[AVL_ADDR][15:8] = AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : LOCAL_REG[AVL_ADDR][15:8];
-            LOCAL_REG[AVL_ADDR][23:16] = AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : LOCAL_REG[AVL_ADDR][23:16];
-            LOCAL_REG[AVL_ADDR][31:24] = AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : LOCAL_REG[AVL_ADDR][31:24];
+            // LOCAL_REG[AVL_ADDR][7:0] = AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : LOCAL_REG[AVL_ADDR][7:0];
+            // LOCAL_REG[AVL_ADDR][15:8] = AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : LOCAL_REG[AVL_ADDR][15:8];
+            // LOCAL_REG[AVL_ADDR][23:16] = AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : LOCAL_REG[AVL_ADDR][23:16];
+            // LOCAL_REG[AVL_ADDR][31:24] = AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : LOCAL_REG[AVL_ADDR][31:24];
+            if (AVL_BYTE_EN[0])
+                LOCAL_REG[AVL_ADDR][7:0] = AVL_WRITEDATA[7:0];
+            if (AVL_BYTE_EN[1])
+                LOCAL_REG[AVL_ADDR][15:8] = AVL_WRITEDATA[15:8];
+            if (AVL_BYTE_EN[2])
+                LOCAL_REG[AVL_ADDR][23:16] = AVL_WRITEDATA[23:16];
+            if (AVL_BYTE_EN[3])
+                LOCAL_REG[AVL_ADDR][31:24] = AVL_WRITEDATA[31:24];
         end
     end
 
@@ -118,28 +125,27 @@ module vga_text_avl_interface (
     end
 
     // Set the color
-    assign InvChar = DrawChar[7];
     always_comb begin
         // If is inverted
-        // if (DrawChar[7])
-        // begin
-        //     // If need to draw
-        //     if (DrawRow[DrawX[2:0]]) 
-        //     begin
-        //         red = BKG_R;
-        //         green = BKG_G;
-        //         blue = BKG_B;
-        //     end
-        //     else
-        //     begin
-        //         red = FGD_R;
-        //         green = FGD_G;
-        //         blue = FGD_B;
-        //     end
-        // end
+        if (DrawChar[7])
+        begin
+            // If need to draw
+            if (DrawRow[DrawX[2:0]]) 
+            begin
+                red = BKG_R;
+                green = BKG_G;
+                blue = BKG_B;
+            end
+            else
+            begin
+                red = FGD_R;
+                green = FGD_G;
+                blue = FGD_B;
+            end
+        end
         // If is not inverted
-        // else
-        // begin
+        else
+        begin
             // If need to draw
             if (DrawRow[DrawX[2:0]]) 
             begin
@@ -153,7 +159,7 @@ module vga_text_avl_interface (
                 green = BKG_G;
                 blue = BKG_B;
             end
-        // end
+        end
     end
 		
 
