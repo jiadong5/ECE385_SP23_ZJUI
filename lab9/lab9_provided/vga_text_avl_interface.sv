@@ -72,7 +72,7 @@ module vga_text_avl_interface (
     );
 
     font_rom font_rom_inst(
-        .addr(DrawChar[6:0] >> 4 + DrawY[3:0]), // DrawChar[6:0] * 16 + DrawY % 16 to get the address in ROM
+        .addr(DrawChar[6:0] << 4 + DrawY[3:0]), // DrawChar[6:0] * 16 + DrawY % 16 to get the address in ROM
         .data(DrawRow)
     );
    
@@ -111,17 +111,18 @@ module vga_text_avl_interface (
     assign BKG_B = LOCAL_REG[`CTRL_REG][4:1];
 
     // Get DrawChar
-    assign DrawData = LOCAL_REG[DrawX >> 5 + (DrawY >> 4) * 20]; // Dx / 32 + (Dy / 16) * 20
+    assign DrawData = LOCAL_REG[DrawX >> 5 + (DrawY >> 4) * 5'd20]; // Dx / 32 + (Dy / 16) * 20
     // The following can be optimized
+    // DrawX % 32
     always_comb begin
-        if (DrawX[4:0] <= 7)
-            DrawChar = DrawData[31:24];
-        else if (DrawX <= 15)
-            DrawChar = DrawData[23:16];
-        else if (DrawX <= 23)
-            DrawChar = DrawData[15:8];
-        else
+        if (DrawX[4:0] <= 5'd7)
             DrawChar = DrawData[7:0];
+        else if (DrawX[4:0] <= 5'd15)
+            DrawChar = DrawData[15:8];
+        else if (DrawX[4:0] <= 5'd23)
+            DrawChar = DrawData[23:16];
+        else
+            DrawChar = DrawData[31:24];
     end
 
     // Set the color
@@ -130,7 +131,7 @@ module vga_text_avl_interface (
         if (DrawChar[7])
         begin
             // If need to draw
-            if (DrawRow[DrawX[2:0]]) 
+            if (DrawRow[DrawX[2:0]])  // DrawX % 8
             begin
                 red = BKG_R;
                 green = BKG_G;
