@@ -57,12 +57,13 @@ module vga_text_avl_interface (
     logic [7:0] DrawChar;               // Current character being drawn
     logic [31:0] DrawData;              // VRAM[DrawChar's address in VRAM]
     logic [31:0] DrawData_Address;
+    logic [31:0] DataColumn, DataRow;
 
     logic [7:0] DrawRow;                // Current row in font_rom
     logic [3:0] FGD_R, FGD_G, FGD_B;
     logic [3:0] BKG_R, BKG_G, BKG_B;
 
-
+ 
     //Declare submodules..e.g. VGA controller, ROMS, etc
     vga_controller vga_controller_inst(
         .*,
@@ -83,7 +84,7 @@ module vga_text_avl_interface (
         if (RESET) begin
             LOCAL_REG <= '{default:0};
         end
-        else if (AVL_WRITE & AVL_CS) 
+        else if (AVL_WRITE && AVL_CS) 
         begin
             case (AVL_BYTE_EN)
                 4'b1111: LOCAL_REG[AVL_ADDR] <= AVL_WRITEDATA;
@@ -96,7 +97,7 @@ module vga_text_avl_interface (
                 default: LOCAL_REG[AVL_ADDR][31:0] <= 32'h0;
             endcase
         end
-        else if (AVL_READ & AVL_CS) begin
+        else if (AVL_READ && AVL_CS) begin
             AVL_READDATA <= LOCAL_REG[AVL_ADDR];
         end
     end
@@ -129,12 +130,14 @@ module vga_text_avl_interface (
     assign BKG_G = LOCAL_REG[`CTRL_REG][8:5];
     assign BKG_B = LOCAL_REG[`CTRL_REG][4:1];
 
-    // Get DrawCharg
-    assign DrawData_Address = DrawX >> 5 + (DrawY >> 4) * 5'd20;
-    assign DrawData = LOCAL_REG[DrawData_Address]; // Dx / 32 + (Dy / 16) * 20
-    // The following can be optimized
-    // DrawX % 32
+
+    // Get DrawChar
     always_comb begin
+        DataColumn = DrawX >> 3;
+        DataRow = DrawY >> 4;
+        DrawData_Address = (DataRow * 80 + DataColumn) >> 2;
+        DrawData = LOCAL_REG[DrawData_Address]; // Dx / 32 + (Dy / 16) * 20
+
         if (DrawX[4:0] <= 5'd7)
             DrawChar = DrawData[7:0];
         else if (DrawX[4:0] <= 5'd15)
@@ -143,8 +146,11 @@ module vga_text_avl_interface (
             DrawChar = DrawData[23:16];
         else
             DrawChar = DrawData[31:24];
+
     end
 
+
+    ///// Original Version
     // Set the color
     always_comb begin
         // If is inverted
