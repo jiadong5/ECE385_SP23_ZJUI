@@ -16,7 +16,8 @@
 *.metadata
 *.qsys_edit
 lab9/lab9_soc
-
+*/software
+*.sopcinfo
 !lab8/Lab8_provided/*.qpf
 !Lab8/Lab8_provided/*.qsf
 
