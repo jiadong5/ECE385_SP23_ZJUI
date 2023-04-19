@@ -56,6 +56,7 @@ module vga_text_avl_interface (
     logic [9:0] DrawX, DrawY;           // Current pixel coordinate
     logic [7:0] DrawChar;               // Current character being drawn
     logic [31:0] DrawData;              // VRAM[DrawChar's address in VRAM]
+    logic [31:0] DrawData_Address;
 
     logic [7:0] DrawRow;                // Current row in font_rom
     logic [3:0] FGD_R, FGD_G, FGD_B;
@@ -72,33 +73,51 @@ module vga_text_avl_interface (
     );
 
     font_rom font_rom_inst(
-        .addr(DrawChar[6:0] << 4 + DrawY[3:0]), // DrawChar[6:0] * 16 + DrawY % 16 to get the address in ROM
+        // .addr(DrawChar[6:0] << 4 + DrawY[3:0]), // DrawChar[6:0] * 16 + DrawY % 16 to get the address in ROM
+        .addr({DrawChar[6:0], DrawY[3:0]}),
         .data(DrawRow)
     );
    
     // Read and write from AVL interface to register block, note that READ waitstate = 1, so this should be in always_ff
     always_ff @(posedge CLK) begin
-        if (AVL_READ & AVL_CS)
-            AVL_READDATA <= LOCAL_REG[AVL_ADDR];
-    end
-    
-    always_comb begin
-        if (AVL_WRITE & AVL_CS)
+        if (RESET) begin
+            LOCAL_REG <= '{default:0};
+        end
+        else if (AVL_WRITE & AVL_CS) 
         begin
-            // LOCAL_REG[AVL_ADDR][7:0] = AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : LOCAL_REG[AVL_ADDR][7:0];
-            // LOCAL_REG[AVL_ADDR][15:8] = AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : LOCAL_REG[AVL_ADDR][15:8];
-            // LOCAL_REG[AVL_ADDR][23:16] = AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : LOCAL_REG[AVL_ADDR][23:16];
-            // LOCAL_REG[AVL_ADDR][31:24] = AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : LOCAL_REG[AVL_ADDR][31:24];
-            if (AVL_BYTE_EN[0])
-                LOCAL_REG[AVL_ADDR][7:0] = AVL_WRITEDATA[7:0];
-            if (AVL_BYTE_EN[1])
-                LOCAL_REG[AVL_ADDR][15:8] = AVL_WRITEDATA[15:8];
-            if (AVL_BYTE_EN[2])
-                LOCAL_REG[AVL_ADDR][23:16] = AVL_WRITEDATA[23:16];
-            if (AVL_BYTE_EN[3])
-                LOCAL_REG[AVL_ADDR][31:24] = AVL_WRITEDATA[31:24];
+            case (AVL_BYTE_EN)
+                4'b1111: LOCAL_REG[AVL_ADDR] <= AVL_WRITEDATA;
+                4'b1100: LOCAL_REG[AVL_ADDR][31:16] <= AVL_WRITEDATA[31:16];
+                4'b0011: LOCAL_REG[AVL_ADDR][15:0] <= AVL_WRITEDATA[15:0];
+                4'b0001: LOCAL_REG[AVL_ADDR][7:0] <= AVL_WRITEDATA[7:0];
+                4'b0010: LOCAL_REG[AVL_ADDR][15:8] <= AVL_WRITEDATA[15:8];
+                4'b0100: LOCAL_REG[AVL_ADDR][23:16] <= AVL_WRITEDATA[23:16];
+                4'b1000: LOCAL_REG[AVL_ADDR][31:24] <= AVL_WRITEDATA[31:24];
+                default: LOCAL_REG[AVL_ADDR][31:0] <= 32'h0;
+            endcase
+        end
+        else if (AVL_READ & AVL_CS) begin
+            AVL_READDATA <= LOCAL_REG[AVL_ADDR];
         end
     end
+    
+    // always_comb begin
+    //     if (AVL_WRITE & AVL_CS)
+    //     begin
+    //         // LOCAL_REG[AVL_ADDR][7:0] = AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : LOCAL_REG[AVL_ADDR][7:0];
+    //         // LOCAL_REG[AVL_ADDR][15:8] = AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : LOCAL_REG[AVL_ADDR][15:8];
+    //         // LOCAL_REG[AVL_ADDR][23:16] = AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : LOCAL_REG[AVL_ADDR][23:16];
+    //         // LOCAL_REG[AVL_ADDR][31:24] = AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : LOCAL_REG[AVL_ADDR][31:24];
+    //         if (AVL_BYTE_EN[0])
+    //             LOCAL_REG[AVL_ADDR][7:0] = AVL_WRITEDATA[7:0];
+    //         if (AVL_BYTE_EN[1])
+    //             LOCAL_REG[AVL_ADDR][15:8] = AVL_WRITEDATA[15:8];
+    //         if (AVL_BYTE_EN[2])
+    //             LOCAL_REG[AVL_ADDR][23:16] = AVL_WRITEDATA[23:16];
+    //         if (AVL_BYTE_EN[3])
+    //             LOCAL_REG[AVL_ADDR][31:24] = AVL_WRITEDATA[31:24];
+    //     end
+    // end
 
     //handle drawing (may either be combinational or sequential - or both).
 
@@ -110,8 +129,9 @@ module vga_text_avl_interface (
     assign BKG_G = LOCAL_REG[`CTRL_REG][8:5];
     assign BKG_B = LOCAL_REG[`CTRL_REG][4:1];
 
-    // Get DrawChar
-    assign DrawData = LOCAL_REG[DrawX >> 5 + (DrawY >> 4) * 5'd20]; // Dx / 32 + (Dy / 16) * 20
+    // Get DrawCharg
+    assign DrawData_Address = DrawX >> 5 + (DrawY >> 4) * 5'd20;
+    assign DrawData = LOCAL_REG[DrawData_Address]; // Dx / 32 + (Dy / 16) * 20
     // The following can be optimized
     // DrawX % 32
     always_comb begin
@@ -131,7 +151,7 @@ module vga_text_avl_interface (
         if (DrawChar[7])
         begin
             // If need to draw
-            if (DrawRow[DrawX[2:0]])  // DrawX % 8
+            if (DrawRow[7 - DrawX[2:0]])  // DrawX % 8
             begin
                 red = BKG_R;
                 green = BKG_G;
@@ -148,7 +168,7 @@ module vga_text_avl_interface (
         else
         begin
             // If need to draw
-            if (DrawRow[DrawX[2:0]]) 
+            if (DrawRow[7 - DrawX[2:0]]) 
             begin
                 red = FGD_R;
                 green = FGD_G;
