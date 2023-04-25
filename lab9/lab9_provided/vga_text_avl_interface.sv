@@ -53,8 +53,8 @@ module vga_text_avl_interface (
 
     logic [9:0] DrawX, DrawY;           // Current pixel coordinate
     logic [7:0] DrawChar;               // Current character being drawn
-    logic [3:0] DrawFGD_IDX
-    logic [3:0] DrawBKG_IDX
+    logic [3:0] DrawFGD_IDX;            // foreground color index of character
+    logic [3:0] DrawBKG_IDX;            // background color index of character
     logic [31:0] DrawData;              // VRAM[DrawChar's address in VRAM]
     logic [31:0] DrawData_Address;
     logic [31:0] DataColumn, DataRow;
@@ -87,18 +87,18 @@ module vga_text_avl_interface (
         else if (AVL_WRITE & AVL_CS & AVL_ADDR[11]) 
         begin
             case (AVL_BYTE_EN)
-                4'b1111: LOCAL_REG[AVL_ADDR[10:0]] <= AVL_WRITEDATA;
-                4'b1100: LOCAL_REG[AVL_ADDR[10:0]][31:16] <= AVL_WRITEDATA[31:16];
-                4'b0011: LOCAL_REG[AVL_ADDR[10:0]][15:0] <= AVL_WRITEDATA[15:0];
-                4'b0001: LOCAL_REG[AVL_ADDR[10:0]][7:0] <= AVL_WRITEDATA[7:0];
-                4'b0010: LOCAL_REG[AVL_ADDR[10:0]][15:8] <= AVL_WRITEDATA[15:8];
-                4'b0100: LOCAL_REG[AVL_ADDR[10:0]][23:16] <= AVL_WRITEDATA[23:16];
-                4'b1000: LOCAL_REG[AVL_ADDR[10:0]][31:24] <= AVL_WRITEDATA[31:24];
-                default: LOCAL_REG[AVL_ADDR[10:0]][31:0] <= 32'h0;
+                4'b1111: PALETTE_REG[AVL_ADDR[10:0]] <= AVL_WRITEDATA;
+                4'b1100: PALETTE_REG[AVL_ADDR[10:0]][31:16] <= AVL_WRITEDATA[31:16];
+                4'b0011: PALETTE_REG[AVL_ADDR[10:0]][15:0] <= AVL_WRITEDATA[15:0];
+                4'b0001: PALETTE_REG[AVL_ADDR[10:0]][7:0] <= AVL_WRITEDATA[7:0];
+                4'b0010: PALETTE_REG[AVL_ADDR[10:0]][15:8] <= AVL_WRITEDATA[15:8];
+                4'b0100: PALETTE_REG[AVL_ADDR[10:0]][23:16] <= AVL_WRITEDATA[23:16];
+                4'b1000: PALETTE_REG[AVL_ADDR[10:0]][31:24] <= AVL_WRITEDATA[31:24];
+                default: PALETTE_REG[AVL_ADDR[10:0]][31:0] <= 32'h0;
             endcase
         end
         else if (AVL_READ & AVL_CS & AVL_ADDR[11]) begin
-            AVL_READDATA <= LOCAL_REG[AVL_ADDR[10:0]];
+            AVL_READDATA <= PALETTE_REG[AVL_ADDR[10:0]];
         end
     end
 
@@ -120,7 +120,7 @@ module vga_text_avl_interface (
         .wren_b(1'b0), // Read only, never write
         .q_a(AVL_READDATA),
         .q_b(DrawData)
-    )
+    );
     
     // Choose between two characters in DrawData
     always_comb begin

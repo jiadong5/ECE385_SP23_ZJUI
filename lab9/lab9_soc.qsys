@@ -175,7 +175,7 @@
  <module
    name="VGA_text_mode_controller_0"
    kind="VGA_text_mode_controller"
-   version="1.1"
+   version="1.2"
    enabled="1" />
  <module name="clk_0" kind="clock_source" version="18.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
