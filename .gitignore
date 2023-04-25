@@ -16,7 +16,8 @@
 *.metadata
 *.qsys_edit
 lab9/lab9_soc
-*/software
+!lab9/software/vga_text_mode_color/*.c
+!lab9/software/vga_text_mode_color/*.h
 *.sopcinfo
 *.tcl~
 !lab8/Lab8_provided/*.qpf

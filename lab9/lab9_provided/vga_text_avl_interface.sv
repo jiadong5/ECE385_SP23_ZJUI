@@ -48,11 +48,6 @@ module vga_text_avl_interface (
 	output logic sync, blank, pixel_clk		// Required by DE2-115 video encoder
 );
 
-    // Synchronous signal for on chip memory
-    logic [11:0] address_a;
-    logic [31:0] data_a;
-    logic [3:0] byteena_a;
-    logic rden_a, wren_a;
     // Local variables
     logic [31:0] PALETTE_REG     [8];
 
@@ -112,7 +107,6 @@ module vga_text_avl_interface (
         DrawData_Address = (DataRow * 80 + DataColumn) >> 1;
     end
 
-
     on_chip_mem on_chip_mem_inst(
         .address_a(AVL_ADDR[10:0]),
         .address_b(DrawData_Address), // Read only
@@ -145,35 +139,32 @@ module vga_text_avl_interface (
 
         // Choose foreground and background palette register
         // If odd
-        // if (DrawFGD_IDX[0])
-        // begin
-        //     FGD_R = PALETTE_REG[DrawFGD_IDX >> 1][24:21];
-        //     FGD_G = PALETTE_REG[DrawFGD_IDX >> 1][20:17];
-        //     FGD_B = PALETTE_REG[DrawFGD_IDX >> 1][16:13];
-        // end
-        // else
-        // begin
-        //     FGD_R = PALETTE_REG[DrawFGD_IDX >> 1][12:9];
-        //     FGD_G = PALETTE_REG[DrawFGD_IDX >> 1][8:5];
-        //     FGD_B = PALETTE_REG[DrawFGD_IDX >> 1][4:1];
-        // end
+        if (DrawFGD_IDX[0])
+        begin
+            FGD_R = PALETTE_REG[DrawFGD_IDX >> 1][24:21];
+            FGD_G = PALETTE_REG[DrawFGD_IDX >> 1][20:17];
+            FGD_B = PALETTE_REG[DrawFGD_IDX >> 1][16:13];
+        end
+        else
+        begin
+            FGD_R = PALETTE_REG[DrawFGD_IDX >> 1][12:9];
+            FGD_G = PALETTE_REG[DrawFGD_IDX >> 1][8:5];
+            FGD_B = PALETTE_REG[DrawFGD_IDX >> 1][4:1];
+        end
             
-        // // If odd
-        // if (DrawBKG_IDX[0])
-        // begin
-        //     BKG_R = PALETTE_REG[DrawBKG_IDX >> 1][24:21];
-        //     BKG_G = PALETTE_REG[DrawBKG_IDX >> 1][20:17];
-        //     BKG_B = PALETTE_REG[DrawBKG_IDX >> 1][16:13];
-        // end
-        // else
-        // begin
-        //     BKG_R = PALETTE_REG[DrawBKG_IDX >> 1][12:9];
-        //     BKG_G = PALETTE_REG[DrawBKG_IDX >> 1][8:5];
-        //     BKG_B = PALETTE_REG[DrawBKG_IDX >> 1][4:1];
-        // end
-        BKG_R = 4'b1010;
-        BKG_G = 4'b0101;
-        BKG_B = 4'b0011;
+        // If odd
+        if (DrawBKG_IDX[0])
+        begin
+            BKG_R = PALETTE_REG[DrawBKG_IDX >> 1][24:21];
+            BKG_G = PALETTE_REG[DrawBKG_IDX >> 1][20:17];
+            BKG_B = PALETTE_REG[DrawBKG_IDX >> 1][16:13];
+        end
+        else
+        begin
+            BKG_R = PALETTE_REG[DrawBKG_IDX >> 1][12:9];
+            BKG_G = PALETTE_REG[DrawBKG_IDX >> 1][8:5];
+            BKG_B = PALETTE_REG[DrawBKG_IDX >> 1][4:1];
+        end
     end
 
     // Set the color
