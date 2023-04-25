@@ -24,8 +24,6 @@ BKG_R/G/B = Background color, flipped with foreground when IVn bit is set
 FGD_R/G/B = Foreground color, flipped with background when Inv bit is set
 
 ************************************************************************/
-`define NUM_REGS 601 //80*30 characters / 4 characters per register
-`define CTRL_REG 600 //index of control register
 
 module vga_text_avl_interface (
 	// Avalon Clock Input, note this clock is also used for VGA, so this must be 50Mhz
@@ -51,10 +49,12 @@ module vga_text_avl_interface (
 );
 
     // Local variables
-    logic [31:0] LOCAL_REG       [`NUM_REGS]; // Registers
+    logic [31:0] PALETTE_REG     [8];
 
     logic [9:0] DrawX, DrawY;           // Current pixel coordinate
     logic [7:0] DrawChar;               // Current character being drawn
+    logic [3:0] DrawFGD_IDX
+    logic [3:0] DrawBKG_IDX
     logic [31:0] DrawData;              // VRAM[DrawChar's address in VRAM]
     logic [31:0] DrawData_Address;
     logic [31:0] DataColumn, DataRow;
@@ -79,78 +79,94 @@ module vga_text_avl_interface (
         .data(DrawRow)
     );
    
-    // Read and write from AVL interface to register block, note that READ waitstate = 1, so this should be in always_ff
+    // Set palette register
     always_ff @(posedge CLK) begin
         if (RESET) begin
-            LOCAL_REG <= '{default:0};
+            PALETTE_REG <= '{default:0};
         end
-        else if (AVL_WRITE && AVL_CS) 
+        else if (AVL_WRITE & AVL_CS & AVL_ADDR[11]) 
         begin
             case (AVL_BYTE_EN)
-                4'b1111: LOCAL_REG[AVL_ADDR] <= AVL_WRITEDATA;
-                4'b1100: LOCAL_REG[AVL_ADDR][31:16] <= AVL_WRITEDATA[31:16];
-                4'b0011: LOCAL_REG[AVL_ADDR][15:0] <= AVL_WRITEDATA[15:0];
-                4'b0001: LOCAL_REG[AVL_ADDR][7:0] <= AVL_WRITEDATA[7:0];
-                4'b0010: LOCAL_REG[AVL_ADDR][15:8] <= AVL_WRITEDATA[15:8];
-                4'b0100: LOCAL_REG[AVL_ADDR][23:16] <= AVL_WRITEDATA[23:16];
-                4'b1000: LOCAL_REG[AVL_ADDR][31:24] <= AVL_WRITEDATA[31:24];
-                default: LOCAL_REG[AVL_ADDR][31:0] <= 32'h0;
+                4'b1111: LOCAL_REG[AVL_ADDR[10:0]] <= AVL_WRITEDATA;
+                4'b1100: LOCAL_REG[AVL_ADDR[10:0]][31:16] <= AVL_WRITEDATA[31:16];
+                4'b0011: LOCAL_REG[AVL_ADDR[10:0]][15:0] <= AVL_WRITEDATA[15:0];
+                4'b0001: LOCAL_REG[AVL_ADDR[10:0]][7:0] <= AVL_WRITEDATA[7:0];
+                4'b0010: LOCAL_REG[AVL_ADDR[10:0]][15:8] <= AVL_WRITEDATA[15:8];
+                4'b0100: LOCAL_REG[AVL_ADDR[10:0]][23:16] <= AVL_WRITEDATA[23:16];
+                4'b1000: LOCAL_REG[AVL_ADDR[10:0]][31:24] <= AVL_WRITEDATA[31:24];
+                default: LOCAL_REG[AVL_ADDR[10:0]][31:0] <= 32'h0;
             endcase
         end
-        else if (AVL_READ && AVL_CS) begin
-            AVL_READDATA <= LOCAL_REG[AVL_ADDR];
+        else if (AVL_READ & AVL_CS & AVL_ADDR[11]) begin
+            AVL_READDATA <= LOCAL_REG[AVL_ADDR[10:0]];
         end
     end
-    
-    // always_comb begin
-    //     if (AVL_WRITE & AVL_CS)
-    //     begin
-    //         // LOCAL_REG[AVL_ADDR][7:0] = AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : LOCAL_REG[AVL_ADDR][7:0];
-    //         // LOCAL_REG[AVL_ADDR][15:8] = AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : LOCAL_REG[AVL_ADDR][15:8];
-    //         // LOCAL_REG[AVL_ADDR][23:16] = AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : LOCAL_REG[AVL_ADDR][23:16];
-    //         // LOCAL_REG[AVL_ADDR][31:24] = AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : LOCAL_REG[AVL_ADDR][31:24];
-    //         if (AVL_BYTE_EN[0])
-    //             LOCAL_REG[AVL_ADDR][7:0] = AVL_WRITEDATA[7:0];
-    //         if (AVL_BYTE_EN[1])
-    //             LOCAL_REG[AVL_ADDR][15:8] = AVL_WRITEDATA[15:8];
-    //         if (AVL_BYTE_EN[2])
-    //             LOCAL_REG[AVL_ADDR][23:16] = AVL_WRITEDATA[23:16];
-    //         if (AVL_BYTE_EN[3])
-    //             LOCAL_REG[AVL_ADDR][31:24] = AVL_WRITEDATA[31:24];
-    //     end
-    // end
-
-    //handle drawing (may either be combinational or sequential - or both).
-
-    // Get Foreground and background colors
-    assign FGD_R = LOCAL_REG[`CTRL_REG][24:21];
-    assign FGD_G = LOCAL_REG[`CTRL_REG][20:17];
-    assign FGD_B = LOCAL_REG[`CTRL_REG][16:13];
-    assign BKG_R = LOCAL_REG[`CTRL_REG][12:9];
-    assign BKG_G = LOCAL_REG[`CTRL_REG][8:5];
-    assign BKG_B = LOCAL_REG[`CTRL_REG][4:1];
 
 
-    // Get DrawChar
+    // Compute address in VRAM based on current DX,DY
     always_comb begin
         DataColumn = DrawX >> 3;
         DataRow = DrawY >> 4;
-        DrawData_Address = (DataRow * 80 + DataColumn) >> 2;
-        DrawData = LOCAL_REG[DrawData_Address]; // Dx / 32 + (Dy / 16) * 20
-
-        if (DrawX[4:0] <= 5'd7)
-            DrawChar = DrawData[7:0];
-        else if (DrawX[4:0] <= 5'd15)
-            DrawChar = DrawData[15:8];
-        else if (DrawX[4:0] <= 5'd23)
-            DrawChar = DrawData[23:16];
-        else
-            DrawChar = DrawData[31:24];
-
+        DrawData_Address = (DataRow * 80 + DataColumn) >> 1;
     end
 
+    on_chip_mem on_chip_mem_inst(
+        .address_a(AVL_ADDR[10:0]),
+        .address_b(DrawData_Address),
+        .clock(CLK),
+        .data_a(AVL_WRITEDATA),
+        .data_b(32'b0),
+        .wren_a(AVL_WRITE & AVL_CS & ~AVL_ADDR[11]),
+        .wren_b(1'b0), // Read only, never write
+        .q_a(AVL_READDATA),
+        .q_b(DrawData)
+    )
+    
+    // Choose between two characters in DrawData
+    always_comb begin
+        if (DrawX[3:0] <= 5'd7)
+        begin
+            DrawChar = DrawData[15:8];
+            DrawFGD_IDX = DrawData[7:4];
+            DrawBKG_IDX = DrawData[3:0];
+        end
+        else
+        begin
+            DrawChar = DrawData[31:24];
+            DrawFGD_IDX = DrawData[23:20];
+            DrawBKG_IDX = DrawData[19:16];
+        end
 
-    ///// Original Version
+        // Choose foreground and background palette register
+        // If odd
+        if (DrawFGD_IDX[0])
+        begin
+            FGD_R = PALETTE_REG[DrawFGD_IDX >> 1][24:21];
+            FGD_G = PALETTE_REG[DrawFGD_IDX >> 1][20:17];
+            FGD_B = PALETTE_REG[DrawFGD_IDX >> 1][16:13];
+        end
+        else
+        begin
+            FGD_R = PALETTE_REG[DrawFGD_IDX >> 1][12:9];
+            FGD_G = PALETTE_REG[DrawFGD_IDX >> 1][8:5];
+            FGD_B = PALETTE_REG[DrawFGD_IDX >> 1][4:1];
+        end
+            
+        // If odd
+        if (DrawBKG_IDX[0])
+        begin
+            BKG_R = PALETTE_REG[DrawBKG_IDX >> 1][24:21];
+            BKG_G = PALETTE_REG[DrawBKG_IDX >> 1][20:17];
+            BKG_B = PALETTE_REG[DrawBKG_IDX >> 1][16:13];
+        end
+        else
+        begin
+            BKG_R = PALETTE_REG[DrawBKG_IDX >> 1][12:9];
+            BKG_G = PALETTE_REG[DrawBKG_IDX >> 1][8:5];
+            BKG_B = PALETTE_REG[DrawBKG_IDX >> 1][4:1];
+        end
+    end
+
     // Set the color
     always_comb begin
         // If is inverted
