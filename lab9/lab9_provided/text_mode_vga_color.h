@@ -17,7 +17,9 @@
 #include <alt_types.h>
 
 struct TEXT_VGA_STRUCT {
-	alt_u8 VRAM [ROWS*COLUMNS*2]; //Week 2 - extended VRAM
+	alt_u8 VRAM [ROWS*COLUMNS*2]; //Week 2 - extended VRAM 0 ~ 4799
+    alt_u8 unused [3392]; // 4799 + 3392 = 8191.  4800 ~ 8191
+    alt_u32 PALETTE [8];  // 8192
 	//modify this by adding const bytes to skip to palette, or manually compute palette
 };
 

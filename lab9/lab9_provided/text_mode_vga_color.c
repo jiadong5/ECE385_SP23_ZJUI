@@ -13,6 +13,7 @@
 #include <string.h>
 #include <alt_types.h>
 #include "text_mode_vga_color.h"
+#include "palette_test.h"
 
 void textVGAColorClr()
 {
@@ -20,6 +21,8 @@ void textVGAColorClr()
 	{
 		vga_ctrl->VRAM[i] = 0x00;
 	}
+    for (int i = 0; i < 8; i++)
+        vga_ctrl->PALETTE[i] = 0;
 }
 
 void textVGADrawColorText(char* str, int x, int y, alt_u8 background, alt_u8 foreground)
@@ -36,6 +39,11 @@ void textVGADrawColorText(char* str, int x, int y, alt_u8 background, alt_u8 for
 void setColorPalette (alt_u8 color, alt_u8 red, alt_u8 green, alt_u8 blue)
 {
 	//fill in this function to set the color palette starting at offset 0x0000 2000 (from base)
+    if (color % 2 == 0)
+        vga_ctrl->PALETTE[color / 2] += red << 9 + green << 5 + blue << 1;
+    else
+        vga_ctrl->PALETTE[color / 2] += red << 21 + green << 17 + blue << 13;
+
 }
 
 
@@ -65,4 +73,10 @@ void textVGAColorScreenSaver()
 		textVGADrawColorText (color_string, x, y, bg, fg);
 		usleep (100000);
 	}
+}
+
+int main()
+{
+    palette_test();
+    // textVGAColorScreenSaver();
 }
