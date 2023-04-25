@@ -38,7 +38,7 @@ module vga_text_avl_interface (
 	input  logic AVL_WRITE,					// Avalon-MM Write
 	input  logic AVL_CS,					// Avalon-MM Chip Select
 	input  logic [3:0] AVL_BYTE_EN,			// Avalon-MM Byte Enable
-	input  logic [9:0] AVL_ADDR,			// Avalon-MM Address
+	input  logic [11:0] AVL_ADDR,			// Avalon-MM Address
 	input  logic [31:0] AVL_WRITEDATA,		// Avalon-MM Write Data
 	output logic [31:0] AVL_READDATA,		// Avalon-MM Read Data
 	
@@ -97,9 +97,6 @@ module vga_text_avl_interface (
                 default: PALETTE_REG[AVL_ADDR[10:0]][31:0] <= 32'h0;
             endcase
         end
-        else if (AVL_READ & AVL_CS & AVL_ADDR[11]) begin
-            AVL_READDATA <= PALETTE_REG[AVL_ADDR[10:0]];
-        end
     end
 
 
@@ -110,12 +107,14 @@ module vga_text_avl_interface (
         DrawData_Address = (DataRow * 80 + DataColumn) >> 1;
     end
 
-    on_chip_mem on_chip_mem_inst(
+    on_chip_men on_chip_mem_inst(
         .address_a(AVL_ADDR[10:0]),
         .address_b(DrawData_Address),
         .clock(CLK),
         .data_a(AVL_WRITEDATA),
         .data_b(32'b0),
+        .rden_a(AVL_READ & AVL_CS & ~AVL_ADDR[11]),
+        .rden_b(1'b1),
         .wren_a(AVL_WRITE & AVL_CS & ~AVL_ADDR[11]),
         .wren_b(1'b0), // Read only, never write
         .q_a(AVL_READDATA),

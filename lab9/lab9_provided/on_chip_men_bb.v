@@ -4,7 +4,7 @@
 // MODULE: altsyncram 
 
 // ============================================================
-// File Name: on_chip_mem.v
+// File Name: on_chip_men.v
 // Megafunction Name(s):
 // 			altsyncram
 //
@@ -31,12 +31,14 @@
 //Intel and sold by Intel or its authorized distributors.  Please
 //refer to the applicable agreement for further details.
 
-module on_chip_mem (
+module on_chip_men (
 	address_a,
 	address_b,
 	clock,
 	data_a,
 	data_b,
+	rden_a,
+	rden_b,
 	wren_a,
 	wren_b,
 	q_a,
@@ -47,6 +49,8 @@ module on_chip_mem (
 	input	  clock;
 	input	[31:0]  data_a;
 	input	[31:0]  data_b;
+	input	  rden_a;
+	input	  rden_b;
 	input	  wren_a;
 	input	  wren_b;
 	output	[31:0]  q_a;
@@ -55,6 +59,8 @@ module on_chip_mem (
 // synopsys translate_off
 `endif
 	tri1	  clock;
+	tri1	  rden_a;
+	tri1	  rden_b;
 	tri0	  wren_a;
 	tri0	  wren_b;
 `ifndef ALTERA_RESERVED_QIS
@@ -109,7 +115,7 @@ endmodule
 // Retrieval info: PRIVATE: REGdata NUMERIC "1"
 // Retrieval info: PRIVATE: REGq NUMERIC "0"
 // Retrieval info: PRIVATE: REGrdaddress NUMERIC "0"
-// Retrieval info: PRIVATE: REGrren NUMERIC "0"
+// Retrieval info: PRIVATE: REGrren NUMERIC "1"
 // Retrieval info: PRIVATE: REGwraddress NUMERIC "1"
 // Retrieval info: PRIVATE: REGwren NUMERIC "1"
 // Retrieval info: PRIVATE: SYNTH_WRAPPER_GEN_POSTFIX STRING "0"
@@ -124,7 +130,7 @@ endmodule
 // Retrieval info: PRIVATE: WRADDR_REG_B NUMERIC "1"
 // Retrieval info: PRIVATE: WRCTRL_ACLR_B NUMERIC "0"
 // Retrieval info: PRIVATE: enable NUMERIC "0"
-// Retrieval info: PRIVATE: rden NUMERIC "0"
+// Retrieval info: PRIVATE: rden NUMERIC "1"
 // Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 // Retrieval info: CONSTANT: ADDRESS_REG_B STRING "CLOCK0"
 // Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
@@ -159,6 +165,8 @@ endmodule
 // Retrieval info: USED_PORT: data_b 0 0 32 0 INPUT NODEFVAL "data_b[31..0]"
 // Retrieval info: USED_PORT: q_a 0 0 32 0 OUTPUT NODEFVAL "q_a[31..0]"
 // Retrieval info: USED_PORT: q_b 0 0 32 0 OUTPUT NODEFVAL "q_b[31..0]"
+// Retrieval info: USED_PORT: rden_a 0 0 0 0 INPUT VCC "rden_a"
+// Retrieval info: USED_PORT: rden_b 0 0 0 0 INPUT VCC "rden_b"
 // Retrieval info: USED_PORT: wren_a 0 0 0 0 INPUT GND "wren_a"
 // Retrieval info: USED_PORT: wren_b 0 0 0 0 INPUT GND "wren_b"
 // Retrieval info: CONNECT: @address_a 0 0 11 0 address_a 0 0 11 0
@@ -166,14 +174,16 @@ endmodule
 // Retrieval info: CONNECT: @clock0 0 0 0 0 clock 0 0 0 0
 // Retrieval info: CONNECT: @data_a 0 0 32 0 data_a 0 0 32 0
 // Retrieval info: CONNECT: @data_b 0 0 32 0 data_b 0 0 32 0
+// Retrieval info: CONNECT: @rden_a 0 0 0 0 rden_a 0 0 0 0
+// Retrieval info: CONNECT: @rden_b 0 0 0 0 rden_b 0 0 0 0
 // Retrieval info: CONNECT: @wren_a 0 0 0 0 wren_a 0 0 0 0
 // Retrieval info: CONNECT: @wren_b 0 0 0 0 wren_b 0 0 0 0
 // Retrieval info: CONNECT: q_a 0 0 32 0 @q_a 0 0 32 0
 // Retrieval info: CONNECT: q_b 0 0 32 0 @q_b 0 0 32 0
-// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_mem.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_mem.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_mem.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_mem.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_mem_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_mem_bb.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_men.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_men.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_men.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_men.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_men_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL on_chip_men_bb.v TRUE
 // Retrieval info: LIB_FILE: altera_mf
