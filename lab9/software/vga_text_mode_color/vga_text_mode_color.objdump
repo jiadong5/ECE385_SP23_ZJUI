@@ -1124,7 +1124,7 @@ void textVGAColorClr()
     for (int i = 0; i < 8; i++)
 1000045c:	e03fff15 	stw	zero,-4(fp)
 10000460:	00000a06 	br	1000048c <textVGAColorClr+0x6c>
-        vga_ctrl->PALETTE[i] = 0;
+        vga_ctrl->PALETTE[i] = 0x00000000;
 10000464:	d0e00117 	ldw	r3,-32764(gp)
 10000468:	e0bfff17 	ldw	r2,-4(fp)
 1000046c:	10820004 	addi	r2,r2,2048
@@ -1144,7 +1144,7 @@ void textVGAColorClr()
 1000048c:	e0bfff17 	ldw	r2,-4(fp)
 10000490:	10800210 	cmplti	r2,r2,8
 10000494:	103ff31e 	bne	r2,zero,10000464 <__alt_data_end+0xf8000464>
-        vga_ctrl->PALETTE[i] = 0;
+        vga_ctrl->PALETTE[i] = 0x00000000;
 }
 10000498:	0001883a 	nop
 1000049c:	e037883a 	mov	sp,fp

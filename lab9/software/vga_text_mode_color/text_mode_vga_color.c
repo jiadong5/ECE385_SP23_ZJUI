@@ -22,7 +22,7 @@ void textVGAColorClr()
 		vga_ctrl->VRAM[i] = 0x00;
 	}
     for (int i = 0; i < 8; i++)
-        vga_ctrl->PALETTE[i] = 0;
+        vga_ctrl->PALETTE[i] = 0x00000000;
 }
 
 void textVGADrawColorText(char* str, int x, int y, alt_u8 background, alt_u8 foreground)

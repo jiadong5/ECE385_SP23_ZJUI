@@ -122,8 +122,8 @@ module vga_text_avl_interface (
         .q_b(DrawData)
     );
     
-    // Choose between two characters in DrawData
     always_comb begin
+        // Choose between two characters in DrawData
         if (DrawX[3:0] <= 5'd7)
         begin
             DrawChar = DrawData[15:8];
@@ -141,69 +141,82 @@ module vga_text_avl_interface (
         // If odd
         if (DrawFGD_IDX[0])
         begin
-            FGD_R = PALETTE_REG[DrawFGD_IDX >> 1][24:21];
-            FGD_G = PALETTE_REG[DrawFGD_IDX >> 1][20:17];
-            FGD_B = PALETTE_REG[DrawFGD_IDX >> 1][16:13];
+            FGD_R = PALETTE_REG[DrawFGD_IDX[3:1]][24:21];
+            FGD_G = PALETTE_REG[DrawFGD_IDX[3:1]][20:17];
+            FGD_B = PALETTE_REG[DrawFGD_IDX[3:1]][16:13];
         end
         else
         begin
-            FGD_R = PALETTE_REG[DrawFGD_IDX >> 1][12:9];
-            FGD_G = PALETTE_REG[DrawFGD_IDX >> 1][8:5];
-            FGD_B = PALETTE_REG[DrawFGD_IDX >> 1][4:1];
+            FGD_R = PALETTE_REG[DrawFGD_IDX[3:1]][12:9];
+            FGD_G = PALETTE_REG[DrawFGD_IDX[3:1]][8:5];
+            FGD_B = PALETTE_REG[DrawFGD_IDX[3:1]][4:1];
         end
             
         // If odd
         if (DrawBKG_IDX[0])
         begin
-            BKG_R = PALETTE_REG[DrawBKG_IDX >> 1][24:21];
-            BKG_G = PALETTE_REG[DrawBKG_IDX >> 1][20:17];
-            BKG_B = PALETTE_REG[DrawBKG_IDX >> 1][16:13];
+            BKG_R = PALETTE_REG[DrawBKG_IDX[3:1]][24:21];
+            BKG_G = PALETTE_REG[DrawBKG_IDX[3:1]][20:17];
+            BKG_B = PALETTE_REG[DrawBKG_IDX[3:1]][16:13];
         end
         else
         begin
-            BKG_R = PALETTE_REG[DrawBKG_IDX >> 1][12:9];
-            BKG_G = PALETTE_REG[DrawBKG_IDX >> 1][8:5];
-            BKG_B = PALETTE_REG[DrawBKG_IDX >> 1][4:1];
+            BKG_R = PALETTE_REG[DrawBKG_IDX[3:1]][12:9];
+            BKG_G = PALETTE_REG[DrawBKG_IDX[3:1]][8:5];
+            BKG_B = PALETTE_REG[DrawBKG_IDX[3:1]][4:1];
+        end
+
+    end
+
+    always_ff @(posedge pixel_clk) begin
+        // Set the color
+        // If is inverted
+        // blank is actually !blank, when blank == 0, set color to 4'h0
+        if (blank)
+        begin
+
+            if (DrawChar[7])
+            begin
+                // If need to draw
+                if (DrawRow[7 - DrawX[2:0]])  // DrawX % 8
+                begin
+                    red <= BKG_R;
+                    green <= BKG_G;
+                    blue <= BKG_B;
+                end
+                else
+                begin
+                    red <= FGD_R;
+                    green <= FGD_G;
+                    blue <= FGD_B;
+                end
+            end
+            // If is not inverted
+            else
+            begin
+                // If need to draw
+                if (DrawRow[7 - DrawX[2:0]]) 
+                begin
+                    red <= FGD_R;
+                    green <= FGD_G;
+                    blue <= FGD_B;
+                end
+                else
+                begin
+                    red <= BKG_R;
+                    green <= BKG_G;
+                    blue <= BKG_B;
+                end
+            end
+
+        end
+        else begin
+            red <= 4'h0;
+            green <= 4'h0;
+            blue <= 4'h0;
         end
     end
 
-    // Set the color
-    always_comb begin
-        // If is inverted
-        if (DrawChar[7])
-        begin
-            // If need to draw
-            if (DrawRow[7 - DrawX[2:0]])  // DrawX % 8
-            begin
-                red = BKG_R;
-                green = BKG_G;
-                blue = BKG_B;
-            end
-            else
-            begin
-                red = FGD_R;
-                green = FGD_G;
-                blue = FGD_B;
-            end
-        end
-        // If is not inverted
-        else
-        begin
-            // If need to draw
-            if (DrawRow[7 - DrawX[2:0]]) 
-            begin
-                red = FGD_R;
-                green = FGD_G;
-                blue = FGD_B;
-            end
-            else
-            begin
-                red = BKG_R;
-                green = BKG_G;
-                blue = BKG_B;
-            end
-        end
-    end
 		
 
 endmodule

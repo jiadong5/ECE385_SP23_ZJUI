@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>2023-4-25 21:45:27</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1682430327666</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>2023-4-25 23:18:40</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1682435920271</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>D:\ece385\lab9\software\vga_text_mode_color_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\lab9_soc.sopcinfo</SopcDesignFile>
