@@ -52,12 +52,11 @@ module vga_text_avl_interface (
     logic [31:0] PALETTE_REG     [8];
 
     logic [9:0] DrawX, DrawY;           // Current pixel coordinate
-    logic [7:0] DrawChar;               // Current character being drawn
+    logic [7:0] DrawChar;               // Current character being drawn (ASCII), with MSB representing invert
     logic [3:0] DrawFGD_IDX;            // foreground color index of character
     logic [3:0] DrawBKG_IDX;            // background color index of character
     logic [31:0] DrawData;              // VRAM[DrawChar's address in VRAM]
-    logic [31:0] DrawData_Address;      // Input b to on chip memory.
-    logic [31:0] DataColumn, DataRow;   //
+    logic [15:0] DrawData_Address;      // Input b to on chip memory.
     logic [7:0] DrawRow;                // Current row in font_rom
 
     logic [3:0] FGD_R, FGD_G, FGD_B;
@@ -66,7 +65,6 @@ module vga_text_avl_interface (
     logic [31:0] REG_READDATA;          // READDATA from palette register
     logic [31:0] OCM_READDATA;          // READDATA from on chip memory
 
- 
     //Declare submodules..e.g. VGA controller, ROMS, etc
     vga_controller vga_controller_inst(
         .*,
@@ -100,13 +98,8 @@ module vga_text_avl_interface (
         end
     end
 
-
     // Compute address in VRAM based on current DX,DY
-    always_comb begin
-        DataColumn = DrawX >> 3;
-        DataRow = DrawY >> 4;
-        DrawData_Address = (DataRow * 80 + DataColumn) >> 1;
-    end
+    assign DrawData_Address = DrawX[9:4] + DrawY[9:4] * 40;
 
     on_chip_mem on_chip_mem_inst(
         .address_a(AVL_ADDR[10:0]),
@@ -179,7 +172,6 @@ module vga_text_avl_interface (
             BKG_G = PALETTE_REG[DrawBKG_IDX[3:1]][8:5];
             BKG_B = PALETTE_REG[DrawBKG_IDX[3:1]][4:1];
         end
-
     end
 
 
@@ -198,9 +190,5 @@ module vga_text_avl_interface (
             blue = BKG_B;
         end
     end
-
-  
     
-
-
 endmodule
