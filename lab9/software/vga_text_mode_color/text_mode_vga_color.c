@@ -120,7 +120,7 @@ void textVGAReadWriteTest()
 	printf("Checksum match!\n");
 }
 
-void PaletteRegTest()
+void PaletteRegReadWriteTest()
 {
 	alt_u32 check[8], read[8];
 	for (int i = 0; i < 8; i ++)
@@ -141,16 +141,14 @@ void PaletteRegTest()
 			while (1){};
 		}
 	}
-	printf("Palette match!\n");
+	printf("Palette Read Write match!\n");
 }
 int main()
 {
-//	PaletteRegTest();
-//	textVGAReadWriteTest();
-//	printf("Start Palette test\n");
-    paletteTest();
-//    printf("Palette Test end\n");
+	PaletteRegReadWriteTest();
+	textVGAReadWriteTest();
 
+    paletteTest();
     textVGAColorScreenSaver();
 
 

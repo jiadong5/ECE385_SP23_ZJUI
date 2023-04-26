@@ -63,6 +63,9 @@ module vga_text_avl_interface (
     logic [3:0] FGD_R, FGD_G, FGD_B;
     logic [3:0] BKG_R, BKG_G, BKG_B;
 
+    logic [31:0] REG_READDATA;          // READDATA from palette register
+    logic [31:0] OCM_READDATA;          // READDATA from on chip memory
+
  
     //Declare submodules..e.g. VGA controller, ROMS, etc
     vga_controller vga_controller_inst(
@@ -100,7 +103,7 @@ module vga_text_avl_interface (
         end
         else if (AVL_READ & AVL_CS & AVL_ADDR[11])
         begin
-            AVL_READDATA <= PALETTE_REG[AVL_ADDR[2:0]];
+            REG_READDATA <= PALETTE_REG[AVL_ADDR[2:0]];
         end
     end
 
@@ -123,9 +126,18 @@ module vga_text_avl_interface (
         .rden_b(1'b1), // Read only
         .wren_a(AVL_WRITE & AVL_CS & ~AVL_ADDR[11]),
         .wren_b(1'b0), // Read only, never write
-        .q_a(), // Read Data
+        .q_a(OCM_READDATA), // Read Data
         .q_b(DrawData)
     );
+
+    always_comb begin
+        if (AVL_ADDR[11]) begin
+            AVL_READDATA = REG_READDATA;
+        end
+        else begin
+            AVL_READDATA = OCM_READDATA;
+        end
+    end
     
     always_comb begin
         // Choose between two characters in DrawData
