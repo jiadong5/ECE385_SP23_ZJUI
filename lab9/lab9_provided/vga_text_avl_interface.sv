@@ -86,16 +86,21 @@ module vga_text_avl_interface (
         end
         else if (AVL_WRITE & AVL_CS & AVL_ADDR[11]) 
         begin
-            case (AVL_BYTE_EN)
-                4'b1111: PALETTE_REG[AVL_ADDR[10:0]] <= AVL_WRITEDATA;
-                4'b1100: PALETTE_REG[AVL_ADDR[10:0]][31:16] <= AVL_WRITEDATA[31:16];
-                4'b0011: PALETTE_REG[AVL_ADDR[10:0]][15:0] <= AVL_WRITEDATA[15:0];
-                4'b0001: PALETTE_REG[AVL_ADDR[10:0]][7:0] <= AVL_WRITEDATA[7:0];
-                4'b0010: PALETTE_REG[AVL_ADDR[10:0]][15:8] <= AVL_WRITEDATA[15:8];
-                4'b0100: PALETTE_REG[AVL_ADDR[10:0]][23:16] <= AVL_WRITEDATA[23:16];
-                4'b1000: PALETTE_REG[AVL_ADDR[10:0]][31:24] <= AVL_WRITEDATA[31:24];
-                default: PALETTE_REG[AVL_ADDR[10:0]][31:0] <= 32'h0;
-            endcase
+            PALETTE_REG[AVL_ADDR[2:0]] <= AVL_WRITEDATA;
+            // case (AVL_BYTE_EN)
+            //     4'b1111: PALETTE_REG[AVL_ADDR[10:0]] <= AVL_WRITEDATA;
+            //     4'b1100: PALETTE_REG[AVL_ADDR[10:0]][31:16] <= AVL_WRITEDATA[31:16];
+            //     4'b0011: PALETTE_REG[AVL_ADDR[10:0]][15:0] <= AVL_WRITEDATA[15:0];
+            //     4'b0001: PALETTE_REG[AVL_ADDR[10:0]][7:0] <= AVL_WRITEDATA[7:0];
+            //     4'b0010: PALETTE_REG[AVL_ADDR[10:0]][15:8] <= AVL_WRITEDATA[15:8];
+            //     4'b0100: PALETTE_REG[AVL_ADDR[10:0]][23:16] <= AVL_WRITEDATA[23:16];
+            //     4'b1000: PALETTE_REG[AVL_ADDR[10:0]][31:24] <= AVL_WRITEDATA[31:24];
+            //     default: PALETTE_REG[AVL_ADDR[10:0]][31:0] <= 32'h0;
+            // endcase
+        end
+        else if (AVL_READ & AVL_CS & AVL_ADDR[11])
+        begin
+            AVL_READDATA <= PALETTE_REG[AVL_ADDR[2:0]];
         end
     end
 
@@ -118,7 +123,7 @@ module vga_text_avl_interface (
         .rden_b(1'b1), // Read only
         .wren_a(AVL_WRITE & AVL_CS & ~AVL_ADDR[11]),
         .wren_b(1'b0), // Read only, never write
-        .q_a(AVL_READDATA), // Read Data
+        .q_a(), // Read Data
         .q_b(DrawData)
     );
     
@@ -136,7 +141,9 @@ module vga_text_avl_interface (
             DrawFGD_IDX = DrawData[23:20];
             DrawBKG_IDX = DrawData[19:16];
         end
+    end
 
+    always_comb begin
         // Choose foreground and background palette register
         // If odd
         if (DrawFGD_IDX[0])
@@ -166,7 +173,14 @@ module vga_text_avl_interface (
             BKG_B = PALETTE_REG[DrawBKG_IDX[3:1]][4:1];
         end
 
+        // FGD_R = 4'b1111;
+        // FGD_G = 4'b0000;
+        // FGD_B = 4'b0000;
+        // BKG_R = 4'b0000;
+        // BKG_G = 4'b1111;
+        // BKG_B = 4'b0000;
     end
+
 
     always_ff @(posedge pixel_clk) begin
         // Set the color
@@ -216,6 +230,57 @@ module vga_text_avl_interface (
             blue <= 4'h0;
         end
     end
+    
+
+
+    // always_ff @(posedge pixel_clk) begin
+    //     // Set the color
+    //     // If is inverted
+    //     // blank is actually !blank, when blank == 0, set color to 4'h0
+    //     if (blank)
+    //     begin
+
+    //         if (DrawChar[7])
+    //         begin
+    //             // If need to draw
+    //             if (DrawRow[7 - DrawX[2:0]])  // DrawX % 8
+    //             begin
+    //                 red <= BKG_R;
+    //                 green <= BKG_G;
+    //                 blue <= BKG_B;
+    //             end
+    //             else
+    //             begin
+    //                 red <= FGD_R;
+    //                 green <= FGD_G;
+    //                 blue <= FGD_B;
+    //             end
+    //         end
+    //         // If is not inverted
+    //         else
+    //         begin
+    //             // If need to draw
+    //             if (DrawRow[7 - DrawX[2:0]]) 
+    //             begin
+    //                 red <= FGD_R;
+    //                 green <= FGD_G;
+    //                 blue <= FGD_B;
+    //             end
+    //             else
+    //             begin
+    //                 red <= BKG_R;
+    //                 green <= BKG_G;
+    //                 blue <= BKG_B;
+    //             end
+    //         end
+
+    //     end
+    //     else begin
+    //         red <= 4'h0;
+    //         green <= 4'h0;
+    //         blue <= 4'h0;
+    //     end
+    // end
 
 		
 

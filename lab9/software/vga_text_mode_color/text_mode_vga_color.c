@@ -51,6 +51,11 @@ void setColorPalette (alt_u8 color, alt_u8 red, alt_u8 green, alt_u8 blue)
         vga_ctrl->PALETTE[color / 2] |= red << 21 | green << 17 | blue << 13;
     }
 
+//    if (color == 0)
+//    {
+//    	vga_ctrl->PALETTE[0] = 0x00000000;
+//    }
+
 
 }
 
@@ -115,12 +120,36 @@ void textVGAReadWriteTest()
 	printf("Checksum match!\n");
 }
 
+void PaletteRegTest()
+{
+	alt_u32 check[8], read[8];
+	for (int i = 0; i < 8; i ++)
+	{
+		vga_ctrl->PALETTE[i] = i;
+		check[i] = i;
+	}
+	for (int j = 0; j < 8; j++)
+	{
+		read[j] = vga_ctrl->PALETTE[j];
+	}
+	for (int i = 0; i < 8; i++)
+	{
+		printf("check: %x, read: %x\n", check[i],read[i]);
+		if (check[i] != read[i])
+		{
+			printf("Palette mismatch!\n");
+			while (1){};
+		}
+	}
+	printf("Palette match!\n");
+}
 int main()
 {
-	textVGAReadWriteTest();
-	printf("Start Palette test\n");
+//	PaletteRegTest();
+//	textVGAReadWriteTest();
+//	printf("Start Palette test\n");
     paletteTest();
-    printf("Palette Test end\n");
+//    printf("Palette Test end\n");
 
     textVGAColorScreenSaver();
 

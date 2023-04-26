@@ -142,8 +142,8 @@ ACDS_VERSION := 18.1
 ELF := vga_text_mode_color.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS += text_mode_vga_color.c
 C_SRCS += palette_test.c
+C_SRCS += text_mode_vga_color.c
 CXX_SRCS :=
 ASM_SRCS :=
 
