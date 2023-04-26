@@ -173,115 +173,48 @@ module vga_text_avl_interface (
             BKG_B = PALETTE_REG[DrawBKG_IDX[3:1]][4:1];
         end
 
-        // FGD_R = 4'b1111;
-        // FGD_G = 4'b0000;
-        // FGD_B = 4'b0000;
-        // BKG_R = 4'b0000;
-        // BKG_G = 4'b1111;
-        // BKG_B = 4'b0000;
+
     end
 
 
-    always_ff @(posedge pixel_clk) begin
-        // Set the color
-        // If is inverted
-        // blank is actually !blank, when blank == 0, set color to 4'h0
-        if (blank)
+    always_comb begin
+        if (DrawChar[7])
         begin
-
-            if (DrawChar[7])
+            // If need to draw
+            if (DrawRow[7 - DrawX[2:0]])  // DrawX % 8
             begin
-                // If need to draw
-                if (DrawRow[7 - DrawX[2:0]])  // DrawX % 8
-                begin
-                    red <= BKG_R;
-                    green <= BKG_G;
-                    blue <= BKG_B;
-                end
-                else
-                begin
-                    red <= FGD_R;
-                    green <= FGD_G;
-                    blue <= FGD_B;
-                end
+                red = BKG_R;
+                green = BKG_G;
+                blue = BKG_B;
             end
-            // If is not inverted
             else
             begin
-                // If need to draw
-                if (DrawRow[7 - DrawX[2:0]]) 
-                begin
-                    red <= FGD_R;
-                    green <= FGD_G;
-                    blue <= FGD_B;
-                end
-                else
-                begin
-                    red <= BKG_R;
-                    green <= BKG_G;
-                    blue <= BKG_B;
-                end
+                red = FGD_R;
+                green = FGD_G;
+                blue = FGD_B;
             end
-
         end
-        else begin
-            red <= 4'h0;
-            green <= 4'h0;
-            blue <= 4'h0;
+        // If is not inverted
+        else
+        begin
+        // If need to draw
+        if (DrawRow[7 - DrawX[2:0]]) 
+            begin
+                red = FGD_R;
+                green = FGD_G;
+                blue = FGD_B;
+            end
+            else
+            begin
+                red = BKG_R;
+                green = BKG_G;
+                blue = BKG_B;
+            end
         end
     end
+
+  
     
 
-
-    // always_ff @(posedge pixel_clk) begin
-    //     // Set the color
-    //     // If is inverted
-    //     // blank is actually !blank, when blank == 0, set color to 4'h0
-    //     if (blank)
-    //     begin
-
-    //         if (DrawChar[7])
-    //         begin
-    //             // If need to draw
-    //             if (DrawRow[7 - DrawX[2:0]])  // DrawX % 8
-    //             begin
-    //                 red <= BKG_R;
-    //                 green <= BKG_G;
-    //                 blue <= BKG_B;
-    //             end
-    //             else
-    //             begin
-    //                 red <= FGD_R;
-    //                 green <= FGD_G;
-    //                 blue <= FGD_B;
-    //             end
-    //         end
-    //         // If is not inverted
-    //         else
-    //         begin
-    //             // If need to draw
-    //             if (DrawRow[7 - DrawX[2:0]]) 
-    //             begin
-    //                 red <= FGD_R;
-    //                 green <= FGD_G;
-    //                 blue <= FGD_B;
-    //             end
-    //             else
-    //             begin
-    //                 red <= BKG_R;
-    //                 green <= BKG_G;
-    //                 blue <= BKG_B;
-    //             end
-    //         end
-
-    //     end
-    //     else begin
-    //         red <= 4'h0;
-    //         green <= 4'h0;
-    //         blue <= 4'h0;
-    //     end
-    // end
-
-		
 
 endmodule
