@@ -56,10 +56,10 @@ module vga_text_avl_interface (
     logic [3:0] DrawFGD_IDX;            // foreground color index of character
     logic [3:0] DrawBKG_IDX;            // background color index of character
     logic [31:0] DrawData;              // VRAM[DrawChar's address in VRAM]
-    logic [31:0] DrawData_Address;
-    logic [31:0] DataColumn, DataRow;
-
+    logic [31:0] DrawData_Address;      // Input b to on chip memory.
+    logic [31:0] DataColumn, DataRow;   //
     logic [7:0] DrawRow;                // Current row in font_rom
+
     logic [3:0] FGD_R, FGD_G, FGD_B;
     logic [3:0] BKG_R, BKG_G, BKG_B;
 
@@ -89,17 +89,10 @@ module vga_text_avl_interface (
         end
         else if (AVL_WRITE & AVL_CS & AVL_ADDR[11]) 
         begin
-            PALETTE_REG[AVL_ADDR[2:0]] <= AVL_WRITEDATA;
-            // case (AVL_BYTE_EN)
-            //     4'b1111: PALETTE_REG[AVL_ADDR[10:0]] <= AVL_WRITEDATA;
-            //     4'b1100: PALETTE_REG[AVL_ADDR[10:0]][31:16] <= AVL_WRITEDATA[31:16];
-            //     4'b0011: PALETTE_REG[AVL_ADDR[10:0]][15:0] <= AVL_WRITEDATA[15:0];
-            //     4'b0001: PALETTE_REG[AVL_ADDR[10:0]][7:0] <= AVL_WRITEDATA[7:0];
-            //     4'b0010: PALETTE_REG[AVL_ADDR[10:0]][15:8] <= AVL_WRITEDATA[15:8];
-            //     4'b0100: PALETTE_REG[AVL_ADDR[10:0]][23:16] <= AVL_WRITEDATA[23:16];
-            //     4'b1000: PALETTE_REG[AVL_ADDR[10:0]][31:24] <= AVL_WRITEDATA[31:24];
-            //     default: PALETTE_REG[AVL_ADDR[10:0]][31:0] <= 32'h0;
-            // endcase
+            PALETTE_REG[AVL_ADDR[2:0]][7:0] <= AVL_BYTE_EN[0] ? AVL_WRITEDATA[7:0] : PALETTE_REG[AVL_ADDR[2:0]][7:0];
+            PALETTE_REG[AVL_ADDR[2:0]][15:8] <= AVL_BYTE_EN[1] ? AVL_WRITEDATA[15:8] : PALETTE_REG[AVL_ADDR[2:0]][15:8];
+            PALETTE_REG[AVL_ADDR[2:0]][23:16] <= AVL_BYTE_EN[2] ? AVL_WRITEDATA[23:16] : PALETTE_REG[AVL_ADDR[2:0]][23:16];
+            PALETTE_REG[AVL_ADDR[2:0]][31:24] <= AVL_BYTE_EN[3] ? AVL_WRITEDATA[31:24] : PALETTE_REG[AVL_ADDR[2:0]][31:24];
         end
         else if (AVL_READ & AVL_CS & AVL_ADDR[11])
         begin
@@ -130,6 +123,7 @@ module vga_text_avl_interface (
         .q_b(DrawData)
     );
 
+    // Assign AVL_READDATA based on reading from on chip memory or palette
     always_comb begin
         if (AVL_ADDR[11]) begin
             AVL_READDATA = REG_READDATA;
@@ -157,13 +151,14 @@ module vga_text_avl_interface (
 
     always_comb begin
         // Choose foreground and background palette register
-        // If odd
+        // If odd, choose upper bits
         if (DrawFGD_IDX[0])
         begin
             FGD_R = PALETTE_REG[DrawFGD_IDX[3:1]][24:21];
             FGD_G = PALETTE_REG[DrawFGD_IDX[3:1]][20:17];
             FGD_B = PALETTE_REG[DrawFGD_IDX[3:1]][16:13];
         end
+        // If even, choose lower bits
         else
         begin
             FGD_R = PALETTE_REG[DrawFGD_IDX[3:1]][12:9];
