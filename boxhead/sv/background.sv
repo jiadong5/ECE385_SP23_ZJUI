@@ -14,11 +14,11 @@ module  frameRAM
 );
 
 // mem has width of 3 bits and a total of 400 addresses
-logic [4:0] mem [0:76800];
+logic [4:0] mem [0:76799];
 
 initial
 begin
-	 $readmemh("background.txt", mem);
+	 $readmemh("background320240.txt", mem);
 end
 
 

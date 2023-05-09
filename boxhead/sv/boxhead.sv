@@ -55,7 +55,8 @@ module boxhead(
         .sync(VGA_SYNC_N)
     );
 
-    frameRAM bck_ram(
+    frameRAM background_ram(
+        .*,
         .data_In(),
         .write_address(),
         .read_address(bkg_address),
@@ -76,8 +77,6 @@ module boxhead(
     assign VGA_R = color[23:16];
     assign VGA_G = color[15:8];
     assign VGA_B = color[7:0];
-
-
 
     assign HEX0 = 7'hFF;
     assign HEX1 = 7'hFF;
