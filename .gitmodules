@@ -1,0 +1,3 @@
+[submodule "boxhead/ECE385-HelperTools"]
+	path = boxhead/ECE385-HelperTools
+	url = https://github.com/atrifex/ECE385-HelperTools
