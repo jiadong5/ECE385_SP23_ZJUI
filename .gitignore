@@ -21,5 +21,6 @@ lab9/lab9_soc
 *.sopcinfo
 *.tcl~
 !lab8/Lab8_provided/*.qpf
-!Lab8/Lab8_provided/*.qsf
+Lab8/Lab8_provided/*.qsf
+*/ECE385-HelperTools
 
