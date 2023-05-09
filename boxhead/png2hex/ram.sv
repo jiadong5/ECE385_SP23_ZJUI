@@ -14,7 +14,7 @@ module  frameRAM
 );
 
 // mem has width of 3 bits and a total of 400 addresses
-logic [2:0] mem [0:399];
+logic [4:0] mem [0:76799];
 
 initial
 begin

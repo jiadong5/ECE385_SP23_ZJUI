@@ -26,7 +26,6 @@ outImg = Image.new('RGB', im.size, color='white')
 outFile = open("./sprite_bytes/" + filename + '.txt', 'w')
 i = 0
 
-pixel_count = 0
 
 for y in range(im.size[1]):
     for x in range(im.size[0]):
@@ -34,19 +33,14 @@ for y in range(im.size[1]):
         print(pixel)
         if(pixel[3] < 200):
             outImg.putpixel((x,y), palette_rgb[0])
-            # outFile.write("%x" % (0))
-            outFile.write("00")
-            pixel_count += 1;
+            outFile.write("%x\n" % (0))
+            # outFile.write("00")
             print(i)
         else:
             index = pixel_tree.query(pixel[:3])[1]
             outImg.putpixel((x,y), palette_rgb[index])
-            # outFile.write("%x".zfill(2) % (index))
-            outFile.write(f"{str(hex(index)[2:].zfill(2))}")
-            pixel_count += 1;
-        if pixel_count == 4:
-            pixel_count = 0
-            outFile.write("\n")
+            outFile.write("%x\n" % (index))
+            # outFile.write(f"{str(hex(index)[2:].zfill(2))}")
 
         i += 1
 outFile.close()

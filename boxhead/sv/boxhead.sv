@@ -35,11 +35,15 @@ module boxhead(
     end  
 
     logic [9:0] DrawX, DrawY;
+    logic [8:0] PixelX, PixelY;
     logic [31:0] bkg_address;
     logic [4:0] bkg_index;
     logic [23:0] color;
 
-    assign bkg_address = DrawX + DrawY * 480;
+    assign PixelX = DrawX[9:1];
+    assign PixelY = DrawY[9:1];
+
+    assign bkg_address = PixelX + PixelY * 320;
 
     vga_controller vga_controller_inst(
         .*,
@@ -62,7 +66,7 @@ module boxhead(
     
     palette palette_inst(
         .*,
-        .read_address(1'd0),
+        .read_address(bkg_index),
         .data_Out(color)
     );
 
