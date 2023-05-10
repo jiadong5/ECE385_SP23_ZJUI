@@ -6,17 +6,21 @@
 
 module playerROM
 (
-		input [11:0] read_address,
+		input [15:0] read_address,
 		input Clk,
 		output logic [4:0] data_Out
 );
 
-// mem has width of 3 bits and a total of 40 * 64
-logic [4:0] mem [0:2559];
+// For directions, each direction 40 * 64
+// mem has width of 3 bits and a total of 40 * 64 * 4
+logic [4:0] mem [0:10239];
 
 initial
 begin
-	 $readmemh("player.txt", mem);
+    $readmemh("sprite/player_front.txt", mem, 0);
+    $readmemh("sprite/player_left.txt", mem, 1 * 2560);
+    $readmemh("sprite/player_back.txt", mem, 2 * 2560);
+    $readmemh("sprite/player_right.txt", mem, 3 * 2560);
 end
 
 

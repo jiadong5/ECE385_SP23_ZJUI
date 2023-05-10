@@ -16,7 +16,7 @@ logic [23:0] mem [0:22];
 
 initial
 begin
-	 $readmemh("palette.txt", mem);
+	 $readmemh("sprite/palette.txt", mem);
 end
 
 

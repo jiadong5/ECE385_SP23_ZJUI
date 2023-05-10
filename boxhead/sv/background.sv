@@ -18,7 +18,7 @@ logic [4:0] mem [0:76799];
 
 initial
 begin
-	 $readmemh("background320240.txt", mem);
+	 $readmemh("sprite/background320240.txt", mem);
 end
 
 

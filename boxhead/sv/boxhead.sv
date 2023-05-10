@@ -106,7 +106,7 @@ module boxhead( input               CLOCK_50,
     logic [8:0] PixelX, PixelY;
 
     logic [31:0] bkg_address;
-    logic [11:0] player_address;
+    logic [15:0] player_address;
     logic [4:0] bkg_index;
     logic [4:0] player_index;
     logic [23:0] bkg_color;
@@ -143,8 +143,8 @@ module boxhead( input               CLOCK_50,
         .Reset(Reset_h),
         .frame_clk(VGA_VS),
         .keycode(keycode),
-        .is_player(is_player),
-        .player_address(player_address)
+        .is_obj(is_player),
+        .Obj_address(player_address)
     );
 
     playerROM playerROM_inst(

@@ -8,8 +8,8 @@ module  player ( input       Clk,                // 50 MHz clock
                              frame_clk,          // The clock indicating a new frame (~60Hz)
                input [7:0]   keycode,
                input [8:0]   PixelX, PixelY,     
-               output logic  is_player,             // Whether current pixel belongs to ball or background
-               output logic [11:0] player_address
+               output logic  is_obj,             // Whether current pixel belongs to ball or background
+               output logic [15:0] Obj_address
               );
     
     parameter [9:0] Obj_X_Center = 10'd160;  // Center position on the X axis
@@ -28,6 +28,7 @@ module  player ( input       Clk,                // 50 MHz clock
     
     logic [9:0] Obj_X_Pos, Obj_X_Motion, Obj_Y_Pos, Obj_Y_Motion; // Current position, left upper point of object
     logic [9:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
+    logic [1:0] Obj_Direction, Obj_Direction_in;
 
     
 
@@ -48,6 +49,7 @@ module  player ( input       Clk,                // 50 MHz clock
             Obj_Y_Pos <= Obj_Y_Center - Height[9:1];
             Obj_X_Motion <= 10'd0;
             Obj_Y_Motion <= 10'd0;
+            Obj_Direction <= 2'd0;
         end
         else
         begin
@@ -55,32 +57,30 @@ module  player ( input       Clk,                // 50 MHz clock
             Obj_Y_Pos <= Obj_Y_Pos_in;
             Obj_X_Motion <= Obj_X_Motion_in;
             Obj_Y_Motion <= Obj_Y_Motion_in;
+            Obj_Direction <= Obj_Direction_in;
         end
     end
     
     // Movement change of the object based on keycode
     always_comb
     begin
-        // By default position unchanged and no motion
+        // By default position, direction unchanged and no motion
         Obj_X_Pos_in = Obj_X_Pos;
         Obj_Y_Pos_in = Obj_Y_Pos;
         Obj_X_Motion_in = 10'd0;
         Obj_Y_Motion_in = 10'd0;
+        Obj_Direction_in = Obj_Direction;
         
         // Update position and motion only at rising edge of frame clock
         if (frame_clk_rising_edge)
         begin
-            // if( (Obj_Y_Pos + Height >= Obj_Y_Max) || (Obj_Y_Pos <= Obj_Y_Min))
-            //     Obj_Y_Motion_in = 10'b0;
-            // else if ((Obj_X_Pos + Width >= Obj_X_Max) || (Obj_X_Pos <= Obj_X_Min))
-            //     Obj_X_Motion_in = 10'b0;
-
             // Handle keypress
             case(keycode)
             10'd26: // Up W
                     begin
                     Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);
                     Obj_X_Motion_in = 1'b0;
+                    Obj_Direction_in = 2'd2;
                     if (Obj_Y_Pos <= Obj_Y_Min)
                         Obj_Y_Motion_in = 10'b0;
                     end
@@ -88,6 +88,7 @@ module  player ( input       Clk,                // 50 MHz clock
                     begin
                     Obj_Y_Motion_in = Obj_Y_Step;
                     Obj_X_Motion_in = 1'b0;
+                    Obj_Direction_in = 2'd0;
                     if (Obj_Y_Pos + Height >= Obj_Y_Max)
                         Obj_Y_Motion_in = 10'b0;
                     end
@@ -95,6 +96,7 @@ module  player ( input       Clk,                // 50 MHz clock
                     begin
                     Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
                     Obj_Y_Motion_in = 1'b0;
+                    Obj_Direction_in = 2'd1;
                     if (Obj_X_Pos <= Obj_X_Min)
                         Obj_X_Motion_in = 1'b0;
                     end
@@ -102,23 +104,11 @@ module  player ( input       Clk,                // 50 MHz clock
                     begin
                     Obj_X_Motion_in = Obj_X_Step;
                     Obj_Y_Motion_in = 1'b0;
+                    Obj_Direction_in = 2'd3;
                     if (Obj_X_Pos + Width >= Obj_X_Max)
                         Obj_X_Motion_in = 1'b0;
                     end
             endcase
-
-    //         // Be careful when using comparators with "logic" datatype because compiler treats 
-    //         //   both sides of the operator as UNSIGNED numbers.
-    //         // e.g. Obj_Y_Pos - Obj_Size <= Obj_Y_Min 
-    //         // If Obj_Y_Pos is 0, then Obj_Y_Pos - Obj_Size will not be -4, but rather a large positive number.
-    //         if( Obj_Y_Pos + Obj_Size >= Obj_Y_Max )  // Obj is at the bottom edge, BOUNCE!
-    //             Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);  // 2's complement.  
-    //         else if ( Obj_Y_Pos <= Obj_Y_Min + Obj_Size )  // Obj is at the top edge, BOUNCE!
-    //             Obj_Y_Motion_in = Obj_Y_Step;
-    //         if ( Obj_X_Pos + Obj_Size >= Obj_X_Max) // Obj is at the right edge, BOUNCE!
-    //             Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
-    //         else if ( Obj_X_Pos <= Obj_X_Min + Obj_Size ) // Obj is at the left edge, BOUNCE!
-    //             Obj_X_Motion_in = Obj_X_Step;
 
             // Update the ball's position with its motion, immediate change, use Motion_in instead of Motion
             Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion_in;
@@ -134,12 +124,12 @@ module  player ( input       Clk,                // 50 MHz clock
     always_comb begin
         if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
             (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height))) begin
-            is_player = 1'b1;
-            player_address = DistX + DistY * Width;
+            is_obj = 1'b1;
+            Obj_address = DistX + DistY * Width + Obj_Direction * Width * Height;
         end
         else begin
-            is_player = 1'b0;
-            player_address = 11'b0;
+            is_obj = 1'b0;
+            Obj_address = 11'b0;
         end
     end
     
