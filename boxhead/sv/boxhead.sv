@@ -71,7 +71,7 @@ module boxhead(
         .data_Out(bkg_index)
     );
 
-    ball player_inst(
+    player player_inst(
         .*,
         .Reset(Reset_h),
         .frame_clk(VGA_VS),
@@ -100,7 +100,7 @@ module boxhead(
 
     assign test_is_player = 1'b1;
     always_comb begin
-        // If background is player and it's not red
+        // If background is player and it's not red(sprite background color)
         if((is_player == 1'b1) && (player_index != 5'h0)) begin
             VGA_R = player_color[23:16];
             VGA_G = player_color[15:8];
