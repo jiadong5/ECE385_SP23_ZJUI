@@ -14,11 +14,11 @@ module  player ( input       Clk,                // 50 MHz clock
     
     parameter [9:0] Obj_X_Center = 10'd160;  // Center position on the X axis
     parameter [9:0] Obj_Y_Center = 10'd120;  // Center position on the Y axis
-    parameter [9:0] Height = 10'd64;
-    parameter [9:0] Width = 10'd40;
-    
+    parameter [9:0] Height = 10'd64;         // Height of object
+    parameter [9:0] Width = 10'd40;          // Width of object
+
     parameter [9:0] Obj_X_Min = 10'd0;       // Leftmost point on the X axis
-    parameter [9:0] Obj_X_Max = 10'd479;     // Rightmost point on the X axis
+    parameter [9:0] Obj_X_Max = 10'd319;     // Rightmost point on the X axis
     parameter [9:0] Obj_Y_Min = 10'd0;       // Topmost point on the Y axis
     parameter [9:0] Obj_Y_Max = 10'd239;     // Bottommost point on the Y axis
     parameter [9:0] Obj_X_Step = 10'd1;      // Step size on the X axis
@@ -26,7 +26,7 @@ module  player ( input       Clk,                // 50 MHz clock
     parameter [9:0] Obj_Size = 10'd40;
 
     
-    logic [9:0] Obj_X_Pos, Obj_X_Motion, Obj_Y_Pos, Obj_Y_Motion; // Current position
+    logic [9:0] Obj_X_Pos, Obj_X_Motion, Obj_Y_Pos, Obj_Y_Motion; // Current position, left upper point of object
     logic [9:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
 
     
@@ -61,36 +61,49 @@ module  player ( input       Clk,                // 50 MHz clock
     // Movement change of the object based on keycode
     always_comb
     begin
-        // By default, keep motion and position unchanged
+        // By default position unchanged and no motion
         Obj_X_Pos_in = Obj_X_Pos;
         Obj_Y_Pos_in = Obj_Y_Pos;
-        Obj_X_Motion_in = Obj_X_Motion;
-        Obj_Y_Motion_in = Obj_Y_Motion;
+        Obj_X_Motion_in = 10'd0;
+        Obj_Y_Motion_in = 10'd0;
         
         // Update position and motion only at rising edge of frame clock
         if (frame_clk_rising_edge)
         begin
+            // if( (Obj_Y_Pos + Height >= Obj_Y_Max) || (Obj_Y_Pos <= Obj_Y_Min))
+            //     Obj_Y_Motion_in = 10'b0;
+            // else if ((Obj_X_Pos + Width >= Obj_X_Max) || (Obj_X_Pos <= Obj_X_Min))
+            //     Obj_X_Motion_in = 10'b0;
+
             // Handle keypress
             case(keycode)
             10'd26: // Up W
                     begin
                     Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);
                     Obj_X_Motion_in = 1'b0;
+                    if (Obj_Y_Pos <= Obj_Y_Min)
+                        Obj_Y_Motion_in = 10'b0;
                     end
             10'd22: // Down S
                     begin
                     Obj_Y_Motion_in = Obj_Y_Step;
                     Obj_X_Motion_in = 1'b0;
+                    if (Obj_Y_Pos + Height >= Obj_Y_Max)
+                        Obj_Y_Motion_in = 10'b0;
                     end
             10'd4:  // Left A
                     begin
                     Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
                     Obj_Y_Motion_in = 1'b0;
+                    if (Obj_X_Pos <= Obj_X_Min)
+                        Obj_X_Motion_in = 1'b0;
                     end
             10'd7:  // Right D
                     begin
                     Obj_X_Motion_in = Obj_X_Step;
                     Obj_Y_Motion_in = 1'b0;
+                    if (Obj_X_Pos + Width >= Obj_X_Max)
+                        Obj_X_Motion_in = 1'b0;
                     end
             endcase
 
@@ -107,9 +120,9 @@ module  player ( input       Clk,                // 50 MHz clock
     //         else if ( Obj_X_Pos <= Obj_X_Min + Obj_Size ) // Obj is at the left edge, BOUNCE!
     //             Obj_X_Motion_in = Obj_X_Step;
 
-            // Update the ball's position with its motion
-            Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion;
-            Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion;
+            // Update the ball's position with its motion, immediate change, use Motion_in instead of Motion
+            Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion_in;
+            Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion_in;
         end
     end
 
