@@ -4,7 +4,7 @@
  *
  */
 
-module  frameRAM
+module backgroundRAM
 (
 		input [4:0] data_In,
 		input [17:0] write_address, read_address,
