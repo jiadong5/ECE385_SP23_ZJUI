@@ -30,7 +30,7 @@ module  player ( input       Clk,                // 50 MHz clock
     logic [9:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
 
     
-    //////// Do not modify the always_ff blocks. ////////
+
     // Detect rising edge of frame_clk
     logic frame_clk_delayed, frame_clk_rising_edge;
     always_ff @ (posedge Clk) begin
@@ -39,60 +39,60 @@ module  player ( input       Clk,                // 50 MHz clock
     end
 
     // Update registers
-    // always_ff @ (posedge Clk)
-    // begin
-    //     if (Reset)
-    //     begin
-    //         Obj_X_Pos <= Obj_X_Center;
-    //         Obj_Y_Pos <= Obj_Y_Center;
-    //         Obj_X_Motion <= 10'd0;
-    //         Obj_Y_Motion <= 10'd0;
-    //     end
-    //     else
-    //     begin
-    //         Obj_X_Pos <= Obj_X_Pos_in;
-    //         Obj_Y_Pos <= Obj_Y_Pos_in;
-    //         Obj_X_Motion <= Obj_X_Motion_in;
-    //         Obj_Y_Motion <= Obj_Y_Motion_in;
-    //     end
-    // end
-    // //////// Do not modify the always_ff blocks. ////////
+    always_ff @ (posedge Clk)
+    begin
+        if (Reset)
+        begin
+            // CenterX - Width / 2. CenterY - Height / 2
+            Obj_X_Pos <= Obj_X_Center - Width[9:1];
+            Obj_Y_Pos <= Obj_Y_Center - Height[9:1];
+            Obj_X_Motion <= 10'd0;
+            Obj_Y_Motion <= 10'd0;
+        end
+        else
+        begin
+            Obj_X_Pos <= Obj_X_Pos_in;
+            Obj_Y_Pos <= Obj_Y_Pos_in;
+            Obj_X_Motion <= Obj_X_Motion_in;
+            Obj_Y_Motion <= Obj_Y_Motion_in;
+        end
+    end
     
-    // // You need to modify always_comb block.
-    // always_comb
-    // begin
-    //     // By default, keep motion and position unchanged
-    //     Obj_X_Pos_in = Obj_X_Pos;
-    //     Obj_Y_Pos_in = Obj_Y_Pos;
-    //     Obj_X_Motion_in = Obj_X_Motion;
-    //     Obj_Y_Motion_in = Obj_Y_Motion;
+    // Movement change of the object based on keycode
+    always_comb
+    begin
+        // By default, keep motion and position unchanged
+        Obj_X_Pos_in = Obj_X_Pos;
+        Obj_Y_Pos_in = Obj_Y_Pos;
+        Obj_X_Motion_in = Obj_X_Motion;
+        Obj_Y_Motion_in = Obj_Y_Motion;
         
-    //     // Update position and motion only at rising edge of frame clock
-    //     if (frame_clk_rising_edge)
-    //     begin
-    //         // Handle keypress
-    //         case(keycode)
-    //         10'd26: // Up W
-    //                 begin
-    //                 Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);
-    //                 Obj_X_Motion_in = 1'b0;
-    //                 end
-    //         10'd22: // Down S
-    //                 begin
-    //                 Obj_Y_Motion_in = Obj_Y_Step;
-    //                 Obj_X_Motion_in = 1'b0;
-    //                 end
-    //         10'd4:  // Left A
-    //                 begin
-    //                 Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
-    //                 Obj_Y_Motion_in = 1'b0;
-    //                 end
-    //         10'd7:  // Right D
-    //                 begin
-    //                 Obj_X_Motion_in = Obj_X_Step;
-    //                 Obj_Y_Motion_in = 1'b0;
-    //                 end
-    //         endcase
+        // Update position and motion only at rising edge of frame clock
+        if (frame_clk_rising_edge)
+        begin
+            // Handle keypress
+            case(keycode)
+            10'd26: // Up W
+                    begin
+                    Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);
+                    Obj_X_Motion_in = 1'b0;
+                    end
+            10'd22: // Down S
+                    begin
+                    Obj_Y_Motion_in = Obj_Y_Step;
+                    Obj_X_Motion_in = 1'b0;
+                    end
+            10'd4:  // Left A
+                    begin
+                    Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
+                    Obj_Y_Motion_in = 1'b0;
+                    end
+            10'd7:  // Right D
+                    begin
+                    Obj_X_Motion_in = Obj_X_Step;
+                    Obj_Y_Motion_in = 1'b0;
+                    end
+            endcase
 
     //         // Be careful when using comparators with "logic" datatype because compiler treats 
     //         //   both sides of the operator as UNSIGNED numbers.
@@ -107,16 +107,13 @@ module  player ( input       Clk,                // 50 MHz clock
     //         else if ( Obj_X_Pos <= Obj_X_Min + Obj_Size ) // Obj is at the left edge, BOUNCE!
     //             Obj_X_Motion_in = Obj_X_Step;
 
-    //         // Update the ball's position with its motion
-    //         Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion;
-    //         Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion;
-    //     end
-    // end
+            // Update the ball's position with its motion
+            Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion;
+            Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion;
+        end
+    end
 
 
-    // CenterX - Width / 2. CenterY - Height / 2
-    assign Obj_X_Pos = Obj_X_Center - Width[9:1];
-    assign Obj_Y_Pos = Obj_Y_Center - Height[9:1];
 
     int DistX, DistY;
     assign DistX = PixelX - Obj_X_Pos;
