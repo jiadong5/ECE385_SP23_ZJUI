@@ -21,8 +21,8 @@ module  player ( input       Clk,                // 50 MHz clock
     parameter [9:0] Obj_X_Max = 10'd319;     // Rightmost point on the X axis
     parameter [9:0] Obj_Y_Min = 10'd0;       // Topmost point on the Y axis
     parameter [9:0] Obj_Y_Max = 10'd239;     // Bottommost point on the Y axis
-    parameter [9:0] Obj_X_Step = 10'd1;      // Step size on the X axis
-    parameter [9:0] Obj_Y_Step = 10'd1;      // Step size on the Y axis
+    parameter [9:0] Obj_X_Step = 10'd2;      // Step size on the X axis
+    parameter [9:0] Obj_Y_Step = 10'd2;      // Step size on the Y axis
     parameter [9:0] Obj_Size = 10'd40;
 
     
@@ -37,9 +37,23 @@ module  player ( input       Clk,                // 50 MHz clock
 
     // Detect rising edge of frame_clk
     logic frame_clk_delayed, frame_clk_rising_edge;
+    logic frame2_clk_rising_edge;
     always_ff @ (posedge Clk) begin
         frame_clk_delayed <= frame_clk;
         frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
+    end
+
+    // Reduce frame clk frequency. 
+    logic [1:0] counter = 2'd0;
+    always_ff @ (posedge Clk) begin
+        frame2_clk_rising_edge  <= 1'b0;
+        if (frame_clk_rising_edge) begin
+            counter <= counter + 1;
+            if  (counter == 3) begin
+                counter <= 0;
+                frame2_clk_rising_edge <= 1'b1;
+            end
+        end
     end
 
     // Update registers
@@ -90,7 +104,7 @@ module  player ( input       Clk,                // 50 MHz clock
         Obj_Right_Count_in = Obj_Right_Count;
         
         // Update position and motion only at rising edge of frame clock
-        if (frame_clk_rising_edge)
+        if (frame2_clk_rising_edge)
         begin
             // Handle keypress
             case(keycode)
