@@ -107,12 +107,20 @@ module boxhead( input               CLOCK_50,
 
     logic [31:0] bkg_address;
     logic [15:0] player_address;
+    logic [7:0] attack_address;
+
     logic [4:0] bkg_index;
     logic [4:0] player_index;
+    logic [4:0] attack_index;
+
     logic [23:0] bkg_color;
     logic [23:0] player_color;
+    logic [23:0] attack_color;
 
     logic is_player;
+    logic is_attack;
+    logic [9:0] Player_X, Player_Y;
+    logic [1:0] Player_Direction;
 
     assign PixelX = DrawX[9:1];
     assign PixelY = DrawY[9:1];
@@ -144,7 +152,10 @@ module boxhead( input               CLOCK_50,
         .frame_clk(VGA_VS),
         .keycode(keycode),
         .is_obj(is_player),
-        .Obj_address(player_address)
+        .Obj_address(player_address),
+        .Obj_X_Pos(Player_X),
+        .Obj_Y_Pos(Player_Y),
+        .Obj_Direction(Player_Direction)
     );
 
     playerROM playerROM_inst(
@@ -152,6 +163,22 @@ module boxhead( input               CLOCK_50,
         .read_address(player_address),
         .data_Out(player_index)
     );
+    
+    attack attack_inst(
+        .*,
+        .Reset(Reset_h),
+        .frame_clk(VGA_VS),
+        .keycode(keycode),
+        .is_obj(is_attack),
+        .Obj_address(attack_address)
+    );
+
+    attackROM attackROM_inst(
+        .Clk(Clk),
+        .read_address(attack_address),
+        .data_Out(attack_index)
+    );
+   
 
     palette bkg_palette_inst(
         .*,
@@ -165,9 +192,21 @@ module boxhead( input               CLOCK_50,
         .data_Out(player_color)
     );
 
+    palette attack_palette_inst(
+        .*,
+        .read_address(attack_index),
+        .data_Out(attack_color)
+    );
+
     always_comb begin
+        if ((is_attack == 1'b1) && (attack_index != 5'h0)) begin
+            VGA_R = attack_color[23:16];
+            VGA_G = attack_color[15:8];
+            VGA_B = attack_color[7:0];
+        end
         // If background is player and it's not red(sprite background color)
-        if((is_player == 1'b1) && (player_index != 5'h0)) begin
+        else if(((is_player == 1'b1) && (player_index != 5'h0)) ||
+                ((is_attack == 1'b1) && (attack_index == 5'h0) && (player_index != 5'h0)) ) begin
             VGA_R = player_color[23:16];
             VGA_G = player_color[15:8];
             VGA_B = player_color[7:0];

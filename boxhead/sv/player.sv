@@ -9,7 +9,9 @@ module  player ( input       Clk,                // 50 MHz clock
                input [7:0]   keycode,
                input [8:0]   PixelX, PixelY,     
                output logic  is_obj,             // Whether current pixel belongs to ball or background
-               output logic [15:0] Obj_address
+               output logic [15:0] Obj_address,
+               output logic [9:0] Obj_X_Pos, Obj_Y_Pos,
+               output logic [1:0] Obj_Direction
               );
     
     parameter [9:0] Obj_X_Center = 10'd160;  // Center position on the X axis
@@ -26,9 +28,9 @@ module  player ( input       Clk,                // 50 MHz clock
     parameter [9:0] Obj_Size = 10'd40;
 
     
-    logic [9:0] Obj_X_Pos, Obj_X_Motion, Obj_Y_Pos, Obj_Y_Motion; // Current position, left upper point of object
+    logic [9:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
     logic [9:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
-    logic [1:0] Obj_Direction, Obj_Direction_in;
+    logic [1:0] Obj_Direction_in;
 
     // Count how many steps object has walked in one direction
     logic [1:0] Obj_Up_Count, Obj_Down_Count, Obj_Left_Count, Obj_Right_Count;
