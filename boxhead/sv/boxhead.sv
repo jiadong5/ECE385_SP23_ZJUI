@@ -199,14 +199,15 @@ module boxhead( input               CLOCK_50,
     );
 
     always_comb begin
-        if ((is_attack == 1'b1) && (attack_index != 5'h0)) begin
+        // it's not red(sprite bacground color), which corresponds to index 0
+        if ((is_attack) && (attack_index)) begin
             VGA_R = attack_color[23:16];
             VGA_G = attack_color[15:8];
             VGA_B = attack_color[7:0];
         end
         // If background is player and it's not red(sprite background color)
-        else if(((is_player == 1'b1) && (player_index != 5'h0)) ||
-                ((is_attack == 1'b1) && (attack_index == 5'h0) && (player_index != 5'h0)) ) begin
+        else if(((is_player) && (player_index)) ||
+                ((is_attack) && (!attack_index) && (player_index)) ) begin
             VGA_R = player_color[23:16];
             VGA_G = player_color[15:8];
             VGA_B = player_color[7:0];

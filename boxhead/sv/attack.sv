@@ -43,8 +43,27 @@ module  attack ( input       Clk,                // 50 MHz clock
         end
     end
 
-    assign Obj_X_Pos = Player_X + 10'd5; 
-    assign Obj_Y_Pos = Player_Y + 10'd40;
+    always_comb begin
+        case (Player_Direction)
+            2'd0: begin
+                Obj_X_Pos = Player_X + 10'd2; 
+                Obj_Y_Pos = Player_Y + 10'd40;
+            end
+            2'd1: begin
+                Obj_X_Pos = Player_X;
+                Obj_Y_Pos = Player_Y + 10'd10;
+            end
+            2'd2: begin
+                Obj_X_Pos = Player_X + 10'd36;
+                Obj_Y_Pos = Player_Y + 10'd2;
+            end
+            2'd3: begin
+                Obj_X_Pos = Player_X + 10'd36;
+                Obj_Y_Pos = Player_Y + 10'd30;
+            end
+        endcase
+
+    end
 
     // Update registers
     always_ff @ (posedge Clk)
