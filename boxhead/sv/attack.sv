@@ -7,7 +7,7 @@ module  attack ( input       Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
                              frame_clk,          // The clock indicating a new frame (~60Hz)
                input [7:0] keycode,
-               input [9:0] Player_X, Player_Y,
+               input [8:0] Player_X, Player_Y,
                input [1:0] Player_Direction,
                input [8:0]   PixelX, PixelY,     
 
@@ -15,10 +15,10 @@ module  attack ( input       Clk,                // 50 MHz clock
                output logic [7:0] Obj_address
               );
     
-    parameter [9:0] Height = 10'd16;         // Height of object
-    parameter [9:0] Width = 10'd16;          // Width of object
+    parameter [8:0] Height = 10'd16;         // Height of object
+    parameter [8:0] Width = 10'd16;          // Width of object
     
-    logic [9:0] Obj_X_Pos, Obj_Y_Pos;
+    logic [8:0] Obj_X_Pos, Obj_Y_Pos;
     logic Obj_On, Obj_On_in;        // If the object displays or not
 
 

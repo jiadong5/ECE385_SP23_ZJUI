@@ -1,15 +1,5 @@
 //-------------------------------------------------------------------------
-//      lab8.sv                                                          --
-//      Christine Chen                                                   --
-//      Fall 2014                                                        --
-//                                                                       --
-//      Modified by Po-Han Huang                                         --
-//      10/06/2017                                                       --
-//                                                                       --
-//      Fall 2017 Distribution                                           --
-//                                                                       --
-//      For use with ECE 385 Lab 8                                       --
-//      UIUC ECE Departmen;t                                              --
+//      boxhead
 //-------------------------------------------------------------------------
 
 
@@ -107,19 +97,23 @@ module boxhead( input               CLOCK_50,
 
     logic [31:0] bkg_address;
     logic [15:0] player_address;
+    logic [15:0] enemy_address;
     logic [7:0] attack_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
+    logic [4:0] enemy_index;
     logic [4:0] attack_index;
 
     logic [23:0] bkg_color;
     logic [23:0] player_color;
+    logic [23:0] enemy_color;
     logic [23:0] attack_color;
 
     logic is_player;
+    logic is_enemy;
     logic is_attack;
-    logic [9:0] Player_X, Player_Y;
+    logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
 
     assign PixelX = DrawX[9:1];
@@ -163,6 +157,21 @@ module boxhead( input               CLOCK_50,
         .read_address(player_address),
         .data_Out(player_index)
     );
+
+    enemy enemy_inst(
+        .*,
+        .Reset(Reset_h),
+        .frame_clk(VGA_VS),
+        .keycode(keycode),
+        .is_obj(is_enemy),
+        .Obj_address(enemy_address),
+    );
+
+    enemyROM enemyROM_inst(
+        .Clk(Clk),
+        .read_address(enemy_address),
+        .data_Out(enemy_index)
+    );
     
     attack attack_inst(
         .*,
@@ -178,8 +187,8 @@ module boxhead( input               CLOCK_50,
         .read_address(attack_address),
         .data_Out(attack_index)
     );
-   
 
+   
     palette bkg_palette_inst(
         .*,
         .read_address(bkg_index),
@@ -190,6 +199,12 @@ module boxhead( input               CLOCK_50,
         .*,
         .read_address(player_index),
         .data_Out(player_color)
+    );
+
+    palette enemy_palette_inst(
+        .*,
+        .read_address(enemy_index),
+        .data_Out(enemy_color)
     );
 
     palette attack_palette_inst(
@@ -211,6 +226,11 @@ module boxhead( input               CLOCK_50,
             VGA_R = player_color[23:16];
             VGA_G = player_color[15:8];
             VGA_B = player_color[7:0];
+        end
+        else if ((is_enemy) && (enemy_index)) begin
+            VGA_R = enemy_color[23:16];
+            VGA_G = enemy_color[15:8];
+            VGA_B = enemy_color[7:0];
         end
         else begin
             VGA_R = bkg_color[23:16];
