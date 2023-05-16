@@ -8,7 +8,7 @@ module player_step ( input logic Clk,
     enum logic [1:0] { S_0,
     S_1,
     S_2,
-        S_3} State, Next_state;
+    S_3} State, Next_state;
 
     always_ff @ (posedge Clk)
     begin

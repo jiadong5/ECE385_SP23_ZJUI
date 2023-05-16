@@ -96,6 +96,7 @@ module  enemy ( input       Clk,                // 50 MHz clock
     always_comb
     begin
         // By default position, direction unchanged and no motion
+        // This happens when overlap with player
         Obj_X_Pos_in = Obj_X_Pos;
         Obj_Y_Pos_in = Obj_Y_Pos;
         Obj_X_Motion_in = 10'd0;
@@ -154,7 +155,7 @@ module  enemy ( input       Clk,                // 50 MHz clock
                     Obj_Y_Motion_in = 10'b0;
             end
             // Walk Up
-            else begin
+            else if (Obj_Y_Pos > Player_Y) begin
                 Obj_X_Motion_in = 1'b0;
                 Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);
                 Obj_Direction_in = 2'd2;
