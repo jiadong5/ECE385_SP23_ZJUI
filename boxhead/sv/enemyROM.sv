@@ -4,7 +4,7 @@
  *
  */
 
-module playerROM
+module enemyROM
 (
 		input [15:0] read_address,
 		input Clk,
