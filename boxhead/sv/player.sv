@@ -9,15 +9,15 @@ module  player ( input       Clk,                // 50 MHz clock
                input [7:0]   keycode,
                input [8:0]   PixelX, PixelY,     
                output logic  is_obj,             // Whether current pixel belongs to ball or background
-               output logic [15:0] Obj_address,
+               output logic [12:0] Obj_address,
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
                output logic [1:0] Obj_Direction
               );
     
     parameter [8:0] Obj_X_Center = 10'd160;  // Center position on the X axis
     parameter [8:0] Obj_Y_Center = 10'd120;  // Center position on the Y axis
-    parameter [8:0] Height = 10'd64;         // Height of object
-    parameter [8:0] Width = 10'd40;          // Width of object
+    parameter [8:0] Height = 10'd20;         // Height of object
+    parameter [8:0] Width = 10'd18;          // Width of object
 
     parameter [8:0] Obj_X_Min = 10'd0;       // Leftmost point on the X axis
     parameter [8:0] Obj_X_Max = 10'd319;     // Rightmost point on the X axis

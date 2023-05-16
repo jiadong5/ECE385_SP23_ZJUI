@@ -96,8 +96,8 @@ module boxhead( input               CLOCK_50,
     logic [8:0] PixelX, PixelY;
 
     logic [31:0] bkg_address;
-    logic [15:0] player_address;
-    logic [15:0] enemy_address;
+    logic [12:0] player_address;
+    logic [12:0] enemy_address;
     logic [7:0] attack_address;
 
     logic [4:0] bkg_index;
@@ -133,10 +133,7 @@ module boxhead( input               CLOCK_50,
 
     backgroundRAM background_ram(
         .*,
-        .data_In(),
-        .write_address(),
         .read_address(bkg_address),
-        .we(),
         .data_Out(bkg_index)
     );
 

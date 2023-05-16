@@ -12,7 +12,7 @@ module palette
 );
 
 // mem has width of 3 bits and a total of 400 addresses
-logic [23:0] mem [0:22];
+logic [23:0] mem [0:31];
 
 initial
 begin
