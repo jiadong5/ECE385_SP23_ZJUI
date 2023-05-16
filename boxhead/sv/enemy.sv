@@ -10,7 +10,7 @@ module  enemy ( input       Clk,                // 50 MHz clock
                input [8:0]   PixelX, PixelY,     
                input [8:0]   Player_X, Player_Y,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
-               output logic [15:0] Obj_address,
+               output logic [15:0] Obj_address
                // output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
                // output logic [1:0] Obj_Direction
               );
@@ -29,9 +29,10 @@ module  enemy ( input       Clk,                // 50 MHz clock
     parameter [8:0] Obj_Size = 10'd40;
 
     
+    logic [8:0] Obj_X_Pos, Obj_Y_Pos;
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
     logic [8:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
-    logic [1:0] Obj_Direction_in;
+    logic [1:0] Obj_Direction_in, Obj_Direction;
 
     // Count how many steps object has walked in one direction
     logic [1:0] Obj_Up_Count, Obj_Down_Count, Obj_Left_Count, Obj_Right_Count;
@@ -125,7 +126,7 @@ module  enemy ( input       Clk,                // 50 MHz clock
                     Obj_X_Motion_in = 1'b0;
             end
             // Walk Left
-            else if ((Obj_X_Pos >= Player_X)) begin
+            else if ((Obj_X_Pos > Player_X)) begin
                 Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
                 Obj_Y_Motion_in = 1'b0;
 
