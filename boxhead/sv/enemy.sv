@@ -96,7 +96,8 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         Obj_Direction_in = Obj_Direction;
         
         // Update position and motion only at rising edge of frame clock
-        if (frame2_clk_rising_edge)
+        // Dead enemy stays at the same place
+        if (frame2_clk_rising_edge & is_alive)
         begin
             // Walk Right
             // If is at left of player and last step is vertical

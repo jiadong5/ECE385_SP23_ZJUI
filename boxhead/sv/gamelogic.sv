@@ -1,6 +1,6 @@
 
 `define ENEMY_NUM 4
-`define RESPAWN_TIME 80
+`define RESPAWN_TIME 200
 module gamelogic
 (
     input logic Clk,
@@ -30,7 +30,7 @@ module gamelogic
     logic [6:0] Enemy_Blood, Enemy_Blood_in;
 
     logic [9:0] Rebirth_Time;
-    logic [9:0] Rebirth_Time_In;
+    logic [9:0] Rebirth_Time_in;
 
 
     // Detect rising edge of frame_clk
@@ -54,13 +54,6 @@ module gamelogic
         end
     end
 
-    // // Enemy Rebirth
-    // always_ff @ (posedge frame2_clk_rising_edge) begin
-    //     if(~Enemy_Alive) begin
-    //         Rebirth_Time <= Rebirth_Time + 1'd1;
-    //     end
-    // end
-
     always_ff @(posedge Clk) begin
         if (Reset) begin
             Player_Blood <= 7'd100;
@@ -70,20 +63,27 @@ module gamelogic
         else begin
             Player_Blood <= Player_Blood_in;
             Enemy_Blood <= Enemy_Blood_in;
+            Rebirth_Time <= Rebirth_Time_in;
         end
     end
 
     always_comb begin
         Player_Blood_in = Player_Blood;
         Enemy_Blood_in = Enemy_Blood;
+        Rebirth_Time_in = Rebirth_Time;
         
-        // if (Rebirth_Time == `RESPAWN_TIME) begin
-        //     Rebrith_Time = 10'd0;
-        //     Enemy_Blood_in = 6'd100;
-        // end
+        if (frame2_clk_rising_edge & ~Enemy_Alive) begin
+            if (Rebirth_Time == `RESPAWN_TIME) begin
+                Rebirth_Time_in = 10'd0;
+                Enemy_Blood_in = 6'd100;
+            end
+            else begin
+                Rebirth_Time_in = Rebirth_Time + 1'd1;
+            end
+        end
 
         // Player attack enemy and judge based on different directions
-        if (Attack_On && (Enemy_Blood > 6'd0)) begin
+        else if (Attack_On && (Enemy_Blood > 6'd0)) begin
             case(Player_Direction)
                 // FIXME: Sometimes the damage doesn't work, especially when shooting left or right
                 // Hard to find the reason
@@ -155,7 +155,6 @@ module gamelogic
     always_comb begin
         if (Enemy_Blood <= 6'd0) begin
             Enemy_Alive = 1'b0;
-            Rebirth_Time = 10'd0;
         end
         else
             Enemy_Alive = 1'b1;

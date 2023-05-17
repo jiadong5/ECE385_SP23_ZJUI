@@ -222,7 +222,7 @@ module boxhead( input               CLOCK_50,
             gamelogic gamelogic_inst(
                 .Clk(Clk),
                 .Reset(Reset_h),
-                .frame_clk(VGA_CLK),
+                .frame_clk(VGA_VS),
                 .Player_X(Player_X),
                 .Player_Y(Player_Y),
                 .Attack_X(Attack_X),
