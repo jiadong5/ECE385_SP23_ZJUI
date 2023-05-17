@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------------
 
 
+`define ENEMY_NUM 4
 module boxhead( input               CLOCK_50,
              input        [3:0]  KEY,          //bit 0 is set up as Reset
              output logic [6:0]  HEX0, HEX1,
@@ -97,21 +98,16 @@ module boxhead( input               CLOCK_50,
 
     logic [31:0] bkg_address;
     logic [12:0] player_address;
-    logic [12:0] enemy_address;
+    logic [12:0] enemy_address [`ENEMY_NUM];
     logic [7:0] attack_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
-    logic [4:0] enemy_index;
+    logic [4:0] enemy_index [`ENEMY_NUM];
     logic [4:0] attack_index;
 
-    logic [23:0] bkg_color;
-    logic [23:0] player_color;
-    logic [23:0] enemy_color;
-    logic [23:0] attack_color;
-
     logic is_player;
-    logic is_enemy;
+    logic is_enemy [`ENEMY_NUM];
     logic is_attack;
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
@@ -131,7 +127,7 @@ module boxhead( input               CLOCK_50,
         .sync(VGA_SYNC_N)
     );
 
-    backgroundRAM background_ram(
+    backgroundROM backgroundROM_inst(
         .*,
         .read_address(bkg_address),
         .data_Out(bkg_index)
@@ -155,19 +151,39 @@ module boxhead( input               CLOCK_50,
         .data_Out(player_index)
     );
 
-    enemy enemy_inst(
-        .*,
-        .Reset(Reset_h),
-        .frame_clk(VGA_VS),
-        .keycode(keycode),
-        .is_obj(is_enemy),
-        .Obj_address(enemy_address),
-    );
+
+    genvar i;
+    generate 
+        for (i = 0; i < `ENEMY_NUM; i++) begin: multi_enemy
+            enemy #(.id(i)) enemy_inst(
+                .Clk(Clk),
+                .Reset(Reset_h),
+                .frame_clk(VGA_VS),
+                .keycode(keycode),
+                .PixelX(PixelX),
+                .PixelY(PixelY),
+                .Player_X(Player_X),
+                .Player_Y(Player_Y),
+                .is_obj(is_enemy[i]),
+                .Obj_address(enemy_address[i])
+            );
+        end
+    endgenerate    
 
     enemyROM enemyROM_inst(
         .Clk(Clk),
-        .read_address(enemy_address),
-        .data_Out(enemy_index)
+        .read_address0(enemy_address[0]),
+        .read_address1(enemy_address[1]),
+        .data_Out0(enemy_index[0]),
+        .data_Out1(enemy_index[1])
+    );
+
+    enemyROM enemyROM_inst1(
+        .Clk(Clk),
+        .read_address0(enemy_address[2]),
+        .read_address1(enemy_address[3]),
+        .data_Out0(enemy_index[2]),
+        .data_Out1(enemy_index[3])
     );
     
     attack attack_inst(
@@ -185,57 +201,10 @@ module boxhead( input               CLOCK_50,
         .data_Out(attack_index)
     );
 
-   
-    background_palette bkg_palette_inst(
-        .*,
-        .read_address(bkg_index),
-        .data_Out(bkg_color)
+    
+    color_mapper color_mapper_inst(
+        .*
     );
-
-    foreground_palette player_palette_inst(
-        .*,
-        .read_address(player_index),
-        .data_Out(player_color)
-    );
-
-    foreground_palette enemy_palette_inst(
-        .*,
-        .read_address(enemy_index),
-        .data_Out(enemy_color)
-    );
-
-    foreground_palette attack_palette_inst(
-        .*,
-        .read_address(attack_index),
-        .data_Out(attack_color)
-    );
-
-    always_comb begin
-        // it's not red(sprite bacground color), which corresponds to index 0
-        if ((is_attack) && (attack_index)) begin
-            VGA_R = attack_color[23:16];
-            VGA_G = attack_color[15:8];
-            VGA_B = attack_color[7:0];
-        end
-        // If background is player and it's not red(sprite background color)
-        else if(((is_player) && (player_index)) ||
-                ((is_attack) && (!attack_index) && (player_index)) ) begin
-            VGA_R = player_color[23:16];
-            VGA_G = player_color[15:8];
-            VGA_B = player_color[7:0];
-        end
-        else if ((is_enemy) && (enemy_index)) begin
-            VGA_R = enemy_color[23:16];
-            VGA_G = enemy_color[15:8];
-            VGA_B = enemy_color[7:0];
-        end
-        else begin
-            VGA_R = bkg_color[23:16];
-            VGA_G = bkg_color[15:8];
-            VGA_B = bkg_color[7:0];
-        end
-
-    end
 
     // Display keycode on hex display
     // HexDriver hex_inst_0 (keycode[3:0], HEX0);

@@ -6,9 +6,11 @@
 
 module enemyROM
 (
-		input [15:0] read_address,
+		input [15:0] read_address0,
+        input [15:0] read_address1,
 		input Clk,
-		output logic [4:0] data_Out
+		output logic [4:0] data_Out0,
+        output logic [4:0] data_Out1
 );
 
 // Four directions, each direction 26 * 26 and 3 walk steps
@@ -43,7 +45,8 @@ end
 
 
 always_ff @ (posedge Clk) begin
-	data_Out<= mem[read_address];
+	data_Out0 <= mem[read_address0];
+    data_Out1 <= mem[read_address1];
 end
 
 endmodule

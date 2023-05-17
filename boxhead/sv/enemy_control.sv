@@ -31,7 +31,8 @@ module enemy_control ( input logic frame_clk,
         // assign next state
         unique case (State)
             S_0 : begin
-                if ((Obj_X_Pos == Player_X) && (Obj_Y_Pos == Player_Y))
+                if ((Obj_X_Pos <= Player_X + 2) && (Obj_Y_Pos <= Player_Y + 2) &&
+                    (2 + Obj_X_Pos >= Player_X) && (2 + Obj_Y_Pos >= Player_Y))
                     Next_state = S_0;
                 else
                     Next_state = S_1;

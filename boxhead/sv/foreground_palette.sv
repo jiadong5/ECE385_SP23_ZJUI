@@ -6,9 +6,11 @@
 
 module foreground_palette
 (
-	input logic [4:0] read_address,
+	input logic [4:0] read_address0,
+					  read_address1,
 	input Clk,
-	output logic [23:0] data_Out
+	output logic [23:0] data_Out0,
+						data_Out1
 );
 
 // mem has width of 3 bits and a total of 400 addresses
@@ -20,8 +22,8 @@ begin
 end
 
 
-always_ff @ (posedge Clk) begin
-	data_Out<= mem[read_address];
-end
+	// data_Out0 <= mem[read_address0];
+	// data_Out1 <= mem[read_address1];
+	assign data_Out0 = mem[read_address0];
 
 endmodule

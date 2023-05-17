@@ -23,8 +23,8 @@ module  player ( input       Clk,                // 50 MHz clock
     parameter [8:0] Obj_X_Max = 10'd319;     // Rightmost point on the X axis
     parameter [8:0] Obj_Y_Min = 10'd0;       // Topmost point on the Y axis
     parameter [8:0] Obj_Y_Max = 10'd239;     // Bottommost point on the Y axis
-    parameter [8:0] Obj_X_Step = 10'd2;      // Step size on the X axis
-    parameter [8:0] Obj_Y_Step = 10'd2;      // Step size on the Y axis
+    parameter [8:0] Obj_X_Step = 10'd3;      // Step size on the X axis
+    parameter [8:0] Obj_Y_Step = 10'd3;      // Step size on the Y axis
     parameter [8:0] Obj_Size = 10'd40;
 
     
