@@ -9,9 +9,10 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                input [7:0]   keycode,
                input [8:0]   PixelX, PixelY,     
                input [8:0]   Player_X, Player_Y,
+               input  logic  is_alive,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
-               output logic [12:0] Obj_address
-               // output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
+               output logic [12:0] Obj_address,
+               output logic [8:0] Obj_X_Pos, Obj_Y_Pos
                // output logic [1:0] Obj_Direction
               );
     
@@ -32,7 +33,6 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     parameter [8:0] Obj_Size = 10'd40;
 
     
-    logic [8:0] Obj_X_Pos, Obj_Y_Pos;
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
     logic [8:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
     logic [1:0] Obj_Direction_in, Obj_Direction;
@@ -157,7 +157,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     assign DistY = PixelY - Obj_Y_Pos;
     always_comb begin
         if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
-            (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height))) begin
+            (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) && (is_alive)) begin
             is_obj = 1'b1;
 
             // Compute Object address based on its position, direction and walk step count
@@ -165,7 +165,6 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                 Obj_address = DistX + DistY * Width + Width * Height * (3 * Obj_Direction);
             else
                 Obj_address = DistX + DistY * Width + Width * Height * (3 * Obj_Direction + 1 + Obj_Step_Count[1]);
-
         end
         else begin
             is_obj = 1'b0;

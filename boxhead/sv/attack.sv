@@ -12,14 +12,15 @@ module  attack ( input       Clk,                // 50 MHz clock
                input [8:0]   PixelX, PixelY,     
 
                output logic  is_obj,             // Whether current pixel belongs to ball or background
-               output logic [7:0] Obj_address
+                             Obj_On,
+               output logic [7:0] Obj_address,
+               output logic [8:0] Obj_X_Pos, Obj_Y_Pos
               );
     
     parameter [8:0] Height = 10'd16;         // Height of object
     parameter [8:0] Width = 10'd16;          // Width of object
     
-    logic [8:0] Obj_X_Pos, Obj_Y_Pos;
-    logic Obj_On, Obj_On_in;        // If the object displays or not
+    logic Obj_On_in;        // If the object displays or not
 
 
     // Detect rising edge of frame_clk
@@ -45,18 +46,22 @@ module  attack ( input       Clk,                // 50 MHz clock
 
     always_comb begin
         case (Player_Direction)
+            // Front (Down)
             2'd0: begin
                 Obj_X_Pos = Player_X + 10'd2; 
                 Obj_Y_Pos = Player_Y + 10'd40;
             end
+            // Left
             2'd1: begin
                 Obj_X_Pos = Player_X;
                 Obj_Y_Pos = Player_Y + 10'd10;
             end
+            // Back (up)
             2'd2: begin
-                Obj_X_Pos = Player_X + 10'd36;
-                Obj_Y_Pos = Player_Y + 10'd2;
+                Obj_X_Pos = Player_X;
+                Obj_Y_Pos = Player_Y;
             end
+            // Right
             2'd3: begin
                 Obj_X_Pos = Player_X + 10'd36;
                 Obj_Y_Pos = Player_Y + 10'd30;

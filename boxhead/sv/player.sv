@@ -71,10 +71,6 @@ module  player ( input       Clk,                // 50 MHz clock
             Obj_Y_Motion <= 10'd0;
 
             Obj_Direction <= 2'd0;
-            // Obj_Up_Count <= 2'd0;
-            // Obj_Down_Count <= 2'd0;
-            // Obj_Left_Count <= 2'd0;
-            // Obj_Right_Count <= 2'd0;
         end
         else
         begin

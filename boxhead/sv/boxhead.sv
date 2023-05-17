@@ -109,8 +109,14 @@ module boxhead( input               CLOCK_50,
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
     logic is_attack;
+
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
+    logic Attack_On;
+    logic [8:0] Attack_X, Attack_Y;
+    logic Enemy_Alive [`ENEMY_NUM];
+    logic [8:0] Enemy_X [`ENEMY_NUM];
+    logic [8:0] Enemy_Y [`ENEMY_NUM];
 
     assign PixelX = DrawX[9:1];
     assign PixelY = DrawY[9:1];
@@ -162,10 +168,14 @@ module boxhead( input               CLOCK_50,
                 .keycode(keycode),
                 .PixelX(PixelX),
                 .PixelY(PixelY),
+                .is_alive(Enemy_Alive[i]),
                 .Player_X(Player_X),
                 .Player_Y(Player_Y),
+                // Output
                 .is_obj(is_enemy[i]),
-                .Obj_address(enemy_address[i])
+                .Obj_address(enemy_address[i]),
+                .Obj_X_Pos(Enemy_X[i]),
+                .Obj_Y_Pos(Enemy_Y[i])
             );
         end
     endgenerate    
@@ -191,8 +201,12 @@ module boxhead( input               CLOCK_50,
         .Reset(Reset_h),
         .frame_clk(VGA_VS),
         .keycode(keycode),
+        // Output
         .is_obj(is_attack),
-        .Obj_address(attack_address)
+        .Obj_address(attack_address),
+        .Obj_On(Attack_On),
+        .Obj_X_Pos(Attack_X),
+        .Obj_Y_Pos(Attack_Y)
     );
 
     attackROM attackROM_inst(
@@ -200,6 +214,27 @@ module boxhead( input               CLOCK_50,
         .read_address(attack_address),
         .data_Out(attack_index)
     );
+
+    genvar j;
+    generate
+        for (j = 0; j < `ENEMY_NUM; j++) begin: game
+            gamelogic gamelogic_inst(
+                .Clk(Clk),
+                .Reset(Reset_h),
+                .frame_clk(VGA_CLK),
+                .Player_X(Player_X),
+                .Player_Y(Player_Y),
+                .Attack_X(Attack_X),
+                .Attack_Y(Attack_Y),
+                .Enemy_X(Enemy_X[j]),
+                .Enemy_Y(Enemy_Y[j]),
+                .Player_Direction(Player_Direction),
+                .Attack_On(Attack_On),
+                .Enemy_Alive(Enemy_Alive[j])
+            );
+        end
+    endgenerate
+
 
     
     color_mapper color_mapper_inst(
