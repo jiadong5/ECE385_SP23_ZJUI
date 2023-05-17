@@ -17,8 +17,10 @@ module  attack ( input       Clk,                // 50 MHz clock
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos
               );
     
-    parameter [8:0] Height = 10'd16;         // Height of object
-    parameter [8:0] Width = 10'd16;          // Width of object
+    parameter [8:0] Height = 10'd16;         // Height of object (unit)
+    parameter [8:0] Width = 10'd16;          // Width of object (unit)
+    parameter [8:0] TotalHeight = 10'd80;
+    parameter [8:0] TotalWidth = 10'd80;
     
     logic Obj_On_in;        // If the object displays or not
 
@@ -53,13 +55,13 @@ module  attack ( input       Clk,                // 50 MHz clock
             end
             // Left
             2'd1: begin
-                Obj_X_Pos = Player_X - 10'd16;
+                Obj_X_Pos = Player_X;
                 Obj_Y_Pos = Player_Y;
             end
             // Back (up)
             2'd2: begin
                 Obj_X_Pos = Player_X;
-                Obj_Y_Pos = Player_Y - 10'd16;
+                Obj_Y_Pos = Player_Y;
             end
             // Right
             2'd3: begin
@@ -94,19 +96,63 @@ module  attack ( input       Clk,                // 50 MHz clock
     end
 
     int DistX, DistY;
-    assign DistX = PixelX - Obj_X_Pos;
-    assign DistY = PixelY - Obj_Y_Pos;
     always_comb begin
-        if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
-            (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
-            (Obj_On == 1'b1)) begin
-            is_obj = 1'b1;
-            Obj_address =  DistX + DistY * Width;
-        end
-        else begin
-            is_obj = 1'b0;
-            Obj_address = 11'b0;
-        end
+
+        DistX = PixelX - Obj_X_Pos;
+        DistY = PixelY - Obj_Y_Pos;
+        is_obj = 1'b0;
+        Obj_address = 11'b0;
+        case (Player_Direction)
+            // Front (Down)
+            2'd0: begin
+                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
+                    (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + TotalHeight)) &&
+                    (Obj_On == 1'b1)) begin
+                        is_obj = 1'b1;
+                        Obj_address =  DistX + DistY[3:0] * Width;
+                    end
+            end
+            // Left
+            2'd1: begin
+                if ((PixelX + TotalWidth >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
+                    (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
+                    (Obj_On == 1'b1)) begin
+                        is_obj = 1'b1;
+                        DistX = Obj_X_Pos - PixelX;
+                        Obj_address =  DistX[3:0] + DistY * Width;
+                    end
+            end
+            // Back (up)
+            2'd2: begin
+                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
+                    (PixelY + TotalHeight >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
+                    (Obj_On == 1'b1)) begin
+                        is_obj = 1'b1;
+                        DistY = Obj_Y_Pos - PixelY;
+                        Obj_address =  DistX + DistY[3:0] * Width;
+                    end
+            end
+            // Right
+            2'd3: begin
+                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + TotalWidth)) &&
+                    (PixelY  >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
+                    (Obj_On == 1'b1)) begin
+                        is_obj = 1'b1;
+                        Obj_address =  DistX[3:0] + DistY * Width;
+                    end
+            end
+        endcase
+
+        // if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
+        //     (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
+        //     (Obj_On == 1'b1)) begin
+        //     is_obj = 1'b1;
+        //     Obj_address =  DistX + DistY * Width;
+        // end
+        // else begin
+        //     is_obj = 1'b0;
+        //     Obj_address = 11'b0;
+        // end
     end
     
 
