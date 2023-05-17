@@ -4,7 +4,7 @@
  *
  */
 
-module palette
+module foreground_palette
 (
 	input logic [4:0] read_address,
 	input Clk,
@@ -16,7 +16,7 @@ logic [23:0] mem [0:31];
 
 initial
 begin
-	 $readmemh("sprite/palette.txt", mem);
+	 $readmemh("sprite/foreground_palette.txt", mem);
 end
 
 

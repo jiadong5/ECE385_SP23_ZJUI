@@ -186,25 +186,25 @@ module boxhead( input               CLOCK_50,
     );
 
    
-    palette bkg_palette_inst(
+    background_palette bkg_palette_inst(
         .*,
         .read_address(bkg_index),
         .data_Out(bkg_color)
     );
 
-    palette player_palette_inst(
+    foreground_palette player_palette_inst(
         .*,
         .read_address(player_index),
         .data_Out(player_color)
     );
 
-    palette enemy_palette_inst(
+    foreground_palette enemy_palette_inst(
         .*,
         .read_address(enemy_index),
         .data_Out(enemy_color)
     );
 
-    palette attack_palette_inst(
+    foreground_palette attack_palette_inst(
         .*,
         .read_address(attack_index),
         .data_Out(attack_color)
