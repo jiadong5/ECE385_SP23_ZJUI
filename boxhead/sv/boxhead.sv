@@ -3,7 +3,7 @@
 //-------------------------------------------------------------------------
 
 
-`define ENEMY_NUM 2
+`define ENEMY_NUM 4
 module boxhead( input               CLOCK_50,
              input        [3:0]  KEY,          //bit 0 is set up as Reset
              output logic [6:0]  HEX0, HEX1,
@@ -156,23 +156,24 @@ module boxhead( input               CLOCK_50,
         .data_Out(player_index)
     );
 
-    enemy #(.id(0)) enemy0_inst(
-        .*,
-        .Reset(Reset_h),
-        .frame_clk(VGA_VS),
-        .keycode(keycode),
-        .is_obj(is_enemy[0]),
-        .Obj_address(enemy_address[0]),
-    );
 
-    enemy #(.id(1)) enemy1_inst(
-        .*,
-        .Reset(Reset_h),
-        .frame_clk(VGA_VS),
-        .keycode(keycode),
-        .is_obj(is_enemy[1]),
-        .Obj_address(enemy_address[1]),
-    );
+    genvar i;
+    generate 
+        for (i = 0; i < `ENEMY_NUM; i++) begin: multi_enemy
+            enemy #(.id(i)) enemy_inst(
+                .Clk(Clk),
+                .Reset(Reset_h),
+                .frame_clk(VGA_VS),
+                .keycode(keycode),
+                .PixelX(PixelX),
+                .PixelY(PixelY),
+                .Player_X(Player_X),
+                .Player_Y(Player_Y),
+                .is_obj(is_enemy[i]),
+                .Obj_address(enemy_address[i])
+            );
+        end
+    endgenerate    
 
     enemyROM enemyROM_inst(
         .Clk(Clk),
@@ -180,6 +181,14 @@ module boxhead( input               CLOCK_50,
         .read_address1(enemy_address[1]),
         .data_Out0(enemy_index[0]),
         .data_Out1(enemy_index[1])
+    );
+
+    enemyROM enemyROM_inst1(
+        .Clk(Clk),
+        .read_address0(enemy_address[2]),
+        .read_address1(enemy_address[3]),
+        .data_Out0(enemy_index[2]),
+        .data_Out1(enemy_index[3])
     );
     
     attack attack_inst(
@@ -215,7 +224,15 @@ module boxhead( input               CLOCK_50,
         .read_address0(enemy_index[0]),
         .read_address1(enemy_index[1]),
         .data_Out0(enemy_color[0]),
-        .data_Out1(enemy_color[1])
+        .data_Out1(enemy_color[1]),
+    );
+
+    foreground_palette enemy_palette_inst1(
+        .Clk(Clk),
+        .read_address0(enemy_index[2]),
+        .read_address1(enemy_index[3]),
+        .data_Out0(enemy_color[2]),
+        .data_Out1(enemy_color[3]),
     );
 
     foreground_palette attack_palette_inst(
@@ -247,6 +264,16 @@ module boxhead( input               CLOCK_50,
             VGA_R = enemy_color[1][23:16];
             VGA_G = enemy_color[1][15:8];
             VGA_B = enemy_color[1][7:0];
+        end
+        else if ((is_enemy[2]) && (enemy_index[2])) begin
+            VGA_R = enemy_color[2][23:16];
+            VGA_G = enemy_color[2][15:8];
+            VGA_B = enemy_color[2][7:0];
+        end
+        else if ((is_enemy[3]) && (enemy_index[3])) begin
+            VGA_R = enemy_color[3][23:16];
+            VGA_G = enemy_color[3][15:8];
+            VGA_B = enemy_color[3][7:0];
         end
         else begin
             VGA_R = bkg_color[23:16];
