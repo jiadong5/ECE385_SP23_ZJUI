@@ -1,10 +1,10 @@
 //-------------------------------------------------------------------------
 //      audio.sv                                                         --
 //      Created by Yihong Jin                                            --
-//      Cited by Yuhao Ge (2021.12.28)                                   --
+//      Cited by Jiadong Hong (2023.5.16)                                --
 //      Fall 2021                                                        --
 //                                                                       --
-//      This mopdule helps to control the sound play of the board        --
+//      This module helps to control the sound play of the board         --
 //      UIUC ECE Department                                              --
 //-------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ always_comb
 				else
 					inner_counter = 16'd0;
 					
-				if (counter== music_frequency && Add<=17'd80549 && data_over!=0)
+				if (counter== music_frequency && Add<=17'd96865 && data_over!=0)
 					inner_Add = Add+17'd1;
 				else if (Add < 17'd80549)
 					inner_Add = Add;
