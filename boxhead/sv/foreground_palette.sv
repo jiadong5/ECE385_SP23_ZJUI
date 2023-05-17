@@ -22,9 +22,8 @@ begin
 end
 
 
-always_ff @ (posedge Clk) begin
-	data_Out0 <= mem[read_address0];
-	data_Out1 <= mem[read_address1];
-end
+	// data_Out0 <= mem[read_address0];
+	// data_Out1 <= mem[read_address1];
+	assign data_Out0 = mem[read_address0];
 
 endmodule

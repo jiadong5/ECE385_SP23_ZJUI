@@ -4,7 +4,7 @@
  *
  */
 
-module backgroundRAM
+module backgroundROM
 (
 		input [17:0] read_address,
 		input Clk,

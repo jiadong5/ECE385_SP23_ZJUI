@@ -106,11 +106,6 @@ module boxhead( input               CLOCK_50,
     logic [4:0] enemy_index [`ENEMY_NUM];
     logic [4:0] attack_index;
 
-    logic [23:0] bkg_color;
-    logic [23:0] player_color;
-    logic [23:0] enemy_color [`ENEMY_NUM];
-    logic [23:0] attack_color;
-
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
     logic is_attack;
@@ -132,7 +127,7 @@ module boxhead( input               CLOCK_50,
         .sync(VGA_SYNC_N)
     );
 
-    backgroundRAM background_ram(
+    backgroundROM backgroundROM_inst(
         .*,
         .read_address(bkg_address),
         .data_Out(bkg_index)
@@ -206,82 +201,10 @@ module boxhead( input               CLOCK_50,
         .data_Out(attack_index)
     );
 
-   
-    background_palette bkg_palette_inst(
-        .*,
-        .read_address(bkg_index),
-        .data_Out(bkg_color)
+    
+    color_mapper color_mapper_inst(
+        .*
     );
-
-    foreground_palette player_palette_inst(
-        .Clk(Clk),
-        .read_address0(player_index),
-        .data_Out0(player_color)
-    );
-
-    foreground_palette enemy_palette_inst(
-        .Clk(Clk),
-        .read_address0(enemy_index[0]),
-        .read_address1(enemy_index[1]),
-        .data_Out0(enemy_color[0]),
-        .data_Out1(enemy_color[1]),
-    );
-
-    foreground_palette enemy_palette_inst1(
-        .Clk(Clk),
-        .read_address0(enemy_index[2]),
-        .read_address1(enemy_index[3]),
-        .data_Out0(enemy_color[2]),
-        .data_Out1(enemy_color[3]),
-    );
-
-    foreground_palette attack_palette_inst(
-        .Clk(Clk),
-        .read_address0(attack_index),
-        .data_Out0(attack_color)
-    );
-
-    always_comb begin
-        // it's not red(sprite bacground color), which corresponds to index 0
-        if ((is_attack) && (attack_index)) begin
-            VGA_R = attack_color[23:16];
-            VGA_G = attack_color[15:8];
-            VGA_B = attack_color[7:0];
-        end
-        // If background is player and it's not red(sprite background color)
-        else if(((is_player) && (player_index)) ||
-                ((is_attack) && (!attack_index) && (player_index)) ) begin
-            VGA_R = player_color[23:16];
-            VGA_G = player_color[15:8];
-            VGA_B = player_color[7:0];
-        end
-        else if ((is_enemy[0]) && (enemy_index[0])) begin
-            VGA_R = enemy_color[0][23:16];
-            VGA_G = enemy_color[0][15:8];
-            VGA_B = enemy_color[0][7:0];
-        end
-        else if ((is_enemy[1]) && (enemy_index[1])) begin
-            VGA_R = enemy_color[1][23:16];
-            VGA_G = enemy_color[1][15:8];
-            VGA_B = enemy_color[1][7:0];
-        end
-        else if ((is_enemy[2]) && (enemy_index[2])) begin
-            VGA_R = enemy_color[2][23:16];
-            VGA_G = enemy_color[2][15:8];
-            VGA_B = enemy_color[2][7:0];
-        end
-        else if ((is_enemy[3]) && (enemy_index[3])) begin
-            VGA_R = enemy_color[3][23:16];
-            VGA_G = enemy_color[3][15:8];
-            VGA_B = enemy_color[3][7:0];
-        end
-        else begin
-            VGA_R = bkg_color[23:16];
-            VGA_G = bkg_color[15:8];
-            VGA_B = bkg_color[7:0];
-        end
-
-    end
 
     // Display keycode on hex display
     // HexDriver hex_inst_0 (keycode[3:0], HEX0);
