@@ -3,7 +3,7 @@
 /*  Enemy
 */
 
-module  enemy #(parameter id=0) ( input       Clk,                // 50 MHz clock
+module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
                              frame_clk,          // The clock indicating a new frame (~60Hz)
                input [7:0]   keycode,
@@ -17,8 +17,8 @@ module  enemy #(parameter id=0) ( input       Clk,                // 50 MHz cloc
     
     // parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
     // parameter [8:0] Obj_Y_Center = 10'd60;  // Center position on the Y axis
-    parameter [8:0] Obj_X_Center = 10'd100 * id;
-    parameter [8:0] Obj_Y_Center = 10'd60 * id;
+    parameter [8:0] Obj_X_Center = 10'd100 * (id + 1);
+    parameter [8:0] Obj_Y_Center = 10'd60 * (id + 1);
 
     parameter [8:0] Height = 10'd26;         // Height of object
     parameter [8:0] Width = 10'd26;          // Width of object
