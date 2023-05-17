@@ -48,23 +48,23 @@ module  attack ( input       Clk,                // 50 MHz clock
         case (Player_Direction)
             // Front (Down)
             2'd0: begin
-                Obj_X_Pos = Player_X + 10'd2; 
-                Obj_Y_Pos = Player_Y + 10'd40;
+                Obj_X_Pos = Player_X; 
+                Obj_Y_Pos = Player_Y + 10'd16;
             end
             // Left
             2'd1: begin
-                Obj_X_Pos = Player_X;
-                Obj_Y_Pos = Player_Y + 10'd10;
+                Obj_X_Pos = Player_X - 10'd16;
+                Obj_Y_Pos = Player_Y;
             end
             // Back (up)
             2'd2: begin
                 Obj_X_Pos = Player_X;
-                Obj_Y_Pos = Player_Y;
+                Obj_Y_Pos = Player_Y - 10'd16;
             end
             // Right
             2'd3: begin
-                Obj_X_Pos = Player_X + 10'd36;
-                Obj_Y_Pos = Player_Y + 10'd30;
+                Obj_X_Pos = Player_X + 10'd16;
+                Obj_Y_Pos = Player_Y;
             end
         endcase
 

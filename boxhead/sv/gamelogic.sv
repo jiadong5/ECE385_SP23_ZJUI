@@ -85,8 +85,15 @@ module gamelogic
         if (Attack_On && (Enemy_Blood > 6'd0)) begin
             case(Player_Direction)
                 // Down (Front)
-                2'd0: begin
-                end
+                // 2'd0: begin
+                //     if ((Attack_X <= Enemy_X + Enemy_Width <= Attack_X + Attack_Width) || 
+                //         (Attack_X <= Enemy_X <= Attack_X + Attack_Width)) begin
+                //             if ((Attack_Y <= Enemy_Y + Enemy_Height <= Attack_Y + Attack_Height) || 
+                //                 (Attack_Y <= Enemy_Y <= Attack_Y + Attack_Height)) begin
+                //                     Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
+                //                 end
+                //         end
+                // end
                 // Left 
                 2'd1: begin
                 end

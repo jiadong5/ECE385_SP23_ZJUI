@@ -11,12 +11,12 @@ module attackROM
 		output logic [4:0] data_Out
 );
 
-// 16 * 16 = 2^ 8 = 256
+// 16 * 16 = 2 ^ 8 = 256
 logic [4:0] mem [0:255];
 
 initial
 begin
-    $readmemh("sprite/attack.txt", mem, 0);
+    $readmemh("sprite/unit_lightening.txt", mem, 0);
 end
 
 

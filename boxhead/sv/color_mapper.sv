@@ -38,8 +38,9 @@ module color_mapper
         if ((is_attack) && (attack_index))
             fgd_index = attack_index;
         // If background is player and it's not red(sprite background color)
-        else if(((is_player) && (player_index)) ||
-                ((is_attack) && (!attack_index) && (player_index)) )
+        // else if(((is_player) && (player_index)) ||
+        //         ((is_attack) && (!attack_index) && (player_index)) )
+        else if ((is_player) && (player_index))
             fgd_index = player_index;
         else if ((is_enemy[0]) && (enemy_index[0]))
             fgd_index = enemy_index[0];

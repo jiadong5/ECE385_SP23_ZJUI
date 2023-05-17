@@ -8,6 +8,7 @@ module  player ( input       Clk,                // 50 MHz clock
                              frame_clk,          // The clock indicating a new frame (~60Hz)
                input [7:0]   keycode,
                input [8:0]   PixelX, PixelY,     
+               input  logic Attack_On,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                output logic [12:0] Obj_address,
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
@@ -162,10 +163,12 @@ module  player ( input       Clk,                // 50 MHz clock
             is_obj = 1'b1;
 
             // Compute Object address based on its position, direction and walk step count
-            if (~Obj_Step_Count[0])
-                Obj_address = DistX + DistY * Width + Width * Height * (3 * Obj_Direction);
+            if (Attack_On)
+                Obj_address = DistX + DistY * Width + Width * Height * (4 * Obj_Direction + 3);
+            else if (~Obj_Step_Count[0])
+                Obj_address = DistX + DistY * Width + Width * Height * (4 * Obj_Direction);
             else
-                Obj_address = DistX + DistY * Width + Width * Height * (3 * Obj_Direction + 1 + Obj_Step_Count[1]);
+                Obj_address = DistX + DistY * Width + Width * Height * (4 * Obj_Direction + 1 + Obj_Step_Count[1]);
         end
         else begin
             is_obj = 1'b0;
