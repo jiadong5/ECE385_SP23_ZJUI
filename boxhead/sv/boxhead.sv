@@ -118,6 +118,9 @@ module boxhead( input               CLOCK_50,
     logic [8:0] Enemy_X [`ENEMY_NUM];
     logic [8:0] Enemy_Y [`ENEMY_NUM];
 
+    logic [7:0] Score [`ENEMY_NUM];
+    logic [7:0] Total_Score;
+
     assign PixelX = DrawX[9:1];
     assign PixelY = DrawY[9:1];
 
@@ -231,20 +234,21 @@ module boxhead( input               CLOCK_50,
                 .Enemy_Y(Enemy_Y[j]),
                 .Player_Direction(Player_Direction),
                 .Attack_On(Attack_On),
-                .Enemy_Alive(Enemy_Alive[j])
+                .Enemy_Alive(Enemy_Alive[j]),
+                .Score(Score[j])
             );
         end
     endgenerate
 
-
+    assign Total_Score = Score[0] + Score[1] + Score[2] + Score[3];
     
     color_mapper color_mapper_inst(
         .*
     );
 
     // Display keycode on hex display
-    // HexDriver hex_inst_0 (keycode[3:0], HEX0);
-    // HexDriver hex_inst_1 (keycode[7:4], HEX1);
+    HexDriver hex_inst_0 (Total_Score[3:0], HEX0);
+    HexDriver hex_inst_1 (Total_Score[7:4], HEX1);
 
     
 endmodule
