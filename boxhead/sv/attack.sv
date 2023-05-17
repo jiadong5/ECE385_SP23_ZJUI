@@ -114,7 +114,8 @@ module  attack ( input       Clk,                // 50 MHz clock
             end
             // Left
             2'd1: begin
-                if ((PixelX + TotalWidth >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
+                // 
+                if ((PixelX + TotalWidth >= Obj_X_Pos) && (PixelX < (Obj_X_Pos)) &&
                     (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
@@ -125,7 +126,7 @@ module  attack ( input       Clk,                // 50 MHz clock
             // Back (up)
             2'd2: begin
                 if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
-                    (PixelY + TotalHeight >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
+                    (PixelY + TotalHeight >= Obj_Y_Pos) && (PixelY < Obj_Y_Pos) &&
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
                         DistY = Obj_Y_Pos - PixelY;
@@ -143,16 +144,6 @@ module  attack ( input       Clk,                // 50 MHz clock
             end
         endcase
 
-        // if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
-        //     (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
-        //     (Obj_On == 1'b1)) begin
-        //     is_obj = 1'b1;
-        //     Obj_address =  DistX + DistY * Width;
-        // end
-        // else begin
-        //     is_obj = 1'b0;
-        //     Obj_address = 11'b0;
-        // end
     end
     
 
