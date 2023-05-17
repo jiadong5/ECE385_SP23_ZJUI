@@ -3,7 +3,7 @@
 /*  Enemy
 */
 
-module  enemy ( input       Clk,                // 50 MHz clock
+module  enemy #(parameter id=0) ( input       Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
                              frame_clk,          // The clock indicating a new frame (~60Hz)
                input [7:0]   keycode,
@@ -15,8 +15,11 @@ module  enemy ( input       Clk,                // 50 MHz clock
                // output logic [1:0] Obj_Direction
               );
     
-    parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
-    parameter [8:0] Obj_Y_Center = 10'd60;  // Center position on the Y axis
+    // parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
+    // parameter [8:0] Obj_Y_Center = 10'd60;  // Center position on the Y axis
+    parameter [8:0] Obj_X_Center = 10'd100 * id;
+    parameter [8:0] Obj_Y_Center = 10'd60 * id;
+
     parameter [8:0] Height = 10'd26;         // Height of object
     parameter [8:0] Width = 10'd26;          // Width of object
 
@@ -35,8 +38,6 @@ module  enemy ( input       Clk,                // 50 MHz clock
     logic [1:0] Obj_Direction_in, Obj_Direction;
 
     // Count how many steps object has walked in one direction
-    // logic [1:0] Obj_Up_Count, Obj_Down_Count, Obj_Left_Count, Obj_Right_Count;
-    // logic [1:0] Obj_Up_Count_in, Obj_Down_Count_in, Obj_Left_Count_in, Obj_Right_Count_in;
     logic [1:0] Obj_Step_Count;
     
 

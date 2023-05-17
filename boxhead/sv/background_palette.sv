@@ -21,7 +21,7 @@ end
 
 
 always_ff @ (posedge Clk) begin
-	data_Out<= mem[read_address];
+	data_Out <= mem[read_address];
 end
 
 endmodule
