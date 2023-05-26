@@ -6,7 +6,7 @@
 `define ENEMY_NUM 4
 module boxhead( input               CLOCK_50,
              input        [3:0]  KEY,          //bit 0 is set up as Reset
-             output logic [6:0]  HEX0, HEX1,
+             output logic [6:0]  HEX0, HEX1, HEX2, HEX3,HEX4,HEX5,HEX6,HEX7,
              // VGA Interface 
              output logic [7:0]  VGA_R,        //VGA Red
                                  VGA_G,        //VGA Green
@@ -100,17 +100,37 @@ module boxhead( input               CLOCK_50,
     logic [12:0] player_address;
     logic [12:0] enemy_address [`ENEMY_NUM];
     logic [7:0] attack_address;
+    logic [8:0] enemy_attack_address [`ENEMY_NUM];
+    logic [8:0] existed_enemy_attack_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
     logic [4:0] enemy_index [`ENEMY_NUM];
     logic [4:0] attack_index;
+    // logic [4:0] enemy_attack_index [`ENEMY_NUM];
+    logic [4:0] existed_enemy_attack_index;
 
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
     logic is_attack;
+    logic is_enemy_attack [`ENEMY_NUM];
+    logic existed_is_enemy_attack;
+
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
+    logic Attack_On;
+    logic Enemy_Attack_On [`ENEMY_NUM];
+    logic [8:0] Attack_X, Attack_Y;
+    logic Enemy_Alive [`ENEMY_NUM];
+    logic [8:0] Enemy_X [`ENEMY_NUM];
+    logic [8:0] Enemy_Y [`ENEMY_NUM];
+    logic Enemy_Attack_Ready [`ENEMY_NUM];
+
+    logic [7:0] Score [`ENEMY_NUM];
+    logic [7:0] Total_Score;
+    logic [9:0] Enemy_Total_Damage [`ENEMY_NUM];
+    parameter [9:0] Player_Full_Blood = 7'd100;
+    logic [9:0] Player_Blood;
 
     assign PixelX = DrawX[9:1];
     assign PixelY = DrawY[9:1];
@@ -126,18 +146,23 @@ module boxhead( input               CLOCK_50,
         .blank(VGA_BLANK_N),
         .sync(VGA_SYNC_N)
     );
-
+    // Comment to increase compile time
+    /*
     backgroundROM backgroundROM_inst(
         .*,
         .read_address(bkg_address),
         .data_Out(bkg_index)
     );
+    */ 
+
+    assign bkg_index = 1;
 
     player player_inst(
         .*,
         .Reset(Reset_h),
         .frame_clk(VGA_VS),
         .keycode(keycode),
+        .Attack_On(Attack_On),
         .is_obj(is_player),
         .Obj_address(player_address),
         .Obj_X_Pos(Player_X),
@@ -162,10 +187,15 @@ module boxhead( input               CLOCK_50,
                 .keycode(keycode),
                 .PixelX(PixelX),
                 .PixelY(PixelY),
+                .is_alive(Enemy_Alive[i]),
                 .Player_X(Player_X),
                 .Player_Y(Player_Y),
+                // Output
                 .is_obj(is_enemy[i]),
-                .Obj_address(enemy_address[i])
+                .Obj_address(enemy_address[i]),
+                .Obj_X_Pos(Enemy_X[i]),
+                .Obj_Y_Pos(Enemy_Y[i]),
+                .Enemy_Attack_Ready(Enemy_Attack_Ready[i])
             );
         end
     endgenerate    
@@ -191,8 +221,12 @@ module boxhead( input               CLOCK_50,
         .Reset(Reset_h),
         .frame_clk(VGA_VS),
         .keycode(keycode),
+        // Output
         .is_obj(is_attack),
-        .Obj_address(attack_address)
+        .Obj_address(attack_address),
+        .Obj_On(Attack_On),
+        .Obj_X_Pos(Attack_X),
+        .Obj_Y_Pos(Attack_Y)
     );
 
     attackROM attackROM_inst(
@@ -201,14 +235,100 @@ module boxhead( input               CLOCK_50,
         .data_Out(attack_index)
     );
 
+    genvar k;
+    generate 
+        for (k = 0; k < `ENEMY_NUM; k++) begin: enemy_attack
+            enemy_attack enemy_attack_inst(
+                .Clk(Clk),
+                .Reset(Reset_h),
+                .frame_clk(VGA_VS),
+                .Player_X(Player_X),
+                .Player_Y(Player_Y),
+                .PixelX(PixelX),
+                .PixelY(PixelY),
+                .Enemy_Attack_Ready(Enemy_Attack_Ready[k]),
+                // Output
+                .is_obj(is_enemy_attack[k]),
+                .Obj_address(enemy_attack_address[k]),
+                .Obj_On(Enemy_Attack_On[k])
+            );
+        end
+    endgenerate
+
+    // Used to reduce size of ROM and read/write ROM
+    always_comb begin
+        if(Enemy_Attack_On[0]) begin
+            existed_enemy_attack_address = enemy_attack_address[0];
+            existed_is_enemy_attack = is_enemy_attack[0];
+        end
+        else if (Enemy_Attack_On[1]) begin
+            existed_enemy_attack_address = enemy_attack_address[1];
+            existed_is_enemy_attack = is_enemy_attack[1];
+        end
+        else if (Enemy_Attack_On[2]) begin
+            existed_enemy_attack_address = enemy_attack_address[2];
+            existed_is_enemy_attack = is_enemy_attack[2];
+        end
+        else if (Enemy_Attack_On[3]) begin
+            existed_enemy_attack_address = enemy_attack_address[3];
+            existed_is_enemy_attack = is_enemy_attack[3];
+        end
+        else begin
+            existed_enemy_attack_address = 9'b0;
+            existed_is_enemy_attack = 1'b0;
+        end
+    end
+
+    enemy_attackROM enemy_attackROM_inst(
+        .Clk(Clk),
+        .read_address(existed_enemy_attack_address),
+        .data_Out(existed_enemy_attack_index)
+    );
+
+
+    genvar j;
+    generate
+        for (j = 0; j < `ENEMY_NUM; j++) begin: game
+            gamelogic gamelogic_inst(
+                .Clk(Clk),
+                .Reset(Reset_h),
+                .frame_clk(VGA_VS),
+                .Player_X(Player_X),
+                .Player_Y(Player_Y),
+                .Attack_X(Attack_X),
+                .Attack_Y(Attack_Y),
+                .Enemy_X(Enemy_X[j]),
+                .Enemy_Y(Enemy_Y[j]),
+                .Player_Direction(Player_Direction),
+                .Attack_On(Attack_On),
+                .Enemy_Attack_On(Enemy_Attack_On[j]),
+                // Output
+                .Enemy_Alive(Enemy_Alive[j]),
+                .Score(Score[j]),
+                .Enemy_Total_Damage(Enemy_Total_Damage[j])
+            );
+        end
+    endgenerate
+
+    assign Total_Score = Score[0] + Score[1] + Score[2] + Score[3];
+    assign Player_Blood = Player_Full_Blood - (Enemy_Total_Damage[0] + Enemy_Total_Damage[1] + Enemy_Total_Damage[2] + Enemy_Total_Damage[3]);
     
     color_mapper color_mapper_inst(
-        .*
+        .*,
+        .enemy_attack_index(existed_enemy_attack_index),
+        .is_enemy_attack(existed_is_enemy_attack)
     );
 
     // Display keycode on hex display
-    // HexDriver hex_inst_0 (keycode[3:0], HEX0);
-    // HexDriver hex_inst_1 (keycode[7:4], HEX1);
+    HexDriver hex_inst_0 (Total_Score[3:0], HEX0);
+    HexDriver hex_inst_1 (Total_Score[7:4], HEX1);
 
+    HexDriver hex_inst_2 (Score[0][3:0], HEX2);
+    HexDriver hex_inst_3 (Score[0][7:4], HEX3);
+
+    HexDriver hex_inst_4 (Player_Blood[3:0], HEX4);
+    HexDriver hex_inst_5 (Player_Blood[7:4], HEX5);
     
+    HexDriver hex_inst_6 (Enemy_Total_Damage[0][3:0], HEX6);
+    HexDriver hex_inst_7 (Enemy_Total_Damage[0][7:4], HEX7);
 endmodule

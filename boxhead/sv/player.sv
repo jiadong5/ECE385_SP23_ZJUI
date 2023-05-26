@@ -8,6 +8,7 @@ module  player ( input       Clk,                // 50 MHz clock
                              frame_clk,          // The clock indicating a new frame (~60Hz)
                input [7:0]   keycode,
                input [8:0]   PixelX, PixelY,     
+               input  logic Attack_On,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                output logic [12:0] Obj_address,
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
@@ -21,11 +22,10 @@ module  player ( input       Clk,                // 50 MHz clock
 
     parameter [8:0] Obj_X_Min = 10'd1;       // Leftmost point on the X axis
     parameter [8:0] Obj_X_Max = 10'd319;     // Rightmost point on the X axis
-    parameter [8:0] Obj_Y_Min = 10'd0;       // Topmost point on the Y axis
-    parameter [8:0] Obj_Y_Max = 10'd239;     // Bottommost point on the Y axis
+    parameter [8:0] Obj_Y_Min = 10'd52;       // Topmost point on the Y axis
+    parameter [8:0] Obj_Y_Max = 10'd205;     // Bottommost point on the Y axis
     parameter [8:0] Obj_X_Step = 10'd3;      // Step size on the X axis
     parameter [8:0] Obj_Y_Step = 10'd3;      // Step size on the Y axis
-    parameter [8:0] Obj_Size = 10'd40;
 
     
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
@@ -71,10 +71,6 @@ module  player ( input       Clk,                // 50 MHz clock
             Obj_Y_Motion <= 10'd0;
 
             Obj_Direction <= 2'd0;
-            // Obj_Up_Count <= 2'd0;
-            // Obj_Down_Count <= 2'd0;
-            // Obj_Left_Count <= 2'd0;
-            // Obj_Right_Count <= 2'd0;
         end
         else
         begin
@@ -166,10 +162,12 @@ module  player ( input       Clk,                // 50 MHz clock
             is_obj = 1'b1;
 
             // Compute Object address based on its position, direction and walk step count
-            if (~Obj_Step_Count[0])
-                Obj_address = DistX + DistY * Width + Width * Height * (3 * Obj_Direction);
+            if (Attack_On)
+                Obj_address = DistX + DistY * Width + Width * Height * (4 * Obj_Direction + 3);
+            else if (~Obj_Step_Count[0])
+                Obj_address = DistX + DistY * Width + Width * Height * (4 * Obj_Direction);
             else
-                Obj_address = DistX + DistY * Width + Width * Height * (3 * Obj_Direction + 1 + Obj_Step_Count[1]);
+                Obj_address = DistX + DistY * Width + Width * Height * (4 * Obj_Direction + 1 + Obj_Step_Count[1]);
         end
         else begin
             is_obj = 1'b0;
