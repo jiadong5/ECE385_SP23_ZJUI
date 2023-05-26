@@ -100,23 +100,31 @@ module boxhead( input               CLOCK_50,
     logic [12:0] player_address;
     logic [12:0] enemy_address [`ENEMY_NUM];
     logic [7:0] attack_address;
+    logic [8:0] enemy_attack_address [`ENEMY_NUM];
+    logic [8:0] existed_enemy_attack_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
     logic [4:0] enemy_index [`ENEMY_NUM];
     logic [4:0] attack_index;
+    // logic [4:0] enemy_attack_index [`ENEMY_NUM];
+    logic [4:0] existed_enemy_attack_index;
 
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
     logic is_attack;
+    logic is_enemy_attack [`ENEMY_NUM];
+    logic existed_is_enemy_attack;
 
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
     logic Attack_On;
+    logic Enemy_Attack_On [`ENEMY_NUM];
     logic [8:0] Attack_X, Attack_Y;
     logic Enemy_Alive [`ENEMY_NUM];
     logic [8:0] Enemy_X [`ENEMY_NUM];
     logic [8:0] Enemy_Y [`ENEMY_NUM];
+    logic Enemy_Attack_Ready [`ENEMY_NUM];
 
     logic [7:0] Score [`ENEMY_NUM];
     logic [7:0] Total_Score;
@@ -183,7 +191,8 @@ module boxhead( input               CLOCK_50,
                 .is_obj(is_enemy[i]),
                 .Obj_address(enemy_address[i]),
                 .Obj_X_Pos(Enemy_X[i]),
-                .Obj_Y_Pos(Enemy_Y[i])
+                .Obj_Y_Pos(Enemy_Y[i]),
+                .Enemy_Attack_Ready(Enemy_Attack_Ready[i])
             );
         end
     endgenerate    
@@ -223,6 +232,57 @@ module boxhead( input               CLOCK_50,
         .data_Out(attack_index)
     );
 
+    genvar k;
+    generate 
+        for (k = 0; k < `ENEMY_NUM; k++) begin: enemy_attack
+            enemy_attack enemy_attack_inst(
+                .Clk(Clk),
+                .Reset(Reset_h),
+                .frame_clk(VGA_VS),
+                .Player_X(Player_X),
+                .Player_Y(Player_Y),
+                .PixelX(PixelX),
+                .PixelY(PixelY),
+                .Enemy_Attack_Ready(Enemy_Attack_Ready[k]),
+                // Output
+                .is_obj(is_enemy_attack[k]),
+                .Obj_address(enemy_attack_address[k]),
+                .Obj_On(Enemy_Attack_On[k])
+            );
+        end
+    endgenerate
+
+    // Used to reduce size of ROM and read/write ROM
+    always_comb begin
+        if(Enemy_Attack_On[0]) begin
+            existed_enemy_attack_address = enemy_attack_address[0];
+            existed_is_enemy_attack = is_enemy_attack[0];
+        end
+        else if (Enemy_Attack_On[1]) begin
+            existed_enemy_attack_address = enemy_attack_address[1];
+            existed_is_enemy_attack = is_enemy_attack[1];
+        end
+        else if (Enemy_Attack_On[2]) begin
+            existed_enemy_attack_address = enemy_attack_address[2];
+            existed_is_enemy_attack = is_enemy_attack[2];
+        end
+        else if (Enemy_Attack_On[3]) begin
+            existed_enemy_attack_address = enemy_attack_address[3];
+            existed_is_enemy_attack = is_enemy_attack[3];
+        end
+        else begin
+            existed_enemy_attack_address = 9'b0;
+            existed_is_enemy_attack = 1'b0;
+        end
+    end
+
+    enemy_attackROM enemy_attackROM_inst(
+        .Clk(Clk),
+        .read_address(existed_enemy_attack_address),
+        .data_Out(existed_enemy_attack_index)
+    );
+
+
     genvar j;
     generate
         for (j = 0; j < `ENEMY_NUM; j++) begin: game
@@ -239,7 +299,7 @@ module boxhead( input               CLOCK_50,
                 .Player_Direction(Player_Direction),
                 .Attack_On(Attack_On),
                 .Enemy_Alive(Enemy_Alive[j]),
-                .Score(Score[j]),
+                .Score(Score[j])
             );
         end
     endgenerate
@@ -247,7 +307,9 @@ module boxhead( input               CLOCK_50,
     assign Total_Score = Score[0] + Score[1] + Score[2] + Score[3];
     
     color_mapper color_mapper_inst(
-        .*
+        .*,
+        .enemy_attack_index(existed_enemy_attack_index),
+        .is_enemy_attack(existed_is_enemy_attack)
     );
 
     // Display keycode on hex display

@@ -12,7 +12,8 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                input  logic  is_alive,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                output logic [12:0] Obj_address,
-               output logic [8:0] Obj_X_Pos, Obj_Y_Pos
+               output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
+               output logic Enemy_Attack_Ready
                // output logic [1:0] Obj_Direction
               );
     
@@ -23,13 +24,15 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
 
     parameter [8:0] Height = 10'd26;         // Height of object
     parameter [8:0] Width = 10'd26;          // Width of object
+    parameter [8:0] Player_Height = 10'd20;
+    parameter [8:0] Player_Width = 10'd18;
 
     parameter [8:0] Obj_X_Min = 10'd0;       // Leftmost point on the X axis
     parameter [8:0] Obj_X_Max = 10'd319;     // Rightmost point on the X axis
     parameter [8:0] Obj_Y_Min = 10'd52;       // Topmost point on the Y axis
     parameter [8:0] Obj_Y_Max = 10'd205;     // Bottommost point on the Y axis
-    parameter [8:0] Obj_X_Step = 10'd1 + id[0];      // Step size on the X axis
-    parameter [8:0] Obj_Y_Step = 10'd1 + id[0];      // Step size on the Y axis
+    parameter [8:0] Obj_X_Step = 10'd1;      // Step size on the X axis
+    parameter [8:0] Obj_Y_Step = 10'd1;      // Step size on the Y axis
 
     
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
@@ -100,7 +103,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         begin
             // Walk Right
             // If is at left of player and last step is vertical
-            if ((Obj_X_Pos < Player_X)) begin
+            if ((Obj_X_Pos + Width < Player_X)) begin
                 Obj_X_Motion_in = Obj_X_Step;
                 Obj_Y_Motion_in = 1'b0;
                 Obj_Direction_in = 2'd3;
@@ -109,7 +112,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                     Obj_X_Motion_in = 1'b0;
             end
             // Walk Left
-            else if ((Obj_X_Pos > Player_X)) begin
+            else if ((Obj_X_Pos > Player_X + Player_Width)) begin
                 Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
                 Obj_Y_Motion_in = 1'b0;
                 Obj_Direction_in = 2'd1;
@@ -118,7 +121,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                     Obj_X_Motion_in = 1'b0;
             end
             // Walk Down
-            else if (Obj_Y_Pos < Player_Y) begin
+            else if (Obj_Y_Pos + Height < Player_Y) begin
                 Obj_X_Motion_in = 1'b0;
                 Obj_Y_Motion_in = Obj_Y_Step;
                 Obj_Direction_in = 2'd0;
@@ -127,7 +130,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                     Obj_Y_Motion_in = 10'b0;
             end
             // Walk Up
-            else if (Obj_Y_Pos > Player_Y) begin
+            else if (Obj_Y_Pos > Player_Y + Player_Width) begin
                 Obj_X_Motion_in = 1'b0;
                 Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);
                 Obj_Direction_in = 2'd2;
@@ -170,6 +173,13 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             is_obj = 1'b0;
             Obj_address = 11'b0;
         end
+    end
+
+    always_comb begin
+        if ((Obj_X_Motion == 0) && (Obj_Y_Motion == 0)) 
+            Enemy_Attack_Ready = 1'b1;
+        else
+            Enemy_Attack_Ready = 1'b0;
     end
     
 
