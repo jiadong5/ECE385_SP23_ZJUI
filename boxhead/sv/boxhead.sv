@@ -128,6 +128,9 @@ module boxhead( input               CLOCK_50,
 
     logic [7:0] Score [`ENEMY_NUM];
     logic [7:0] Total_Score;
+    logic [9:0] Enemy_Total_Damage [`ENEMY_NUM];
+    parameter [9:0] Player_Full_Blood = 7'd100;
+    logic [9:0] Player_Blood;
 
     assign PixelX = DrawX[9:1];
     assign PixelY = DrawY[9:1];
@@ -298,13 +301,17 @@ module boxhead( input               CLOCK_50,
                 .Enemy_Y(Enemy_Y[j]),
                 .Player_Direction(Player_Direction),
                 .Attack_On(Attack_On),
+                .Enemy_Attack_On(Enemy_Attack_On[j]),
+                // Output
                 .Enemy_Alive(Enemy_Alive[j]),
-                .Score(Score[j])
+                .Score(Score[j]),
+                .Enemy_Total_Damage(Enemy_Total_Damage[j])
             );
         end
     endgenerate
 
     assign Total_Score = Score[0] + Score[1] + Score[2] + Score[3];
+    assign Player_Blood = Player_Full_Blood - (Enemy_Total_Damage[0] + Enemy_Total_Damage[1] + Enemy_Total_Damage[2] + Enemy_Total_Damage[3]);
     
     color_mapper color_mapper_inst(
         .*,
@@ -319,9 +326,9 @@ module boxhead( input               CLOCK_50,
     HexDriver hex_inst_2 (Score[0][3:0], HEX2);
     HexDriver hex_inst_3 (Score[0][7:4], HEX3);
 
-    HexDriver hex_inst_4 (Score[0][3:0], HEX4);
-    HexDriver hex_inst_5 (Score[0][7:4], HEX5);
+    HexDriver hex_inst_4 (Player_Blood[3:0], HEX4);
+    HexDriver hex_inst_5 (Player_Blood[7:4], HEX5);
     
-    HexDriver hex_inst_6 (Score[2][3:0], HEX6);
-    HexDriver hex_inst_7 (Score[2][7:4], HEX7);
+    HexDriver hex_inst_6 (Enemy_Total_Damage[0][3:0], HEX6);
+    HexDriver hex_inst_7 (Enemy_Total_Damage[0][7:4], HEX7);
 endmodule
