@@ -135,12 +135,16 @@ module boxhead( input               CLOCK_50,
         .blank(VGA_BLANK_N),
         .sync(VGA_SYNC_N)
     );
-
+    // Comment to increase compile time
+    /*
     backgroundROM backgroundROM_inst(
         .*,
         .read_address(bkg_address),
         .data_Out(bkg_index)
     );
+    */ 
+
+    assign bkg_index = 1;
 
     player player_inst(
         .*,
@@ -235,7 +239,7 @@ module boxhead( input               CLOCK_50,
                 .Player_Direction(Player_Direction),
                 .Attack_On(Attack_On),
                 .Enemy_Alive(Enemy_Alive[j]),
-                .Score(Score[j])
+                .Score(Score[j]),
             );
         end
     endgenerate
@@ -253,8 +257,8 @@ module boxhead( input               CLOCK_50,
     HexDriver hex_inst_2 (Score[0][3:0], HEX2);
     HexDriver hex_inst_3 (Score[0][7:4], HEX3);
 
-    HexDriver hex_inst_4 (Score[1][3:0], HEX4);
-    HexDriver hex_inst_5 (Score[1][7:4], HEX5);
+    HexDriver hex_inst_4 (Score[0][3:0], HEX4);
+    HexDriver hex_inst_5 (Score[0][7:4], HEX5);
     
     HexDriver hex_inst_6 (Score[2][3:0], HEX6);
     HexDriver hex_inst_7 (Score[2][7:4], HEX7);

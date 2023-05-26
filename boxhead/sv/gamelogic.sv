@@ -80,7 +80,7 @@ module gamelogic
             if (frame2_clk_rising_edge) begin
                 if (Rebirth_Time == `RESPAWN_TIME) begin
                     Rebirth_Time_in = 10'd0;
-                    Enemy_Blood_in = 6'd100;
+                    Enemy_Blood_in = 7'd100;
                 end
                 else begin
                     Rebirth_Time_in = Rebirth_Time + 1'd1;
