@@ -69,7 +69,8 @@ module enemy_attack(input Clk,
     end
 
     always_comb begin
-        if(CoolDown_Counter == `COOLDOWN_TIME) begin
+        // if((CoolDown_Counter == `COOLDOWN_TIME) && (Enemy_Attack_Ready)) begin
+        if(Enemy_Attack_Ready) begin
             Obj_On = 1'b1;
         end
         else begin

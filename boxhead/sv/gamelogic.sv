@@ -1,5 +1,5 @@
 
-`define ENEMY_NUM 4
+`define ENEMY_NUM 8
 `define RESPAWN_TIME 200
 module gamelogic
 (

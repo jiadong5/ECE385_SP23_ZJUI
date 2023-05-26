@@ -38,6 +38,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
     logic [8:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
     logic [1:0] Obj_Direction_in, Obj_Direction;
+    logic Enemy_Attack_Ready_in;
 
     // Count how many steps object has walked in one direction
     logic [1:0] Obj_Step_Count;
@@ -75,6 +76,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             Obj_X_Motion <= 10'd0;
             Obj_Y_Motion <= 10'd0;
             Obj_Direction <= 2'd0;
+            Enemy_Attack_Ready <= 1'b0;
         end
         else
         begin
@@ -83,6 +85,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             Obj_X_Motion <= Obj_X_Motion_in;
             Obj_Y_Motion <= Obj_Y_Motion_in;
             Obj_Direction <= Obj_Direction_in;
+            Enemy_Attack_Ready <= Enemy_Attack_Ready_in;
         end
     end
     
@@ -96,11 +99,18 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         Obj_X_Motion_in = 10'd0;
         Obj_Y_Motion_in = 10'd0;
         Obj_Direction_in = Obj_Direction;
+        Enemy_Attack_Ready_in = Enemy_Attack_Ready;
         
         // Update position and motion only at rising edge of frame clock
         // Dead enemy stays at the same place
         if (frame2_clk_rising_edge & is_alive)
         begin
+
+            if ((Obj_X_Motion == 0) && (Obj_Y_Motion == 0)) 
+                Enemy_Attack_Ready_in = 1'b1;
+            else
+                Enemy_Attack_Ready_in = 1'b0;
+
             // Walk Right
             // If is at left of player and last step is vertical
             if ((Obj_X_Pos + Width < Player_X)) begin
@@ -175,12 +185,12 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         end
     end
 
-    always_comb begin
-        if ((Obj_X_Motion == 0) && (Obj_Y_Motion == 0)) 
-            Enemy_Attack_Ready = 1'b1;
-        else
-            Enemy_Attack_Ready = 1'b0;
-    end
+    // always_comb begin
+    //     if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0) && (is_alive)) 
+    //         Enemy_Attack_Ready = 1'b1;
+    //     else
+    //         Enemy_Attack_Ready = 1'b0;
+    // end
     
 
     
