@@ -100,16 +100,15 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         Obj_Y_Motion_in = 10'd0;
         Obj_Direction_in = Obj_Direction;
         Enemy_Attack_Ready_in = Enemy_Attack_Ready;
+
+        if (~is_alive)
+            Enemy_Attack_Ready_in = 1'b0;
         
         // Update position and motion only at rising edge of frame clock
         // Dead enemy stays at the same place
         if (frame2_clk_rising_edge & is_alive)
         begin
 
-            if ((Obj_X_Motion == 0) && (Obj_Y_Motion == 0)) 
-                Enemy_Attack_Ready_in = 1'b1;
-            else
-                Enemy_Attack_Ready_in = 1'b0;
 
             // Walk Right
             // If is at left of player and last step is vertical
@@ -151,6 +150,11 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             // Update the ball's position with its motion, immediate change, use Motion_in instead of Motion
             Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion_in;
             Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion_in;
+
+            if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0)) 
+                Enemy_Attack_Ready_in = 1'b1;
+            else
+                Enemy_Attack_Ready_in = 1'b0;
         end
     end
 
@@ -185,13 +189,6 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         end
     end
 
-    // always_comb begin
-    //     if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0) && (is_alive)) 
-    //         Enemy_Attack_Ready = 1'b1;
-    //     else
-    //         Enemy_Attack_Ready = 1'b0;
-    // end
-    
 
     
 endmodule
