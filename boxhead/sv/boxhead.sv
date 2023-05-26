@@ -6,7 +6,7 @@
 `define ENEMY_NUM 4
 module boxhead( input               CLOCK_50,
              input        [3:0]  KEY,          //bit 0 is set up as Reset
-             output logic [6:0]  HEX0, HEX1,
+             output logic [6:0]  HEX0, HEX1, HEX2, HEX3,HEX4,HEX5,HEX6,HEX7,
              // VGA Interface 
              output logic [7:0]  VGA_R,        //VGA Red
                                  VGA_G,        //VGA Green
@@ -250,5 +250,12 @@ module boxhead( input               CLOCK_50,
     HexDriver hex_inst_0 (Total_Score[3:0], HEX0);
     HexDriver hex_inst_1 (Total_Score[7:4], HEX1);
 
+    HexDriver hex_inst_2 (Score[0][3:0], HEX2);
+    HexDriver hex_inst_3 (Score[0][7:4], HEX3);
+
+    HexDriver hex_inst_4 (Score[1][3:0], HEX4);
+    HexDriver hex_inst_5 (Score[1][7:4], HEX5);
     
+    HexDriver hex_inst_6 (Score[2][3:0], HEX6);
+    HexDriver hex_inst_7 (Score[2][7:4], HEX7);
 endmodule

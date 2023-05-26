@@ -76,18 +76,20 @@ module gamelogic
         Rebirth_Time_in = Rebirth_Time;
         Score_in = Score;
         
-        if (frame2_clk_rising_edge & ~Enemy_Alive) begin
-            if (Rebirth_Time == `RESPAWN_TIME) begin
-                Rebirth_Time_in = 10'd0;
-                Enemy_Blood_in = 6'd100;
-            end
-            else begin
-                Rebirth_Time_in = Rebirth_Time + 1'd1;
+        if (~Enemy_Alive) begin
+            if (frame2_clk_rising_edge) begin
+                if (Rebirth_Time == `RESPAWN_TIME) begin
+                    Rebirth_Time_in = 10'd0;
+                    Enemy_Blood_in = 6'd100;
+                end
+                else begin
+                    Rebirth_Time_in = Rebirth_Time + 1'd1;
+                end
             end
         end
 
         // Player attack enemy and judge based on different directions
-        else if (Attack_On && (Enemy_Blood > 6'd0)) begin
+        else if (Attack_On & Enemy_Alive) begin
             case(Player_Direction)
                 // FIXME: Sometimes the damage doesn't work, especially when shooting left or right
                 // Hard to find the reason
@@ -102,7 +104,7 @@ module gamelogic
                                 ((Enemy_Y >= Attack_Y) && 
                                 (Enemy_Y <= Attack_Y + Attack_Long))) begin
                                     Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
-                                    Score_in = Score + 1'b1;
+                                    Score_in = Score + 1;
                             end
                     end
                 end
@@ -119,7 +121,7 @@ module gamelogic
                                 ((Enemy_Y >= Attack_Y) && 
                                 (Enemy_Y <= Attack_Y + Attack_Short))) begin
                                     Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
-                                    Score_in = Score + 1'b1;
+                                    Score_in = Score + 1;
                             end
                     end
                 end
@@ -136,7 +138,7 @@ module gamelogic
                             // if ((Attack_Y - Attack_Long <= Enemy_Y + Enemy_Height <= Attack_Y) || 
                             //     (Attack_Y - Attack_Long <= Enemy_Y <= Attack_Y))
                                 Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
-                                    Score_in = Score + 1'b1;
+                                    Score_in = Score + 1;
                             end
                     end
                 end
@@ -152,7 +154,7 @@ module gamelogic
                                 ((Enemy_Y >= Attack_Y) && 
                                 (Enemy_Y <= Attack_Y + Attack_Short))) begin
                                     Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
-                                    Score_in = Score + 1'b1;
+                                    Score_in = Score + 1;
                             end
                     end
                 end
