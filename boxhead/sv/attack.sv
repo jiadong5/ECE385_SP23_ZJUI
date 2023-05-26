@@ -17,10 +17,9 @@ module  attack ( input       Clk,                // 50 MHz clock
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos
               );
     
-    parameter [8:0] Height = 10'd16;         // Height of object (unit)
-    parameter [8:0] Width = 10'd16;          // Width of object (unit)
-    parameter [8:0] TotalHeight = 10'd80;
-    parameter [8:0] TotalWidth = 10'd80;
+
+    parameter [8:0] Short = 10'd16;         // Length of Short side of Obj
+    parameter [8:0] Long = 10'd80;          // Length of Long side of Obj
     
     logic Obj_On_in;        // If the object displays or not
 
@@ -50,23 +49,23 @@ module  attack ( input       Clk,                // 50 MHz clock
         case (Player_Direction)
             // Front (Down)
             2'd0: begin
-                Obj_X_Pos = Player_X; 
-                Obj_Y_Pos = Player_Y + 10'd16;
+                Obj_X_Pos = Player_X + 10'd1; 
+                Obj_Y_Pos = Player_Y + 10'd20;
             end
             // Left
             2'd1: begin
                 Obj_X_Pos = Player_X;
-                Obj_Y_Pos = Player_Y;
+                Obj_Y_Pos = Player_Y + 10'd2;
             end
             // Back (up)
             2'd2: begin
-                Obj_X_Pos = Player_X;
+                Obj_X_Pos = Player_X + 10'd1;
                 Obj_Y_Pos = Player_Y;
             end
             // Right
             2'd3: begin
-                Obj_X_Pos = Player_X + 10'd16;
-                Obj_Y_Pos = Player_Y;
+                Obj_X_Pos = Player_X + 10'd18;
+                Obj_Y_Pos = Player_Y + 10'd2;
             end
         endcase
 
@@ -85,14 +84,9 @@ module  attack ( input       Clk,                // 50 MHz clock
     always_comb
     begin
         Obj_On_in = 1'b0;
-        // Update position and motion only at rising edge of frame clock
-        // Don't know why but frame clk is not required
-        // if (frame2_clk_rising_edge)
-        // begin
-            // Press space
-            if (keycode == 10'd44)
-                Obj_On_in = 1'b1;
-        // end
+        // Press space
+        if (keycode == 10'd44)
+            Obj_On_in = 1'b1;
     end
 
     int DistX, DistY;
@@ -105,41 +99,41 @@ module  attack ( input       Clk,                // 50 MHz clock
         case (Player_Direction)
             // Front (Down)
             2'd0: begin
-                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
-                    (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + TotalHeight)) &&
+                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Short)) &&
+                    (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Long)) &&
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
-                        Obj_address =  DistX + DistY[3:0] * Width;
+                        Obj_address =  DistX + DistY[3:0] * Short;
                     end
             end
             // Left
             2'd1: begin
                 // 
-                if ((PixelX + TotalWidth >= Obj_X_Pos) && (PixelX < (Obj_X_Pos)) &&
-                    (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
+                if ((PixelX + Long >= Obj_X_Pos) && (PixelX < (Obj_X_Pos)) &&
+                    (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Short)) &&
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
                         DistX = Obj_X_Pos - PixelX;
-                        Obj_address =  DistX[3:0] + DistY * Width;
+                        Obj_address =  DistX[3:0] + DistY * Short;
                     end
             end
             // Back (up)
             2'd2: begin
-                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
-                    (PixelY + TotalHeight >= Obj_Y_Pos) && (PixelY < Obj_Y_Pos) &&
+                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Short)) &&
+                    (PixelY + Long >= Obj_Y_Pos) && (PixelY < Obj_Y_Pos) &&
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
                         DistY = Obj_Y_Pos - PixelY;
-                        Obj_address =  DistX + DistY[3:0] * Width;
+                        Obj_address =  DistX + DistY[3:0] * Short;
                     end
             end
             // Right
             2'd3: begin
-                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + TotalWidth)) &&
-                    (PixelY  >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) &&
+                if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Long)) &&
+                    (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Short)) &&
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
-                        Obj_address =  DistX[3:0] + DistY * Width;
+                        Obj_address =  DistX[3:0] + DistY * Short;
                     end
             end
         endcase

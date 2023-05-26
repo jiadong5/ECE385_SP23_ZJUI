@@ -91,71 +91,36 @@ module gamelogic
         // Player attack enemy and judge based on different directions
         else if (Attack_On & Enemy_Alive) begin
             case(Player_Direction)
-                // FIXME: Sometimes the damage doesn't work, especially when shooting left or right
-                // Hard to find the reason
                 // Down (Front)
                 2'd0: begin
-                    if (((Enemy_X + Enemy_Width >= Attack_X) && 
-                        (Enemy_X + Enemy_Width <= Attack_X + Attack_Short)) || 
-                        ((Enemy_X >= Attack_X) && 
-                        (Enemy_X <= Attack_X + Attack_Short))) begin
-                            if (((Enemy_Y + Enemy_Height >= Attack_Y) && 
-                                (Enemy_Y + Enemy_Height <= Attack_Y + Attack_Long)) ||
-                                ((Enemy_Y >= Attack_Y) && 
-                                (Enemy_Y <= Attack_Y + Attack_Long))) begin
-                                    Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
-                                    Score_in = Score + 1;
-                            end
+                    if ((Enemy_X + Enemy_Width >= Attack_X) && (Enemy_X <= Attack_X + Attack_Short) && 
+                        (Enemy_Y + Enemy_Height >= Attack_Y) && (Enemy_Y <= Attack_Y + Attack_Long)) begin
+                            Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
+                            Score_in = Score + 1;
                     end
                 end
                 // Left 
                 2'd1: begin
-                    // if ((Attack_X - Attack_Long <= Enemy_X + Enemy_Width <= Attack_X ) || 
-                    //     (Attack_X - Attack_Long <= Enemy_X <= Attack_X))  
-                    if (((Attack_X <= Enemy_X + Enemy_Width + Attack_Long) && 
-                        (Attack_X >= Enemy_X + Enemy_Width)) || 
-                        ((Attack_X <= Enemy_X + Attack_Long) && 
-                        (Attack_X >= Enemy_X))) begin
-                            if (((Enemy_Y + Enemy_Height >= Attack_Y) && 
-                                (Enemy_Y + Enemy_Height <= Attack_Y + Attack_Short)) ||
-                                ((Enemy_Y >= Attack_Y) && 
-                                (Enemy_Y <= Attack_Y + Attack_Short))) begin
-                                    Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
-                                    Score_in = Score + 1;
-                            end
+                    if ((Enemy_X + Enemy_Width + Attack_Long >= Attack_X) && (Enemy_X <= Attack_X) && 
+                        (Enemy_Y + Enemy_Height >= Attack_Y) && (Enemy_Y <= Attack_Y + Attack_Short)) begin
+                            Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
+                            Score_in = Score + 1;
                     end
                 end
                 // Up(Back)
                 2'd2: begin
-                    if (((Enemy_X + Enemy_Width >= Attack_X) &&
-                        (Enemy_X + Enemy_Width <= Attack_X + Attack_Short)) || 
-                        ((Enemy_X >= Attack_X) && 
-                        (Enemy_X <= Attack_X + Attack_Short))) begin
-                            if (((Attack_Y <= Enemy_Y + Enemy_Height + Attack_Long) && 
-                                (Attack_Y >= Enemy_Y + Enemy_Height)) || 
-                                ((Attack_Y <= Enemy_Y + Attack_Long) &&
-                                (Attack_Y >= Enemy_Y))) begin
-                            // if ((Attack_Y - Attack_Long <= Enemy_Y + Enemy_Height <= Attack_Y) || 
-                            //     (Attack_Y - Attack_Long <= Enemy_Y <= Attack_Y))
-                                Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
-                                    Score_in = Score + 1;
-                            end
+                    if ((Enemy_X + Enemy_Width >= Attack_X) && (Enemy_X <= Attack_X + Attack_Short) && 
+                        (Enemy_Y + Enemy_Width + Attack_Long>= Attack_Y) && (Enemy_Y <= Attack_Y)) begin
+                            Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
+                            Score_in = Score + 1;
                     end
                 end
                 // Right
                 2'd3: begin
-
-                    if (((Enemy_X + Enemy_Width >= Attack_X) && 
-                        (Enemy_X + Enemy_Width <= Attack_X + Attack_Long)) || 
-                        ((Enemy_X >= Attack_X) && 
-                        (Enemy_X <= Attack_X + Attack_Long))) begin
-                            if (((Enemy_Y + Enemy_Height >= Attack_Y) && 
-                                (Enemy_Y + Enemy_Height <= Attack_Y + Attack_Short)) ||
-                                ((Enemy_Y >= Attack_Y) && 
-                                (Enemy_Y <= Attack_Y + Attack_Short))) begin
-                                    Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
-                                    Score_in = Score + 1;
-                            end
+                    if ((Enemy_X + Enemy_Width >= Attack_X) && (Enemy_X <= Attack_X + Attack_Long) && 
+                        (Enemy_Y + Enemy_Height >= Attack_Y) && (Enemy_Y <= Attack_Y + Attack_Short) ) begin
+                            Enemy_Blood_in = Enemy_Blood + (~(Damage) + 1'b1);
+                            Score_in = Score + 1;
                     end
                 end
             endcase
