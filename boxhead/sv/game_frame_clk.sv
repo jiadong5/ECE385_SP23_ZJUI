@@ -3,6 +3,7 @@
 module game_frame_clk(
     input logic Clk,
     input logic frame_clk,
+    input logic Game_Over_On,
     output logic game_frame_clk_rising_edge
 );
 
@@ -16,12 +17,16 @@ module game_frame_clk(
     // For game, Reduce frame clk frequency. 
     logic [1:0] counter = 2'd0;
     always_ff @ (posedge Clk) begin
-        game_frame_clk_rising_edge  <= 1'b0;
-        if (frame_clk_rising_edge) begin
-            counter <= counter + 1;
-            if  (counter == 3) begin
-                counter <= 0;
-                game_frame_clk_rising_edge <= 1'b1;
+        if(Game_Over_On) 
+            game_frame_clk_rising_edge <= 1'b0;
+        else begin
+            game_frame_clk_rising_edge <= 1'b0;
+            if (frame_clk_rising_edge) begin
+                counter <= counter + 1;
+                if  (counter == 3) begin
+                    counter <= 0;
+                    game_frame_clk_rising_edge <= 1'b1;
+                end
             end
         end
     end

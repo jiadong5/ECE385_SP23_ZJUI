@@ -1,6 +1,6 @@
 
 
-`define COOLDOWN_TIME 6
+`define COOLDOWN_TIME 10
 `define LAST_TIME 2
 
 module enemy_attack(input Clk,

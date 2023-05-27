@@ -31,9 +31,9 @@ module enemy_control ( input logic frame_clk,
         // assign next state
         unique case (State)
             S_0 : begin
-                if ((Obj_X_Motion == 0) && (Obj_Y_Motion == 0))
-                    Next_state = S_0;
-                else
+                // if ((Obj_X_Motion == 0) && (Obj_Y_Motion == 0))
+                    // Next_state = S_0;
+                // else
                     Next_state = S_1;
             end
             S_1 :

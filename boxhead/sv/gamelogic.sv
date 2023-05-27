@@ -1,6 +1,6 @@
 
 `define ENEMY_NUM 4
-`define RESPAWN_TIME 200
+`define RESPAWN_TIME 100
 module gamelogic
 (
     input logic Clk,

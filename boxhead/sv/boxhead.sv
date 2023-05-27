@@ -103,6 +103,7 @@ module boxhead( input               CLOCK_50,
     logic [7:0] attack_address;
     logic [8:0] enemy_attack_address [`ENEMY_NUM];
     logic [8:0] existed_enemy_attack_address;
+    logic [14:0] game_over_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
@@ -110,17 +111,21 @@ module boxhead( input               CLOCK_50,
     logic [4:0] attack_index;
     // logic [4:0] enemy_attack_index [`ENEMY_NUM];
     logic [4:0] existed_enemy_attack_index;
+    logic [4:0] game_over_index;
 
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
     logic is_attack;
     logic is_enemy_attack [`ENEMY_NUM];
     logic existed_is_enemy_attack;
+    logic is_game_over; // Not determine if game is over. Instead used as sprite
+                        // Game_Over_On determines is game is over
 
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
     logic Attack_On;
     logic Enemy_Attack_On [`ENEMY_NUM];
+    logic Game_Over_On;
     logic [8:0] Attack_X, Attack_Y;
     logic Enemy_Alive [`ENEMY_NUM];
     logic [8:0] Enemy_X [`ENEMY_NUM];
@@ -130,6 +135,7 @@ module boxhead( input               CLOCK_50,
     logic [7:0] Score [`ENEMY_NUM];
     logic [7:0] Total_Score;
     logic [9:0] Enemy_Total_Damage [`ENEMY_NUM];
+    logic [12:0] All_Enemy_Total_Damage;
     parameter [9:0] Player_Full_Blood = 7'd100;
     logic [9:0] Player_Blood;
 
@@ -161,6 +167,8 @@ module boxhead( input               CLOCK_50,
     game_frame_clk game_frame_clk_inst(
         .Clk(Clk),
         .frame_clk(VGA_VS),
+        .Game_Over_On(Game_Over_On),
+        // Output
         .game_frame_clk_rising_edge(game_frame_clk_rising_edge)
     );
 
@@ -318,7 +326,36 @@ module boxhead( input               CLOCK_50,
     endgenerate
 
     assign Total_Score = Score[0] + Score[1] + Score[2] + Score[3];
-    assign Player_Blood = Player_Full_Blood - (Enemy_Total_Damage[0] + Enemy_Total_Damage[1] + Enemy_Total_Damage[2] + Enemy_Total_Damage[3]);
+
+    assign All_Enemy_Total_Damage = (Enemy_Total_Damage[0] + Enemy_Total_Damage[1] + Enemy_Total_Damage[2] + Enemy_Total_Damage[3]);
+
+    always_comb begin
+        if (All_Enemy_Total_Damage <= Player_Full_Blood) begin
+            Player_Blood = Player_Full_Blood - All_Enemy_Total_Damage;
+            Game_Over_On = 1'b0;
+        end
+        else begin
+            Player_Blood = 0;
+            Game_Over_On = 1'b1;
+        end
+    end
+
+
+    gameover gameover_inst(
+        .Clk(Clk),
+        .Reset(Reset_h),
+        .Game_Over_On(Game_Over_On),
+        .PixelX(PixelX),
+        .PixelY(PixelY),
+        .is_obj(is_game_over),
+        .Obj_address(game_over_address)
+    );
+
+    gameoverROM gameoverROM_inst(
+        .Clk(Clk),
+        .read_address(game_over_address),
+        .data_Out(game_over_index),
+    );
     
     color_mapper color_mapper_inst(
         .*,
