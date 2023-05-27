@@ -16,7 +16,7 @@ module music (	input logic  Clk,
 	logic [16:0] music_memory [0:80549];	// The length of the txt file
 	initial 
 	begin 
-		$readmemh("mj.txt",music_memory);
+		$readmemh("littleroot_town.txt",music_memory);
 	end
 	
 	always_ff @ (posedge Clk)
