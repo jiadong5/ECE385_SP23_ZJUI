@@ -116,6 +116,7 @@ module boxhead( input               CLOCK_50,
     logic [4:0] game_over_index;
     logic [4:0] game_start_index;
     logic [4:0] score_index;
+    logic [4:0] blood_index;
 
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
@@ -126,6 +127,7 @@ module boxhead( input               CLOCK_50,
                         // Game_Over_On determines is game is over
     logic is_game_start; // Same as is_game_over
     logic is_score;
+    logic is_blood;
 
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
@@ -397,6 +399,15 @@ module boxhead( input               CLOCK_50,
         .data_Out(score_index)
     );
     
+    blood blood_inst(
+        .Clk(Clk),
+        .Player_Blood(Player_Blood),
+        .PixelX(PixelX),
+        .PixelY(PixelY),
+        .is_obj(is_blood),
+        .Obj_Index(blood_index)
+    );
+
     color_mapper color_mapper_inst(
         .*,
         .Reset(Reset_h),

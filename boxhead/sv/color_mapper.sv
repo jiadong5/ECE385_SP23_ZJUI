@@ -16,6 +16,7 @@ module color_mapper
                 is_game_over,
                 is_game_start,
                 is_score,
+                is_blood,
     input logic is_enemy [`ENEMY_NUM],
     input logic[4:0] bkg_index,
                      player_index,
@@ -24,6 +25,7 @@ module color_mapper
                      game_over_index,
                      game_start_index,
                      score_index,
+                     blood_index,
     input logic[4:0] enemy_index [`ENEMY_NUM],
 
     output logic [7:0] VGA_R,
@@ -58,7 +60,9 @@ module color_mapper
     // Foreground Color
     always_comb begin
         // it's not red(sprite bacground color), which corresponds to index 0
-        if ((is_score) && (score_index))
+        if ((is_blood) && (blood_index)) 
+            fgd_index = blood_index;
+        else if ((is_score) && (score_index))
             fgd_index = score_index;
         else if ((is_game_start) && (game_start_index))
             fgd_index = game_start_index;
@@ -124,6 +128,7 @@ module color_mapper
             5'd13 :fgd_color = 24'h8860B8;
             5'd14 :fgd_color = 24'h502898;
             5'd15 :fgd_color = 24'hB090D8;
+            5'd16 :fgd_color = 24'h00FF00; // Green for blood display
             default : fgd_color = 24'h010101;
         endcase
         end
