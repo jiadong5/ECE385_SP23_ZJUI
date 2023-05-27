@@ -21,7 +21,7 @@ module gamelogic #(parameter id)
     // output logic [6:0] Player_Blood,
     //                    Enemy_Blood,
     output logic       Enemy_Alive,
-    output logic [7:0] Score,
+    output logic [7:0] Enemy_Score,
     output logic [9:0] Enemy_Total_Damage
 );
     parameter [8:0] Attack_Short = 10'd16; // Short side of attack
@@ -37,7 +37,7 @@ module gamelogic #(parameter id)
     logic [9:0] Rebirth_Time;
     logic [9:0] Rebirth_Time_in;
 
-    logic [7:0] Score_in;
+    logic [7:0] Enemy_Score_in;
     logic Enemy_Alive_in;
 
     always_ff @(posedge Clk) begin
@@ -46,13 +46,13 @@ module gamelogic #(parameter id)
             // Enemy_Blood <= Enemy_Full_Blood;
             Enemy_Blood <= 7'd0;
             Rebirth_Time <= 10'd0;
-            Score <= 8'd0;
+            Enemy_Score <= 8'd0;
         end
         else begin
             Enemy_Total_Damage <= Enemy_Total_Damage_in;
             Enemy_Blood <= Enemy_Blood_in;
             Rebirth_Time <= Rebirth_Time_in;
-            Score <= Score_in;
+            Enemy_Score <= Enemy_Score_in;
         end
     end
 
@@ -60,7 +60,7 @@ module gamelogic #(parameter id)
     always_comb begin
         Enemy_Blood_in = Enemy_Blood;
         Rebirth_Time_in = Rebirth_Time;
-        Score_in = Score;
+        Enemy_Score_in = Enemy_Score;
         
         if (~Enemy_Alive) begin
             if (game_frame_clk_rising_edge) begin
@@ -107,7 +107,7 @@ module gamelogic #(parameter id)
                 end
             endcase
             if (Enemy_Blood_in <= 6'd0)
-                Score_in = Score + 1'b1;
+                Enemy_Score_in = Enemy_Score + 1'b1;
         end
     end
 

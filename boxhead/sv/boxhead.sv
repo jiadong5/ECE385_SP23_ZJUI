@@ -105,6 +105,7 @@ module boxhead( input               CLOCK_50,
     logic [8:0] existed_enemy_attack_address;
     logic [14:0] game_over_address;
     logic [17:0] game_start_address;
+    logic [14:0] score_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
@@ -114,6 +115,7 @@ module boxhead( input               CLOCK_50,
     logic [4:0] existed_enemy_attack_index;
     logic [4:0] game_over_index;
     logic [4:0] game_start_index;
+    logic [4:0] score_index;
 
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
@@ -123,6 +125,7 @@ module boxhead( input               CLOCK_50,
     logic is_game_over; // Not determine if game is over. Instead used as sprite
                         // Game_Over_On determines is game is over
     logic is_game_start; // Same as is_game_over
+    logic is_score;
 
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
@@ -136,7 +139,7 @@ module boxhead( input               CLOCK_50,
     logic [8:0] Enemy_Y [`ENEMY_NUM];
     logic Enemy_Attack_Ready [`ENEMY_NUM];
 
-    logic [7:0] Score [`ENEMY_NUM];
+    logic [7:0] Enemy_Score [`ENEMY_NUM];
     logic [7:0] Total_Score;
     logic [9:0] Enemy_Total_Damage [`ENEMY_NUM];
     logic [12:0] All_Enemy_Total_Damage;
@@ -324,13 +327,13 @@ module boxhead( input               CLOCK_50,
                 .Enemy_Attack_On(Enemy_Attack_On[j]),
                 // Output
                 .Enemy_Alive(Enemy_Alive[j]),
-                .Score(Score[j]),
+                .Enemy_Score(Enemy_Score[j]),
                 .Enemy_Total_Damage(Enemy_Total_Damage[j])
             );
         end
     endgenerate
 
-    assign Total_Score = Score[0] + Score[1] + Score[2] + Score[3];
+    assign Total_Score = Enemy_Score[0] + Enemy_Score[1] + Enemy_Score[2] + Enemy_Score[3];
 
     assign All_Enemy_Total_Damage = (Enemy_Total_Damage[0] + Enemy_Total_Damage[1] + Enemy_Total_Damage[2] + Enemy_Total_Damage[3]);
 
@@ -378,6 +381,21 @@ module boxhead( input               CLOCK_50,
         .read_address(game_over_address),
         .data_Out(game_over_index),
     );
+
+    score score_inst(
+        .Clk(Clk),
+        .Total_Score(Total_Score),
+        .PixelX(PixelX),
+        .PixelY(PixelY),
+        .is_obj(is_score),
+        .Obj_address(score_address)
+    );
+
+    scoreROM scoreROM_inst(
+        .Clk(Clk),
+        .read_address(score_address),
+        .data_Out(score_index)
+    );
     
     color_mapper color_mapper_inst(
         .*,
@@ -389,9 +407,6 @@ module boxhead( input               CLOCK_50,
     // Display keycode on hex display
     HexDriver hex_inst_0 (Total_Score[3:0], HEX0);
     HexDriver hex_inst_1 (Total_Score[7:4], HEX1);
-
-    HexDriver hex_inst_2 (Score[0][3:0], HEX2);
-    HexDriver hex_inst_3 (Score[0][7:4], HEX3);
 
     HexDriver hex_inst_4 (Player_Blood[3:0], HEX4);
     HexDriver hex_inst_5 (Player_Blood[7:4], HEX5);

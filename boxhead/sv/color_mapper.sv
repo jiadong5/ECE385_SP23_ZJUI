@@ -15,6 +15,7 @@ module color_mapper
                 is_enemy_attack,
                 is_game_over,
                 is_game_start,
+                is_score,
     input logic is_enemy [`ENEMY_NUM],
     input logic[4:0] bkg_index,
                      player_index,
@@ -22,6 +23,7 @@ module color_mapper
                      enemy_attack_index,
                      game_over_index,
                      game_start_index,
+                     score_index,
     input logic[4:0] enemy_index [`ENEMY_NUM],
 
     output logic [7:0] VGA_R,
@@ -56,7 +58,9 @@ module color_mapper
     // Foreground Color
     always_comb begin
         // it's not red(sprite bacground color), which corresponds to index 0
-        if ((is_game_start) && (game_start_index))
+        if ((is_score) && (score_index))
+            fgd_index = score_index;
+        else if ((is_game_start) && (game_start_index))
             fgd_index = game_start_index;
         else if ((is_game_over) && (game_over_index))
             fgd_index = game_over_index;
