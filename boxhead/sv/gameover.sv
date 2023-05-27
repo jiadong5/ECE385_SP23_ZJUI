@@ -10,8 +10,8 @@ module gameover(
     output logic [14:0] Obj_address
 );
 
-    parameter [8:0] Height = 9'd25;
-    parameter [8:0] Width = 9'd211;
+    parameter [8:0] Height = 9'31;
+    parameter [8:0] Width = 9'203;
     parameter [8:0] Obj_X_Center = 9'd160;
     parameter [8:0] Obj_Y_Center = 9'd80;
 
