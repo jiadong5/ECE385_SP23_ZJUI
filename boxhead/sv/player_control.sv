@@ -1,6 +1,7 @@
 
 
-module player_control ( input logic frame_clk,
+module player_control ( input logic Clk,
+    frame_clk,
     Reset,
     input logic [8:0] Obj_X_Motion,
                       Obj_Y_Motion,
@@ -12,7 +13,7 @@ module player_control ( input logic frame_clk,
     S_2,
     S_3} State, Next_state;
 
-    always_ff @ (posedge frame_clk)
+    always_ff @ (posedge Clk)
     begin
         if (Reset)
             State <= S_0;
@@ -26,17 +27,28 @@ module player_control ( input logic frame_clk,
         // assign next state
         unique case (State)
             S_0 : begin
-                if ((Obj_X_Motion != 9'b0) || (Obj_Y_Motion != 9'b0))
+                if (((Obj_X_Motion != 9'b0) || (Obj_Y_Motion != 9'b0)) && (frame_clk))
                     Next_state = S_1;
                 else
                     Next_state = S_0;
             end
-            S_1 :
-                Next_state = S_2;
-            S_2 : 
-                Next_state = S_3;
+            S_1 : begin
+                if (frame_clk)
+                    Next_state = S_2;
+                else
+                    Next_state = S_1;
+            end
+            S_2 :  begin
+                if (frame_clk)
+                    Next_state = S_3;
+                else
+                    Next_state = S_2;
+            end
             S_3 :
-                Next_state = S_0;
+                if (frame_clk)
+                    Next_state = S_0;
+                else
+                    Next_state = S_3;
         endcase
         // assign output
             case (State)

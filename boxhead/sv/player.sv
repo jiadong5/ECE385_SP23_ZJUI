@@ -121,6 +121,7 @@ module  player ( input       Clk,                // 50 MHz clock
 
     player_control player_control_Inst(
         // Input
+        .Clk(Clk),
         .frame_clk(game_frame_clk_rising_edge),
         .Reset(Reset),
         .Obj_X_Motion(Obj_X_Motion_in),

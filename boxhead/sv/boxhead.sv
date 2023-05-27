@@ -104,6 +104,7 @@ module boxhead( input               CLOCK_50,
     logic [8:0] enemy_attack_address [`ENEMY_NUM];
     logic [8:0] existed_enemy_attack_address;
     logic [14:0] game_over_address;
+    logic [17:0] game_start_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
@@ -112,6 +113,7 @@ module boxhead( input               CLOCK_50,
     // logic [4:0] enemy_attack_index [`ENEMY_NUM];
     logic [4:0] existed_enemy_attack_index;
     logic [4:0] game_over_index;
+    logic [4:0] game_start_index;
 
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
@@ -120,12 +122,14 @@ module boxhead( input               CLOCK_50,
     logic existed_is_enemy_attack;
     logic is_game_over; // Not determine if game is over. Instead used as sprite
                         // Game_Over_On determines is game is over
+    logic is_game_start; // Same as is_game_over
 
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
     logic Attack_On;
     logic Enemy_Attack_On [`ENEMY_NUM];
     logic Game_Over_On;
+    logic Game_Start_On; // Indicate whether start interface is displayed
     logic [8:0] Attack_X, Attack_Y;
     logic Enemy_Alive [`ENEMY_NUM];
     logic [8:0] Enemy_X [`ENEMY_NUM];
@@ -167,6 +171,7 @@ module boxhead( input               CLOCK_50,
     game_frame_clk game_frame_clk_inst(
         .Clk(Clk),
         .frame_clk(VGA_VS),
+        .Game_Start_On(Game_Start_On),
         .Game_Over_On(Game_Over_On),
         // Output
         .game_frame_clk_rising_edge(game_frame_clk_rising_edge)
@@ -340,6 +345,23 @@ module boxhead( input               CLOCK_50,
         end
     end
 
+    gamestart gamestart_inst(
+        .Clk(Clk),
+        .Reset(Reset_h),
+        .keycode(keycode),
+        .PixelX(PixelX),
+        .PixelY(PixelY),
+        // Output
+        .Game_Start_On(Game_Start_On),
+        .is_obj(is_game_start),
+        .Obj_address(game_start_address)
+    );
+
+    gamestartROM gamestartROM_inst(
+        .Clk(Clk),
+        .read_address(game_start_address),
+        .data_Out(game_start_index)
+    );
 
     gameover gameover_inst(
         .Clk(Clk),
