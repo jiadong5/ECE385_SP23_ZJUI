@@ -128,7 +128,9 @@ module color_mapper
             5'd13 :fgd_color = 24'h8860B8;
             5'd14 :fgd_color = 24'h502898;
             5'd15 :fgd_color = 24'hB090D8;
-            5'd16 :fgd_color = 24'h68F780; // Green for blood display
+            5'd16 :fgd_color = 24'hff0000;
+            5'd17 :fgd_color = 24'h333333;
+            5'd18 :fgd_color = 24'hbb0000;
             default : fgd_color = 24'h010101;
         endcase
         end

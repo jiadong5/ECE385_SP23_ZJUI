@@ -9,12 +9,12 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                input [7:0]   keycode,
                input [8:0]   PixelX, PixelY,     
                input [8:0]   Player_X, Player_Y,
+               input         Enemy_Is_Attacked,
                input  logic  is_alive,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                output logic [12:0] Obj_address,
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
                output logic Enemy_Attack_Ready
-               // output logic [1:0] Obj_Direction
               );
     
     // parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
@@ -153,7 +153,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     assign DistY = PixelY - Obj_Y_Pos;
     always_comb begin
         if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
-            (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) && (is_alive)) begin
+            (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) && (is_alive) && (~Enemy_Is_Attacked)) begin
             is_obj = 1'b1;
 
             // Compute Object address based on its position, direction and walk step count

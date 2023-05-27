@@ -149,6 +149,7 @@ module boxhead( input               CLOCK_50,
     logic [14:0] game_over_address;
     logic [17:0] game_start_address;
     logic [14:0] score_address;
+    logic [8:0] blood_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
@@ -183,6 +184,7 @@ module boxhead( input               CLOCK_50,
     logic [8:0] Enemy_X [`ENEMY_NUM];
     logic [8:0] Enemy_Y [`ENEMY_NUM];
     logic Enemy_Attack_Ready [`ENEMY_NUM];
+    logic Enemy_Is_Attacked [`ENEMY_NUM];
 
     logic [7:0] Enemy_Score [`ENEMY_NUM];
     logic [7:0] Total_Score;
@@ -256,6 +258,7 @@ module boxhead( input               CLOCK_50,
                 .is_alive(Enemy_Alive[i]),
                 .Player_X(Player_X),
                 .Player_Y(Player_Y),
+                .Enemy_Is_Attacked(Enemy_Is_Attacked[i]),
                 // Output
                 .is_obj(is_enemy[i]),
                 .Obj_address(enemy_address[i]),
@@ -371,7 +374,8 @@ module boxhead( input               CLOCK_50,
                 // Output
                 .Enemy_Alive(Enemy_Alive[j]),
                 .Enemy_Score(Enemy_Score[j]),
-                .Enemy_Total_Damage(Enemy_Total_Damage[j])
+                .Enemy_Total_Damage(Enemy_Total_Damage[j]),
+                .Enemy_Is_Attacked(Enemy_Is_Attacked[j])
             );
         end
     endgenerate
@@ -422,7 +426,7 @@ module boxhead( input               CLOCK_50,
     gameoverROM gameoverROM_inst(
         .Clk(Clk),
         .read_address(game_over_address),
-        .data_Out(game_over_index),
+        .data_Out(game_over_index)
     );
 
     score score_inst(
@@ -446,7 +450,13 @@ module boxhead( input               CLOCK_50,
         .PixelX(PixelX),
         .PixelY(PixelY),
         .is_obj(is_blood),
-        .Obj_Index(blood_index)
+        .Obj_address(blood_address)
+    );
+
+    bloodROM bloodROM_inst(
+        .Clk(Clk),
+        .read_address(blood_address),
+        .data_Out(blood_index)
     );
 
     color_mapper color_mapper_inst(
