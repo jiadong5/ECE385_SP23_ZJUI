@@ -5,7 +5,7 @@
 
 module enemy_attack(input Clk,
                           Reset,
-                          frame_clk,
+                          game_frame_clk_rising_edge,
                     input [8:0] Player_X, Player_Y,
                                 PixelX, PixelY,
                     input Enemy_Attack_Ready,
@@ -25,27 +25,6 @@ module enemy_attack(input Clk,
     assign Obj_X_Pos = Player_X;
     assign Obj_Y_Pos = Player_Y;
 
-    // Detect rising edge of frame_clk
-    logic frame_clk_delayed, frame_clk_rising_edge;
-    logic frame2_clk_rising_edge;
-    always_ff @ (posedge Clk) begin
-        frame_clk_delayed <= frame_clk;
-        frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
-    end
-
-    // Reduce frame clk frequency. 
-    logic [1:0] counter = 2'd0;
-    always_ff @ (posedge Clk) begin
-        frame2_clk_rising_edge  <= 1'b0;
-        if (frame_clk_rising_edge) begin
-            counter <= counter + 1;
-            if  (counter == 3) begin
-                counter <= 0;
-                frame2_clk_rising_edge <= 1'b1;
-            end
-        end
-    end
-
     // Update registers
     always_ff @ (posedge Clk) begin
         if (Reset) begin
@@ -63,7 +42,7 @@ module enemy_attack(input Clk,
         if(~Enemy_Attack_Ready) begin
             CoolDown_Counter_in = `COOLDOWN_TIME;
         end
-        else if (frame2_clk_rising_edge) begin
+        else if (game_frame_clk_rising_edge) begin
             if(CoolDown_Counter == `COOLDOWN_TIME)
                 CoolDown_Counter_in = 0;
             else

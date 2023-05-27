@@ -5,7 +5,7 @@
 
 module  player ( input       Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
-                             frame_clk,          // The clock indicating a new frame (~60Hz)
+                             game_frame_clk_rising_edge,
                input [7:0]   keycode,
                input [8:0]   PixelX, PixelY,     
                input  logic Attack_On,
@@ -37,28 +37,6 @@ module  player ( input       Clk,                // 50 MHz clock
     // logic [1:0] Obj_Up_Count_in, Obj_Down_Count_in, Obj_Left_Count_in, Obj_Right_Count_in;
     logic [1:0] Obj_Step_Count;
     
-
-    // Detect rising edge of frame_clk
-    logic frame_clk_delayed, frame_clk_rising_edge;
-    logic frame2_clk_rising_edge;
-    always_ff @ (posedge Clk) begin
-        frame_clk_delayed <= frame_clk;
-        frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
-    end
-
-    // Reduce frame clk frequency. 
-    logic [1:0] counter = 2'd0;
-    always_ff @ (posedge Clk) begin
-        frame2_clk_rising_edge  <= 1'b0;
-        if (frame_clk_rising_edge) begin
-            counter <= counter + 1;
-            if  (counter == 3) begin
-                counter <= 0;
-                frame2_clk_rising_edge <= 1'b1;
-            end
-        end
-    end
-
     // Update registers
     always_ff @ (posedge Clk)
     begin
@@ -93,7 +71,7 @@ module  player ( input       Clk,                // 50 MHz clock
         Obj_Direction_in = Obj_Direction;
         
         // Update position and motion only at rising edge of frame clock
-        if (frame2_clk_rising_edge)
+        if (game_frame_clk_rising_edge)
         begin
             // Handle keypress
             case(keycode)
@@ -143,7 +121,7 @@ module  player ( input       Clk,                // 50 MHz clock
 
     player_control player_control_Inst(
         // Input
-        .frame_clk(frame2_clk_rising_edge),
+        .frame_clk(game_frame_clk_rising_edge),
         .Reset(Reset),
         .Obj_X_Motion(Obj_X_Motion_in),
         .Obj_Y_Motion(Obj_Y_Motion_in),

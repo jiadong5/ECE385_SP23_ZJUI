@@ -5,7 +5,7 @@ module gamelogic
 (
     input logic Clk,
                 Reset,
-                frame_clk,
+                game_frame_clk_rising_edge,
 
     input logic [8:0] Player_X,
                       Player_Y,
@@ -38,27 +38,6 @@ module gamelogic
 
     logic [7:0] Score_in;
 
-    // Detect rising edge of frame_clk
-    logic frame_clk_delayed, frame_clk_rising_edge;
-    logic frame2_clk_rising_edge;
-    always_ff @ (posedge Clk) begin
-        frame_clk_delayed <= frame_clk;
-        frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
-    end
-
-    // Reduce frame clk frequency. 
-    logic [1:0] counter = 2'd0;
-    always_ff @ (posedge Clk) begin
-        frame2_clk_rising_edge  <= 1'b0;
-        if (frame_clk_rising_edge) begin
-            counter <= counter + 1;
-            if  (counter == 3) begin
-                counter <= 0;
-                frame2_clk_rising_edge <= 1'b1;
-            end
-        end
-    end
-
     always_ff @(posedge Clk) begin
         if (Reset) begin
             Enemy_Total_Damage <= 10'b0;
@@ -84,7 +63,7 @@ module gamelogic
         Score_in = Score;
         
         if (~Enemy_Alive) begin
-            if (frame2_clk_rising_edge) begin
+            if (game_frame_clk_rising_edge) begin
                 if (Rebirth_Time == `RESPAWN_TIME) begin
                     Rebirth_Time_in = 10'd0;
                     Enemy_Blood_in = 7'd100;
@@ -137,7 +116,7 @@ module gamelogic
     // Enemy Attack Player
     always_comb begin
         Enemy_Total_Damage_in = Enemy_Total_Damage;
-        if (frame2_clk_rising_edge) begin
+        if (game_frame_clk_rising_edge) begin
             if (Enemy_Attack_On) begin
                 Enemy_Total_Damage_in = Enemy_Total_Damage + Enemy_Damage;
             end

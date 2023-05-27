@@ -95,6 +95,7 @@ module boxhead( input               CLOCK_50,
     
     logic [9:0] DrawX, DrawY;
     logic [8:0] PixelX, PixelY;
+    logic game_frame_clk_rising_edge;
 
     logic [31:0] bkg_address;
     logic [12:0] player_address;
@@ -157,10 +158,16 @@ module boxhead( input               CLOCK_50,
 
     assign bkg_index = 1;
 
+    game_frame_clk game_frame_clk_inst(
+        .Clk(Clk),
+        .frame_clk(VGA_VS),
+        .game_frame_clk_rising_edge(game_frame_clk_rising_edge)
+    );
+
     player player_inst(
         .*,
         .Reset(Reset_h),
-        .frame_clk(VGA_VS),
+        .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
         .keycode(keycode),
         .Attack_On(Attack_On),
         .is_obj(is_player),
@@ -183,7 +190,7 @@ module boxhead( input               CLOCK_50,
             enemy #(.id(i)) enemy_inst(
                 .Clk(Clk),
                 .Reset(Reset_h),
-                .frame_clk(VGA_VS),
+                .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
                 .keycode(keycode),
                 .PixelX(PixelX),
                 .PixelY(PixelY),
@@ -219,7 +226,7 @@ module boxhead( input               CLOCK_50,
     attack attack_inst(
         .*,
         .Reset(Reset_h),
-        .frame_clk(VGA_VS),
+        .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
         .keycode(keycode),
         // Output
         .is_obj(is_attack),
@@ -241,7 +248,7 @@ module boxhead( input               CLOCK_50,
             enemy_attack enemy_attack_inst(
                 .Clk(Clk),
                 .Reset(Reset_h),
-                .frame_clk(VGA_VS),
+                .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
                 .Player_X(Player_X),
                 .Player_Y(Player_Y),
                 .PixelX(PixelX),
@@ -292,7 +299,7 @@ module boxhead( input               CLOCK_50,
             gamelogic gamelogic_inst(
                 .Clk(Clk),
                 .Reset(Reset_h),
-                .frame_clk(VGA_VS),
+                .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
                 .Player_X(Player_X),
                 .Player_Y(Player_Y),
                 .Attack_X(Attack_X),
