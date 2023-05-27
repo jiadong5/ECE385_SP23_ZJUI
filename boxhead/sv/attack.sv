@@ -13,7 +13,7 @@ module  attack ( input       Clk,                // 50 MHz clock
 
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                              Obj_On,
-               output logic [7:0] Obj_address,
+               output logic [8:0] Obj_address,
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos
               );
     
@@ -22,6 +22,24 @@ module  attack ( input       Clk,                // 50 MHz clock
     parameter [8:0] Long = 10'd80;          // Length of Long side of Obj
     
     logic Obj_On_in;        // If the object displays or not
+    logic[1:0] attack_counter;       // Used to transform between two forms of attack
+    logic attack_form;
+
+    always_ff @ (posedge game_frame_clk_rising_edge) begin
+        if(Reset)
+            attack_counter <= 1'b0;
+        else
+            attack_counter <= attack_counter + 1'b1;
+    end
+
+    always_comb begin
+        if(attack_counter <= 2'd1)
+            attack_form = 1'b1;
+        else
+            attack_form = 1'b0;
+    end
+
+
 
 
 
@@ -29,7 +47,7 @@ module  attack ( input       Clk,                // 50 MHz clock
         case (Player_Direction)
             // Front (Down)
             2'd0: begin
-                Obj_X_Pos = Player_X + 10'd1; 
+                Obj_X_Pos = Player_X - 10'd2; 
                 Obj_Y_Pos = Player_Y + 10'd20;
             end
             // Left
@@ -83,7 +101,7 @@ module  attack ( input       Clk,                // 50 MHz clock
                     (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Long)) &&
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
-                        Obj_address =  DistX + DistY[3:0] * Short;
+                        Obj_address =  DistX + DistY[3:0] * Short + attack_form * Short * Short;
                     end
             end
             // Left
@@ -94,7 +112,7 @@ module  attack ( input       Clk,                // 50 MHz clock
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
                         DistX = Obj_X_Pos - PixelX;
-                        Obj_address =  DistX[3:0] + DistY * Short;
+                        Obj_address =  DistX[3:0] + DistY * Short + attack_form * Short * Short;
                     end
             end
             // Back (up)
@@ -104,7 +122,7 @@ module  attack ( input       Clk,                // 50 MHz clock
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
                         DistY = Obj_Y_Pos - PixelY;
-                        Obj_address =  DistX + DistY[3:0] * Short;
+                        Obj_address =  DistX + DistY[3:0] * Short + attack_form * Short * Short;
                     end
             end
             // Right
@@ -113,7 +131,7 @@ module  attack ( input       Clk,                // 50 MHz clock
                     (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Short)) &&
                     (Obj_On == 1'b1)) begin
                         is_obj = 1'b1;
-                        Obj_address =  DistX[3:0] + DistY * Short;
+                        Obj_address =  DistX[3:0] + DistY * Short + attack_form * Short * Short;
                     end
             end
         endcase

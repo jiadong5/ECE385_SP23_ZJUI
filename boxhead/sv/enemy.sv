@@ -32,8 +32,8 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     parameter [8:0] Obj_X_Max = 10'd319;     // Rightmost point on the X axis
     parameter [8:0] Obj_Y_Min = 10'd52;       // Topmost point on the Y axis
     parameter [8:0] Obj_Y_Max = 10'd205;     // Bottommost point on the Y axis
-    parameter [8:0] Obj_X_Step = 10'd1;      // Step size on the X axis
-    parameter [8:0] Obj_Y_Step = 10'd1;      // Step size on the Y axis
+    parameter [8:0] Obj_X_Step = 10'd2;      // Step size on the X axis
+    parameter [8:0] Obj_Y_Step = 10'd2;      // Step size on the Y axis
 
     
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object

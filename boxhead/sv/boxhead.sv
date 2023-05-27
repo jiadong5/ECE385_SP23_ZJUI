@@ -143,7 +143,7 @@ module boxhead( input               CLOCK_50,
     logic [31:0] bkg_address;
     logic [12:0] player_address;
     logic [12:0] enemy_address [`ENEMY_NUM];
-    logic [7:0] attack_address;
+    logic [8:0] attack_address;
     logic [8:0] enemy_attack_address [`ENEMY_NUM];
     logic [8:0] existed_enemy_attack_address;
     logic [14:0] game_over_address;

@@ -121,7 +121,7 @@ module color_mapper
             5'd06 :fgd_color = 24'hA06800;
             5'd07 :fgd_color = 24'h5888B8;
             5'd08 :fgd_color = 24'hD8B000;
-            5'd09 :fgd_color = 24'hF8F000;
+            5'd09 :fgd_color = 24'hF8F000; // Yellow
             5'd10 :fgd_color = 24'h6080A8;
             5'd11 :fgd_color = 24'hB8C8F0;
             5'd12 :fgd_color = 24'h303888;
