@@ -9,16 +9,16 @@ module score (
                 output [14:0] Obj_address
 );
 
-    parameter [8:0] Width = 40;
-    parameter [8:0] Height = 46;
+    parameter [8:0] Width = 20;
+    parameter [8:0] Height = 25;
 
     logic [8:0] Obj_X_Pos1, Obj_Y_Pos1; // Position of left digit
     logic [8:0] Obj_X_Pos0, Obj_Y_Pos0; // Position of right digit
     logic [7:0] Ten_Digit, Unit_Digit;
 
     assign Obj_X_Pos1 = 200;
-    assign Obj_Y_Pos1 = 5;
-    assign Obj_X_Pos0 = Obj_X_Pos1 + Width + 1;
+    assign Obj_Y_Pos1 = 16;
+    assign Obj_X_Pos0 = Obj_X_Pos1 + Width;
     assign Obj_Y_Pos0 = Obj_Y_Pos1;
     assign Ten_Digit = Total_Score / 10;
     assign Unit_Digit = Total_Score % 10;

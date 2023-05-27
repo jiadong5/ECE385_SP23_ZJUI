@@ -16,8 +16,8 @@ module blood (
     logic [8:0] Obj_X_Pos, Obj_Y_Pos; // Position of left digit
     logic [8:0] Blood_Width;
 
-    assign Obj_X_Pos = 80;
-    assign Obj_Y_Pos = 5;
+    assign Obj_X_Pos = 40;
+    assign Obj_Y_Pos = 30;
     assign Blood_Width = Player_Blood[9:1];
 
 
