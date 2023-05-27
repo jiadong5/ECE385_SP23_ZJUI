@@ -16,7 +16,7 @@ logic [4:0] mem [0:255];
 
 initial
 begin
-    $readmemh("sprite/unit_lightening.txt", mem, 0);
+    $readmemh("sprite/unit_lightening_cycling.txt", mem, 0);
 end
 
 

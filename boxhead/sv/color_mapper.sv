@@ -1,12 +1,15 @@
 
 
 `define ENEMY_NUM 4
+`define CYCLING_COLOR_NUM 9
 
 module color_mapper
 (
     input logic Clk,
+                Reset,
                 VGA_CLK,
                 VGA_BLANK_N,
+                game_frame_clk_rising_edge,
     input logic is_attack,
                 is_player,
                 is_enemy_attack,
@@ -30,6 +33,18 @@ module color_mapper
 
     logic [23:0] bkg_color;
     logic [23:0] fgd_color;
+
+    logic [4:0] cycling_counter;
+    logic [4:0] cycling_fgd_index;
+
+    always_ff @ (posedge game_frame_clk_rising_edge) begin
+        if(Reset)
+            cycling_counter <= 5'd0;
+        else if (cycling_counter == `CYCLING_COLOR_NUM - 1)
+            cycling_counter <= 5'd0;
+        else 
+            cycling_counter <= cycling_counter + 1;
+    end
 
     // Background Color
     background_palette bkg_palette_inst(
@@ -64,7 +79,30 @@ module color_mapper
             fgd_index = enemy_index[3];
         else 
             fgd_index = 0;
-        
+
+        cycling_fgd_index = 5'd0;
+        // Palette Cycling for attack
+        if((is_attack) && (attack_index)) begin
+            cycling_fgd_index = (fgd_index + cycling_counter - 1) % `CYCLING_COLOR_NUM + 1;
+        case (cycling_fgd_index)
+            5'd00 : fgd_color = 24'h010101;
+            // Original color
+            5'd01 : fgd_color = 24'hFFFFFF; // White
+            5'd02 : fgd_color = 24'hD8B000; // Orange
+            5'd03 : fgd_color = 24'hF8F000; // Yellow
+            // New color
+            5'd04 : fgd_color = 24'hE9C22D; // Yellow
+            5'd05 : fgd_color = 24'hF2EDB1; // Light Yellow
+            5'd06 : fgd_color = 24'h1F97D6; // Blue
+            5'd07 : fgd_color = 24'h6B91AF; // Light Blue
+            5'd08 : fgd_color = 24'h05518B; // Deep Blue
+            5'd09 : fgd_color = 24'hE6E3E3; // Grey white
+
+            default : fgd_color = 24'h010101;
+        endcase
+        end 
+        // Original color for other foreground
+        else begin
         case (fgd_index) 
             5'd00 :fgd_color = 24'h010101;
             5'd01 :fgd_color = 24'h000000;
@@ -84,6 +122,7 @@ module color_mapper
             5'd15 :fgd_color = 24'hB090D8;
             default : fgd_color = 24'h010101;
         endcase
+        end
     end
 
     // Drawing 

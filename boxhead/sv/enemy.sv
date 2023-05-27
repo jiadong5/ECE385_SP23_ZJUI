@@ -17,12 +17,10 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                // output logic [1:0] Obj_Direction
               );
     
-    parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
-    parameter [8:0] Obj_Y_Center = 10'd60;  // Center position on the Y axis
+    // parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
+    // parameter [8:0] Obj_Y_Center = 10'd60;  // Center position on the Y axis
     parameter [8:0] Obj_X_Center = 10'd70 * (id + 1);
     parameter [8:0] Obj_Y_Center = 10'd40 * (id + 1);
-    int Obj_X_Center, Obj_Y_Center;
-
 
 
     parameter [8:0] Height = 10'd26;         // Height of object

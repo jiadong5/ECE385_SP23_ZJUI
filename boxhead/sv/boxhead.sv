@@ -381,6 +381,7 @@ module boxhead( input               CLOCK_50,
     
     color_mapper color_mapper_inst(
         .*,
+        .Reset(Reset_h),
         .enemy_attack_index(existed_enemy_attack_index),
         .is_enemy_attack(existed_is_enemy_attack)
     );
