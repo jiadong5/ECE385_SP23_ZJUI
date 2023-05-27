@@ -309,7 +309,7 @@ module boxhead( input               CLOCK_50,
     genvar j;
     generate
         for (j = 0; j < `ENEMY_NUM; j++) begin: game
-            gamelogic gamelogic_inst(
+            gamelogic #(.id(j)) gamelogic_inst(
                 .Clk(Clk),
                 .Reset(Reset_h),
                 .game_frame_clk_rising_edge(game_frame_clk_rising_edge),

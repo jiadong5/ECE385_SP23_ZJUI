@@ -1,7 +1,8 @@
 
 `define ENEMY_NUM 4
-`define RESPAWN_TIME 100
-module gamelogic
+
+`define RESPAWN_TIME 40
+module gamelogic #(parameter id)
 (
     input logic Clk,
                 Reset,
@@ -27,28 +28,27 @@ module gamelogic
     parameter [8:0] Attack_Long = 10'd80; // Long side of attack
     parameter [8:0] Enemy_Height = 10'd26;
     parameter [8:0] Enemy_Width = 10'd26;
-    parameter [6:0] Player_Damage = 7'd100;
+    parameter [6:0] Player_Damage = 7'd10;
     parameter [9:0] Enemy_Damage = 10'd10;
+    parameter [6:0] Enemy_Full_Blood = 7'd100;
 
     logic [9:0] Enemy_Total_Damage_in;
     logic [6:0] Enemy_Blood, Enemy_Blood_in;
     logic [9:0] Rebirth_Time;
     logic [9:0] Rebirth_Time_in;
 
-
     logic [7:0] Score_in;
+    logic Enemy_Alive_in;
 
     always_ff @(posedge Clk) begin
         if (Reset) begin
             Enemy_Total_Damage <= 10'b0;
-            Enemy_Blood <= 7'd100;
+            // Enemy_Blood <= Enemy_Full_Blood;
+            Enemy_Blood <= 7'd0;
             Rebirth_Time <= 10'd0;
             Score <= 8'd0;
         end
         else begin
-            Enemy_Total_Damage <= Enemy_Total_Damage;
-            // if (Attack_On)
-            //     Enemy_Total_Damage <= Enemy_Total_Damage + Enemy_Damage;
             Enemy_Total_Damage <= Enemy_Total_Damage_in;
             Enemy_Blood <= Enemy_Blood_in;
             Rebirth_Time <= Rebirth_Time_in;
@@ -64,9 +64,9 @@ module gamelogic
         
         if (~Enemy_Alive) begin
             if (game_frame_clk_rising_edge) begin
-                if (Rebirth_Time == `RESPAWN_TIME) begin
+                if (Rebirth_Time == (`RESPAWN_TIME * (id[0] + 1))) begin
                     Rebirth_Time_in = 10'd0;
-                    Enemy_Blood_in = 7'd100;
+                    Enemy_Blood_in = Enemy_Full_Blood;
                 end
                 else begin
                     Rebirth_Time_in = Rebirth_Time + 1'd1;
@@ -82,7 +82,6 @@ module gamelogic
                     if ((Enemy_X + Enemy_Width >= Attack_X) && (Enemy_X <= Attack_X + Attack_Short) && 
                         (Enemy_Y + Enemy_Height >= Attack_Y) && (Enemy_Y <= Attack_Y + Attack_Long)) begin
                             Enemy_Blood_in = Enemy_Blood + (~(Player_Damage) + 1'b1);
-                            Score_in = Score + 1;
                     end
                 end
                 // Left 
@@ -90,7 +89,6 @@ module gamelogic
                     if ((Enemy_X + Enemy_Width + Attack_Long >= Attack_X) && (Enemy_X <= Attack_X) && 
                         (Enemy_Y + Enemy_Height >= Attack_Y) && (Enemy_Y <= Attack_Y + Attack_Short)) begin
                             Enemy_Blood_in = Enemy_Blood + (~(Player_Damage) + 1'b1);
-                            Score_in = Score + 1;
                     end
                 end
                 // Up(Back)
@@ -98,7 +96,6 @@ module gamelogic
                     if ((Enemy_X + Enemy_Width >= Attack_X) && (Enemy_X <= Attack_X + Attack_Short) && 
                         (Enemy_Y + Enemy_Width + Attack_Long>= Attack_Y) && (Enemy_Y <= Attack_Y)) begin
                             Enemy_Blood_in = Enemy_Blood + (~(Player_Damage) + 1'b1);
-                            Score_in = Score + 1;
                     end
                 end
                 // Right
@@ -106,10 +103,11 @@ module gamelogic
                     if ((Enemy_X + Enemy_Width >= Attack_X) && (Enemy_X <= Attack_X + Attack_Long) && 
                         (Enemy_Y + Enemy_Height >= Attack_Y) && (Enemy_Y <= Attack_Y + Attack_Short) ) begin
                             Enemy_Blood_in = Enemy_Blood + (~(Player_Damage) + 1'b1);
-                            Score_in = Score + 1;
                     end
                 end
             endcase
+            if (Enemy_Blood_in <= 6'd0)
+                Score_in = Score + 1'b1;
         end
     end
 
