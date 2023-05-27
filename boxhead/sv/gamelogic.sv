@@ -75,7 +75,7 @@ module gamelogic #(parameter id)
         end
 
         // Player attack enemy and judge based on different directions
-        else if (Attack_On & Enemy_Alive) begin
+        else if (Attack_On & Enemy_Alive & game_frame_clk_rising_edge) begin
             case(Player_Direction)
                 // Down (Front)
                 2'd0: begin
