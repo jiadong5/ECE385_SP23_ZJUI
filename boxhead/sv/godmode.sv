@@ -52,77 +52,97 @@ module godmode (input Clk,
         // Assign next state
         unique case (State)
             S_0 : begin
-                if (keycode == `UP && (game_frame_clk_rising_edge)) 
+                if (keycode == `UP) 
                     Next_state = S_1;
                 else
                     Next_state = S_0;
             end
             S_1 : begin
-                if (keycode == `UP && (game_frame_clk_rising_edge))
+                if (keycode == `UP)
                     Next_state = S_2;
-                else if (((keycode == `SPACE) || (keycode == `DOWN) || (keycode == `LEFT) || (keycode == `RIGHT)) && (game_frame_clk_rising_edge))
+                else if (((keycode == `SPACE) || (keycode == `DOWN) || (keycode == `LEFT) || (keycode == `RIGHT)))
                     Next_state = S_0;
                 else
                     Next_state = S_1;
             end
             S_2 : begin
-                if (keycode == `DOWN && (game_frame_clk_rising_edge))
+                if (keycode == `DOWN)
                     Next_state = S_3;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_2;
             end
             S_3 : begin
-                if (keycode == `DOWN && (game_frame_clk_rising_edge))
+                if (keycode == `DOWN)
                     Next_state = S_4;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_3;
             end
             S_4 : begin
                 if (keycode == `LEFT && (game_frame_clk_rising_edge))
                     Next_state = S_5;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_4;
             end
             S_5 : begin
-                if (keycode == `LEFT && (game_frame_clk_rising_edge))
+                if (keycode == `LEFT)
                     Next_state = S_6;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_5;
             end
 
             S_6 : begin
-                if (keycode == `RIGHT && (game_frame_clk_rising_edge))
+                if (keycode == `RIGHT)
                     Next_state = S_7;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_6;
             end
             S_7 : begin
-                if (keycode == `RIGHT && (game_frame_clk_rising_edge))
+                if (keycode == `RIGHT)
                     Next_state = S_8;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_7;
             end
             S_8 : begin
-                if (keycode == `Z && (game_frame_clk_rising_edge))
+                if (keycode == `Z)
                     Next_state = S_9;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_8;
             end
             S_9 : begin
-                if (keycode == `X && (game_frame_clk_rising_edge))
+                if (keycode == `X)
                     Next_state = S_10;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_9;
             end
             S_10 : begin
-                if (keycode == `Z && (game_frame_clk_rising_edge))
+                if (keycode == `Z)
                     Next_state = S_11;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_10;
             end
             S_11 : begin
-                if (keycode == `X && (game_frame_clk_rising_edge))
+                if (keycode == `X)
                     Next_state = S_12;
+                else if (keycode == `SPACE)
+                    Next_state = S_0;
                 else
                     Next_state = S_11;
             end

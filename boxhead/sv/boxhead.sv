@@ -190,7 +190,9 @@ module boxhead( input               CLOCK_50,
     logic [7:0] Total_Score;
     logic [9:0] Enemy_Total_Damage [`ENEMY_NUM];
     logic [12:0] All_Enemy_Total_Damage;
-    parameter [9:0] Player_Full_Blood = 7'd100;
+    parameter [9:0] Player_Full_Blood_NoGod = 10'd100;
+    parameter [9:0] Player_Full_Blood_God = 10'd300;
+    logic [9:0] Player_Full_Blood;
     logic [9:0] Player_Blood;
 
     logic Godmode_On;
@@ -199,6 +201,14 @@ module boxhead( input               CLOCK_50,
     assign PixelY = DrawY[9:1];
 
     assign bkg_address = PixelX + PixelY * 320;
+
+    // In god mode, player's life is larger.
+    always_comb begin
+        if(Godmode_On)
+            Player_Full_Blood = Player_Full_Blood_God;
+        else
+            Player_Full_Blood = Player_Full_Blood_NoGod;
+    end
 
     vga_controller vga_controller_inst(
         .*,
@@ -452,6 +462,7 @@ module boxhead( input               CLOCK_50,
         .Player_Blood(Player_Blood),
         .PixelX(PixelX),
         .PixelY(PixelY),
+        .Godmode_On(Godmode_On),
         .is_obj(is_blood),
         .Obj_address(blood_address)
     );
