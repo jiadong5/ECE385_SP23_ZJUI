@@ -1,12 +1,15 @@
 
+
+`define SPACE 44
+
 module gamestart(
     input Clk,
           Reset,
     input [7:0] keycode,
     input [8:0] PixelX,PixelY,
 
-    output Game_Start_On,
-    output is_obj,
+    output logic Game_Start_On,
+    output logic is_obj,
     output logic [17:0] Obj_address
 );
 
@@ -35,7 +38,7 @@ module gamestart(
 
     always_comb begin
         Game_Start_On_in <= Game_Start_On;
-        if ((keycode == 10'd22) && (Game_Start_On)) begin
+        if ((keycode == `SPACE) && (Game_Start_On)) begin
             Game_Start_On_in <= 1'b0;
         end
     end

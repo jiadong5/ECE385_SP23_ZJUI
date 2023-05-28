@@ -170,7 +170,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion_in;
             Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion_in;
 
-            if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0) && (~Enemy_Is_Attacked)) 
+            if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0) && (~Enemy_Is_Attacked) && (Enemy_Stay_Counter == 0)) 
                 Enemy_Attack_Ready_in = 1'b1;
             else
                 Enemy_Attack_Ready_in = 1'b0;

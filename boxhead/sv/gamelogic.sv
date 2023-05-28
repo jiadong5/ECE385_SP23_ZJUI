@@ -17,12 +17,14 @@ module gamelogic #(parameter id)
     input logic [1:0] Player_Direction,
     input logic       Attack_On,
                       Enemy_Attack_On,
+                      Godmode_On,
 
     // output logic [6:0] Player_Blood,
     //                    Enemy_Blood,
     output logic       Enemy_Alive,
     output logic [7:0] Enemy_Score,
     output logic [9:0] Enemy_Total_Damage,
+    output logic [9:0] Enemy_Total_Damage_God,
     output logic       Enemy_Is_Attacked
 );
     parameter [8:0] Attack_Short = 10'd16; // Short side of attack
@@ -30,7 +32,7 @@ module gamelogic #(parameter id)
     parameter [8:0] Enemy_Height = 10'd26;
     parameter [8:0] Enemy_Width = 10'd26;
     parameter [6:0] Player_Damage = 7'd10;
-    parameter [9:0] Enemy_Damage = 10'd00;
+    parameter [9:0] Enemy_Damage = 10'd10;
     parameter [6:0] Enemy_Full_Blood = 7'd100;
 
     logic [9:0] Enemy_Total_Damage_in;
@@ -42,16 +44,36 @@ module gamelogic #(parameter id)
     logic Enemy_Alive_in;
     logic Enemy_Is_Attacked_in;
 
+    
+
+    // Enemy no damage under god mode
+    // always_comb begin
+    //     if(Godmode_On) 
+    //         Enemy_Damage = 10'd0;
+    //     else
+    //         Enemy_Damage = Actual_Enemy_Damage;
+    // end
+
+
+    // Update registers
     always_ff @(posedge Clk) begin
         if (Reset) begin
             Enemy_Total_Damage <= 10'b0;
-            // Enemy_Blood <= Enemy_Full_Blood;
             Enemy_Blood <= 7'd0;
             Rebirth_Time <= 10'd0;
             Enemy_Score <= 8'd0;
+            Enemy_Total_Damage_God <= 10'b0;
         end
         else begin
-            Enemy_Total_Damage <= Enemy_Total_Damage_in;
+            if(Godmode_On) begin
+                Enemy_Total_Damage_God <= Enemy_Total_Damage_in;
+                Enemy_Total_Damage <= Enemy_Total_Damage;
+            end
+            else begin
+                Enemy_Total_Damage_God <= Enemy_Total_Damage_God;
+                Enemy_Total_Damage <= Enemy_Total_Damage_in;
+            end
+
             Enemy_Blood <= Enemy_Blood_in;
             Rebirth_Time <= Rebirth_Time_in;
             Enemy_Score <= Enemy_Score_in;
@@ -69,6 +91,7 @@ module gamelogic #(parameter id)
         Enemy_Score_in = Enemy_Score;
         Enemy_Is_Attacked_in = 1'b0;
         
+        // Enemy respawn
         if (~Enemy_Alive) begin
             if (game_frame_clk_rising_edge) begin
                 if (Rebirth_Time == (`RESPAWN_TIME * (id[0] + 1))) begin
@@ -124,14 +147,19 @@ module gamelogic #(parameter id)
 
     // Enemy Attack Player
     always_comb begin
-        Enemy_Total_Damage_in = Enemy_Total_Damage;
-        if (game_frame_clk_rising_edge) begin
-            if (Enemy_Attack_On) begin
+        if (Godmode_On) 
+            Enemy_Total_Damage_in = Enemy_Total_Damage_God;
+        else
+            Enemy_Total_Damage_in = Enemy_Total_Damage;
+        if (Enemy_Attack_On & game_frame_clk_rising_edge) begin
+            if (Godmode_On)
+                Enemy_Total_Damage_in = Enemy_Total_Damage_God + Enemy_Damage; 
+            else
                 Enemy_Total_Damage_in = Enemy_Total_Damage + Enemy_Damage;
-            end
         end
     end
 
+    // Evaluate if enemy is alive
     always_comb begin
         if (Enemy_Blood <= 6'd0) begin
             Enemy_Alive = 1'b0;

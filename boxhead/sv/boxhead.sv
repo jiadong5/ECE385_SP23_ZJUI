@@ -189,9 +189,14 @@ module boxhead( input               CLOCK_50,
     logic [7:0] Enemy_Score [`ENEMY_NUM];
     logic [7:0] Total_Score;
     logic [9:0] Enemy_Total_Damage [`ENEMY_NUM];
+    logic [9:0] Enemy_Total_Damage_God [`ENEMY_NUM];
     logic [12:0] All_Enemy_Total_Damage;
-    parameter [9:0] Player_Full_Blood = 7'd100;
+    logic [12:0] All_Enemy_Total_Damage_God;
+    parameter [9:0] Player_Full_Blood = 10'd100;
+    parameter [9:0] Player_Full_Blood_God = 10'd300;
     logic [9:0] Player_Blood;
+
+    logic Godmode_On;
 
     assign PixelX = DrawX[9:1];
     assign PixelY = DrawY[9:1];
@@ -371,10 +376,12 @@ module boxhead( input               CLOCK_50,
                 .Player_Direction(Player_Direction),
                 .Attack_On(Attack_On),
                 .Enemy_Attack_On(Enemy_Attack_On[j]),
+                .Godmode_On(Godmode_On),
                 // Output
                 .Enemy_Alive(Enemy_Alive[j]),
                 .Enemy_Score(Enemy_Score[j]),
                 .Enemy_Total_Damage(Enemy_Total_Damage[j]),
+                .Enemy_Total_Damage_God(Enemy_Total_Damage_God[j]),
                 .Enemy_Is_Attacked(Enemy_Is_Attacked[j])
             );
         end
@@ -383,15 +390,28 @@ module boxhead( input               CLOCK_50,
     assign Total_Score = Enemy_Score[0] + Enemy_Score[1] + Enemy_Score[2] + Enemy_Score[3];
 
     assign All_Enemy_Total_Damage = (Enemy_Total_Damage[0] + Enemy_Total_Damage[1] + Enemy_Total_Damage[2] + Enemy_Total_Damage[3]);
+    assign All_Enemy_Total_Damage_God = (Enemy_Total_Damage_God[0] + Enemy_Total_Damage_God[1] + Enemy_Total_Damage_God[2] + Enemy_Total_Damage_God[3]);
 
     always_comb begin
-        if (All_Enemy_Total_Damage <= Player_Full_Blood) begin
-            Player_Blood = Player_Full_Blood - All_Enemy_Total_Damage;
-            Game_Over_On = 1'b0;
+        if (Godmode_On) begin
+            if (All_Enemy_Total_Damage_God <= Player_Full_Blood_God) begin
+                Player_Blood = Player_Full_Blood_God - All_Enemy_Total_Damage_God;
+                Game_Over_On = 1'b0;
+            end
+            else begin
+                Player_Blood = 0;
+                Game_Over_On = 1'b1;
+            end
         end
         else begin
-            Player_Blood = 0;
-            Game_Over_On = 1'b1;
+            if (All_Enemy_Total_Damage <= Player_Full_Blood) begin
+                Player_Blood = Player_Full_Blood - All_Enemy_Total_Damage;
+                Game_Over_On = 1'b0;
+            end
+            else begin
+                Player_Blood = 0;
+                Game_Over_On = 1'b1;
+            end
         end
     end
 
@@ -449,6 +469,7 @@ module boxhead( input               CLOCK_50,
         .Player_Blood(Player_Blood),
         .PixelX(PixelX),
         .PixelY(PixelY),
+        .Godmode_On(Godmode_On),
         .is_obj(is_blood),
         .Obj_address(blood_address)
     );
@@ -464,6 +485,15 @@ module boxhead( input               CLOCK_50,
         .Reset(Reset_h),
         .enemy_attack_index(existed_enemy_attack_index),
         .is_enemy_attack(existed_is_enemy_attack)
+    );
+
+    godmode godmode_inst(
+        .Clk(Clk),
+        .Reset(Reset_h),
+        .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
+        .keycode(keycode),
+        // Output
+        .Godmode_On(Godmode_On)
     );
 
     // Display keycode on hex display

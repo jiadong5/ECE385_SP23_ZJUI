@@ -1,7 +1,11 @@
 
-
-/*  Player
-*/
+`define UP 82
+`define DOWN 81
+`define LEFT 80
+`define RIGHT 79
+`define Z 29
+`define X 27
+`define SPACE 44
 
 module  attack ( input       Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
@@ -92,7 +96,7 @@ module  attack ( input       Clk,                // 50 MHz clock
     begin
         Obj_On_in = 1'b0;
         // Press space
-        if ((keycode == 10'd44))
+        if ((keycode == `Z))
             Obj_On_in = 1'b1;
     end
 

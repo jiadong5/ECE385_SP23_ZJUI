@@ -3,6 +3,14 @@
 /*  Player
 */
 
+`define UP 82
+`define DOWN 81
+`define LEFT 80
+`define RIGHT 79
+`define Z 29
+`define X 27
+`define SPACE 44
+
 module  player ( input       Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
                              game_frame_clk_rising_edge,
@@ -75,7 +83,7 @@ module  player ( input       Clk,                // 50 MHz clock
         begin
             // Handle keypress
             case(keycode)
-            10'd26: // Up W
+            `UP: // Up W
                     begin
                     Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);
                     Obj_X_Motion_in = 1'b0;
@@ -84,7 +92,7 @@ module  player ( input       Clk,                // 50 MHz clock
                     if (Obj_Y_Pos <= Obj_Y_Min)
                         Obj_Y_Motion_in = 10'b0;
                     end
-            10'd22: // Down S
+            `DOWN: // Down S
                     begin
                     Obj_Y_Motion_in = Obj_Y_Step;
                     Obj_X_Motion_in = 1'b0;
@@ -93,7 +101,7 @@ module  player ( input       Clk,                // 50 MHz clock
                     if (Obj_Y_Pos + Height >= Obj_Y_Max)
                         Obj_Y_Motion_in = 10'b0;
                     end
-            10'd4:  // Left A
+            `LEFT:  // Left A
                     begin
                     Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
                     Obj_Y_Motion_in = 1'b0;
@@ -102,7 +110,7 @@ module  player ( input       Clk,                // 50 MHz clock
                     if (Obj_X_Pos <= Obj_X_Min)
                         Obj_X_Motion_in = 1'b0;
                     end
-            10'd7:  // Right D
+            `RIGHT:  // Right D
                     begin
                     Obj_X_Motion_in = Obj_X_Step;
                     Obj_Y_Motion_in = 1'b0;
