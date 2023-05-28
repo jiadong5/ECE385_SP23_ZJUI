@@ -150,6 +150,7 @@ module boxhead( input               CLOCK_50,
     logic [17:0] game_start_address;
     logic [14:0] score_address;
     logic [8:0] blood_address;
+    logic [8:0] level_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
@@ -160,6 +161,7 @@ module boxhead( input               CLOCK_50,
     logic [4:0] game_over_index;
     logic [4:0] game_start_index;
     logic [4:0] score_index;
+    logic [4:0] level_index;
     logic [4:0] blood_index;
 
     logic is_player;
@@ -171,6 +173,7 @@ module boxhead( input               CLOCK_50,
                         // Game_Over_On determines is game is over
     logic is_game_start; // Same as is_game_over
     logic is_score;
+    logic is_level;
     logic is_blood;
 
     logic [8:0] Player_X, Player_Y;
@@ -186,8 +189,9 @@ module boxhead( input               CLOCK_50,
     logic Enemy_Attack_Ready [`ENEMY_NUM];
     logic Enemy_Is_Attacked [`ENEMY_NUM];
 
-    logic [7:0] Enemy_Score [`ENEMY_NUM];
-    logic [7:0] Total_Score;
+    logic [9:0] Enemy_Score [`ENEMY_NUM];
+    logic [9:0] Total_Score;
+    logic [9:0] Enemy_Respawn_Unit_Time;
     logic [9:0] Enemy_Total_Damage [`ENEMY_NUM];
     logic [9:0] Enemy_Total_Damage_God [`ENEMY_NUM];
     logic [12:0] All_Enemy_Total_Damage;
@@ -195,6 +199,7 @@ module boxhead( input               CLOCK_50,
     parameter [9:0] Player_Full_Blood = 10'd100;
     parameter [9:0] Player_Full_Blood_God = 10'd300;
     logic [9:0] Player_Blood;
+
 
     logic Godmode_On;
 
@@ -377,6 +382,7 @@ module boxhead( input               CLOCK_50,
                 .Attack_On(Attack_On),
                 .Enemy_Attack_On(Enemy_Attack_On[j]),
                 .Godmode_On(Godmode_On),
+                .Enemy_Respawn_Unit_Time(Enemy_Respawn_Unit_Time),
                 // Output
                 .Enemy_Alive(Enemy_Alive[j]),
                 .Enemy_Score(Enemy_Score[j]),
@@ -458,10 +464,23 @@ module boxhead( input               CLOCK_50,
         .Obj_address(score_address)
     );
 
+    gamelevel game_level_inst(
+        .Clk(Clk),
+        .Reset(Reset),
+        .PixelX(PixelX),
+        .PixelY(PixelY),
+        .Total_Score(Total_Score),
+        .is_obj(is_level),
+        .Obj_address(level_address),
+        .Enemy_Respawn_Unit_Time(Enemy_Respawn_Unit_Time)
+    );
+
     scoreROM scoreROM_inst(
         .Clk(Clk),
-        .read_address(score_address),
-        .data_Out(score_index)
+        .read_address0(score_address),
+        .data_Out0(score_index),
+        .read_address1(level_address),
+        .data_Out1(level_index)
     );
     
     blood blood_inst(
@@ -486,6 +505,7 @@ module boxhead( input               CLOCK_50,
         .enemy_attack_index(existed_enemy_attack_index),
         .is_enemy_attack(existed_is_enemy_attack)
     );
+
 
     godmode godmode_inst(
         .Clk(Clk),

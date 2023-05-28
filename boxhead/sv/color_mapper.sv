@@ -16,6 +16,7 @@ module color_mapper
                 is_game_over,
                 is_game_start,
                 is_score,
+                is_level,
                 is_blood,
     input logic is_enemy [`ENEMY_NUM],
     input logic[4:0] bkg_index,
@@ -25,6 +26,7 @@ module color_mapper
                      game_over_index,
                      game_start_index,
                      score_index,
+                     level_index,
                      blood_index,
     input logic[4:0] enemy_index [`ENEMY_NUM],
 
@@ -62,6 +64,8 @@ module color_mapper
         // it's not red(sprite bacground color), which corresponds to index 0
         if ((is_blood) && (blood_index)) 
             fgd_index = blood_index;
+        else if ((is_level) && (level_index))
+            fgd_index = level_index;
         else if ((is_score) && (score_index))
             fgd_index = score_index;
         else if ((is_game_start) && (game_start_index))

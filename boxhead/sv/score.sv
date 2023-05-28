@@ -5,13 +5,14 @@ module score (
                 input [7:0] Total_Score,
                 input [8:0] PixelX, PixelY,
                 
-                output is_obj,
-                output [14:0] Obj_address
+                output logic is_obj,
+                output logic [14:0] Obj_address
 );
 
     parameter [8:0] Width = 20;
     parameter [8:0] Height = 25;
 
+    logic [8:0] Obj_X_Pos2, Obj_Y_Pos2; // Letter S
     logic [8:0] Obj_X_Pos1, Obj_Y_Pos1; // Position of left digit
     logic [8:0] Obj_X_Pos0, Obj_Y_Pos0; // Position of right digit
     logic [7:0] Ten_Digit, Unit_Digit;
@@ -20,6 +21,10 @@ module score (
     assign Obj_Y_Pos1 = 16;
     assign Obj_X_Pos0 = Obj_X_Pos1 + Width;
     assign Obj_Y_Pos0 = Obj_Y_Pos1;
+    // S
+    assign Obj_X_Pos2 = Obj_X_Pos1 - Width;
+    assign Obj_Y_Pos2 = Obj_Y_Pos1;
+
     assign Ten_Digit = Total_Score / 10;
     assign Unit_Digit = Total_Score % 10;
 
@@ -44,6 +49,11 @@ module score (
             (PixelY >= Obj_Y_Pos0) && (PixelY < (Obj_Y_Pos0 + Height))) begin
                 is_obj = 1'b1;
                 Obj_address = DistX0 + DistY0 * Width + Unit_Digit * Width * Height;
+        end
+        else if ((PixelX >= Obj_X_Pos2) && (PixelX < (Obj_X_Pos2 + Width)) &&
+            (PixelY >= Obj_Y_Pos2) && (PixelY < (Obj_Y_Pos2 + Height))) begin
+                is_obj = 1'b1;
+                Obj_address = DistX0 + DistY0 * Width + 11 * Width * Height;
         end
 
     end
