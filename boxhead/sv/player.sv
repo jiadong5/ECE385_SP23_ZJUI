@@ -14,7 +14,7 @@
 module  player ( input       Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
                              game_frame_clk_rising_edge,
-               input [7:0]   keycode,
+               input [15:0]   keycode,
                input [8:0]   PixelX, PixelY,     
                input  logic Attack_On,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
@@ -82,8 +82,7 @@ module  player ( input       Clk,                // 50 MHz clock
         if (game_frame_clk_rising_edge)
         begin
             // Handle keypress
-            case(keycode)
-            `UP: // Up W
+            if (keycode[7:0] == `UP | keycode[15:8] == `UP)
                     begin
                     Obj_Y_Motion_in = (~(Obj_Y_Step) + 1'b1);
                     Obj_X_Motion_in = 1'b0;
@@ -92,7 +91,7 @@ module  player ( input       Clk,                // 50 MHz clock
                     if (Obj_Y_Pos <= Obj_Y_Min)
                         Obj_Y_Motion_in = 10'b0;
                     end
-            `DOWN: // Down S
+            if (keycode[7:0] == `DOWN | keycode[15:8] == `DOWN)
                     begin
                     Obj_Y_Motion_in = Obj_Y_Step;
                     Obj_X_Motion_in = 1'b0;
@@ -101,7 +100,7 @@ module  player ( input       Clk,                // 50 MHz clock
                     if (Obj_Y_Pos + Height >= Obj_Y_Max)
                         Obj_Y_Motion_in = 10'b0;
                     end
-            `LEFT:  // Left A
+            if (keycode[7:0] == `LEFT | keycode[15:8] == `LEFT)
                     begin
                     Obj_X_Motion_in = (~(Obj_X_Step) + 1'b1);
                     Obj_Y_Motion_in = 1'b0;
@@ -110,7 +109,7 @@ module  player ( input       Clk,                // 50 MHz clock
                     if (Obj_X_Pos <= Obj_X_Min)
                         Obj_X_Motion_in = 1'b0;
                     end
-            `RIGHT:  // Right D
+            if (keycode[7:0] == `RIGHT | keycode[15:8] == `RIGHT)
                     begin
                     Obj_X_Motion_in = Obj_X_Step;
                     Obj_Y_Motion_in = 1'b0;
@@ -119,7 +118,6 @@ module  player ( input       Clk,                // 50 MHz clock
                     if (Obj_X_Pos + Width >= Obj_X_Max)
                         Obj_X_Motion_in = 1'b0;
                     end
-            endcase
 
             // Update the ball's position with its motion, immediate change, use Motion_in instead of Motion
             Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion_in;

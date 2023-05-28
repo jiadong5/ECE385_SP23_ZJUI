@@ -77,7 +77,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  29 .quartus_project_dir 00000011  00000000  00000000  000700fe  2**0
                   CONTENTS, READONLY
- 30 .sopcinfo     00072a10  00000000  00000000  0007010f  2**0
+ 30 .sopcinfo     00072a14  00000000  00000000  0007010f  2**0
                   CONTENTS, READONLY
 SYMBOL TABLE:
 10000000 l    d  .entry	00000000 .entry
@@ -2510,10 +2510,10 @@ int main(void)
 10000fc0:	00022c00 	call	100022c0 <printf>
 		// We only need the first keycode, which is at the lower byte of keycode.
 		// Send the keycode to hardware via PIO.
-		*keycode_base = keycode & 0xff; 
+		*keycode_base = keycode & 0xffff; 
 10000fc4:	00802004 	movi	r2,128
 10000fc8:	e0fffd17 	ldw	r3,-12(fp)
-10000fcc:	10c00005 	stb	r3,0(r2)
+10000fcc:	10c0000d 	sth	r3,0(r2)
 
 		usleep(200);//usleep(5000);
 10000fd0:	01003204 	movi	r4,200
@@ -22303,7 +22303,7 @@ alt_exception_cause_generated_bad_addr(alt_exception_cause cause)
 100117a0:	d9400015 	stw	r5,0(sp)
 100117a4:	d9800115 	stw	r6,4(sp)
 100117a8:	d9c00215 	stw	r7,8(sp)
-100117ac:	00000000 	call	10000000 <__reset>
+100117ac:	00000000 	call	10000000 <__alt_mem_sdram>
 100117b0:	d9400017 	ldw	r5,0(sp)
 100117b4:	d9800117 	ldw	r6,4(sp)
 100117b8:	d9c00217 	ldw	r7,8(sp)
@@ -22387,7 +22387,7 @@ alt_exception_cause_generated_bad_addr(alt_exception_cause cause)
 100118e8:	10003226 	beq	r2,zero,100119b4 <__call_exitprocs+0x178>
 100118ec:	a009883a 	mov	r4,r20
 100118f0:	98800015 	stw	r2,0(r19)
-100118f4:	00000000 	call	10000000 <__reset>
+100118f4:	00000000 	call	10000000 <__alt_mem_sdram>
 100118f8:	9d000017 	ldw	r20,0(r19)
 100118fc:	a03fe41e 	bne	r20,zero,10011890 <__alt_data_end+0xf8011890>
 10011900:	dfc00a17 	ldw	ra,40(sp)

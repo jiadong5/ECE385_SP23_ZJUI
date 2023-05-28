@@ -47,8 +47,8 @@ refer to the applicable agreement for further details.
 	(port
 		(pt 0 112)
 		(output)
-		(text "keycode_export[7..0]" (rect 0 0 84 12)(font "Arial" (font_size 8)))
-		(text "keycode_export[7..0]" (rect 4 101 124 112)(font "Arial" (font_size 8)))
+		(text "keycode_export[15..0]" (rect 0 0 88 12)(font "Arial" (font_size 8)))
+		(text "keycode_export[15..0]" (rect 4 101 130 112)(font "Arial" (font_size 8)))
 		(line (pt 0 112)(pt 160 112)(line_width 3))
 	)
 	(port

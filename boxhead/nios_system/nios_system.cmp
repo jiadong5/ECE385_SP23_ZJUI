@@ -1,7 +1,7 @@
 	component nios_system is
 		port (
 			clk_clk                : in    std_logic                     := 'X';             -- clk
-			keycode_export         : out   std_logic_vector(7 downto 0);                     -- export
+			keycode_export         : out   std_logic_vector(15 downto 0);                    -- export
 			otg_hpi_address_export : out   std_logic_vector(1 downto 0);                     -- export
 			otg_hpi_cs_export      : out   std_logic;                                        -- export
 			otg_hpi_data_in_port   : in    std_logic_vector(15 downto 0) := (others => 'X'); -- in_port
