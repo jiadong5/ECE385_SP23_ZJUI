@@ -13,7 +13,7 @@
 #define otg_hpi_cs				(volatile char*)	OTG_HPI_CS_BASE //FOR SOME REASON CS BASE BEHAVES WEIRDLY MIGHT HAVE TO SET MANUALLY
 #define otg_hpi_w				(volatile char*)	OTG_HPI_W_BASE
 #define otg_hpi_reset			(volatile char*)	OTG_HPI_RESET_BASE
-#define keycode_base			(volatile char*)	KEYCODE_BASE
+#define keycode_base			(volatile short*)	KEYCODE_BASE
 
 void IO_write(alt_u8 Address, alt_u16 Data);
 alt_u16 IO_read(alt_u8 Address);

@@ -47,7 +47,7 @@ module boxhead( input               CLOCK_50,
                     );
     
     logic Reset_h, Clk;
-    logic [7:0] keycode;
+    logic [15:0] keycode;
     
     assign Clk = CLOCK_50;
     always_ff @ (posedge Clk) begin

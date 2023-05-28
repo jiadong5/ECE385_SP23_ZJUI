@@ -2,7 +2,7 @@ set_global_assignment -entity "nios_system" -library "nios_system" -name IP_TOOL
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_TOOL_VERSION "18.1"
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_TOOL_ENV "Qsys"
 set_global_assignment -library "nios_system" -name SOPCINFO_FILE [file join $::quartus(qip_path) "../../nios_system.sopcinfo"]
-set_global_assignment -entity "nios_system" -library "nios_system" -name SLD_INFO "QSYS_NAME nios_system HAS_SOPCINFO 1 GENERATION_ID 1683715837"
+set_global_assignment -entity "nios_system" -library "nios_system" -name SLD_INFO "QSYS_NAME nios_system HAS_SOPCINFO 1 GENERATION_ID 1685273329"
 set_global_assignment -library "nios_system" -name MISC_FILE [file join $::quartus(qip_path) "../nios_system.cmp"]
 set_global_assignment -library "nios_system" -name SLD_FILE [file join $::quartus(qip_path) "nios_system.regmap"]
 set_global_assignment -library "nios_system" -name SLD_FILE [file join $::quartus(qip_path) "nios_system.debuginfo"]
@@ -16,7 +16,7 @@ set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMP
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMPONENT_REPORT_HIERARCHY "On"
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMPONENT_INTERNAL "Off"
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMPONENT_VERSION "MS4w"
-set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMPONENT_PARAMETER "QVVUT19HRU5FUkFUSU9OX0lE::MTY4MzcxNTgzNw==::QXV0byBHRU5FUkFUSU9OX0lE"
+set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMPONENT_PARAMETER "QVVUT19HRU5FUkFUSU9OX0lE::MTY4NTI3MzMyOQ==::QXV0byBHRU5FUkFUSU9OX0lE"
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0VfRkFNSUxZ::Q3ljbG9uZSBJViBF::QXV0byBERVZJQ0VfRkFNSUxZ"
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0U=::RVA0Q0UxMTVGMjlDNw==::QXV0byBERVZJQ0U="
 set_global_assignment -entity "nios_system" -library "nios_system" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0VfU1BFRURHUkFERQ==::Nw==::QXV0byBERVZJQ0VfU1BFRURHUkFERQ=="
@@ -1177,7 +1177,7 @@ set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name
 set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name IP_COMPONENT_PARAMETER "Yml0TW9kaWZ5aW5nT3V0UmVn::ZmFsc2U=::RW5hYmxlIGluZGl2aWR1YWwgYml0IHNldHRpbmcvY2xlYXJpbmc="
 set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name IP_COMPONENT_PARAMETER "ZGlyZWN0aW9u::T3V0cHV0::RGlyZWN0aW9u"
 set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name IP_COMPONENT_PARAMETER "cmVzZXRWYWx1ZQ==::MA==::T3V0cHV0IFBvcnQgUmVzZXQgVmFsdWU="
-set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name IP_COMPONENT_PARAMETER "d2lkdGg=::OA==::V2lkdGggKDEtMzIgYml0cyk="
+set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name IP_COMPONENT_PARAMETER "d2lkdGg=::MTY=::V2lkdGggKDEtMzIgYml0cyk="
 set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name IP_COMPONENT_PARAMETER "Y2xvY2tSYXRl::NTAwMDAwMDA=::Y2xvY2tSYXRl"
 set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name IP_COMPONENT_PARAMETER "ZGVyaXZlZF9oYXNfdHJp::ZmFsc2U=::ZGVyaXZlZF9oYXNfdHJp"
 set_global_assignment -entity "nios_system_keycode" -library "nios_system" -name IP_COMPONENT_PARAMETER "ZGVyaXZlZF9oYXNfb3V0::dHJ1ZQ==::ZGVyaXZlZF9oYXNfb3V0"

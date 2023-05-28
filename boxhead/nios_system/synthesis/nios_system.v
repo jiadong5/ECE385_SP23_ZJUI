@@ -5,7 +5,7 @@
 `timescale 1 ps / 1 ps
 module nios_system (
 		input  wire        clk_clk,                //             clk.clk
-		output wire [7:0]  keycode_export,         //         keycode.export
+		output wire [15:0] keycode_export,         //         keycode.export
 		output wire [1:0]  otg_hpi_address_export, // otg_hpi_address.export
 		output wire        otg_hpi_cs_export,      //      otg_hpi_cs.export
 		input  wire [15:0] otg_hpi_data_in_port,   //    otg_hpi_data.in_port
