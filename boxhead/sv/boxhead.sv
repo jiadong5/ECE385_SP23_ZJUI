@@ -128,6 +128,7 @@ module boxhead( input               CLOCK_50,
     logic [16:0] pika_frequency;
     logic INIT_pika;
 
+
     always_comb begin
         pika_frequency = 16'd31;
     end
@@ -202,7 +203,7 @@ module boxhead( input               CLOCK_50,
 								.AUD_ADCLRCK(AUD_ADCLRCK),
 								.I2C_SDAT(I2C_SDAT),
 								.I2C_SCLK(I2C_SCLK),
-								.ADCDATA(ADCDATA),
+								.ADCDATA(ADCDATA)
 	);
 
     // VGA part
@@ -278,6 +279,13 @@ module boxhead( input               CLOCK_50,
 
     assign bkg_address = PixelX + PixelY * 320;
 
+    // Audio interface
+    // Pika is attacked
+    assign pika_enable = Enemy_Attack_On[0] | Enemy_Attack_On[1] | Enemy_Attack_On[2] | Enemy_Attack_On[3];
+    assign gengar_enable = Enemy_Is_Attacked[0] | Enemy_Is_Attacked[1] | Enemy_Is_Attacked[2] | Enemy_Is_Attacked[3];
+    assign ele_enable = Attack_On;
+
+
     vga_controller vga_controller_inst(
         .*,
         .Reset(Reset_h),
@@ -288,13 +296,13 @@ module boxhead( input               CLOCK_50,
         .sync(VGA_SYNC_N)
     );
     // Comment to decrease compile time
-    // backgroundROM backgroundROM_inst(
-    //     .*,
-    //     .read_address(bkg_address),
-    //     .data_Out(bkg_index)
-    // );
+    backgroundROM backgroundROM_inst(
+        .*,
+        .read_address(bkg_address),
+        .data_Out(bkg_index)
+    );
 
-    assign bkg_index = 1;
+    // assign bkg_index = 1;
 
     game_frame_clk game_frame_clk_inst(
         .Clk(Clk),
