@@ -9,19 +9,21 @@
 //-------------------------------------------------------------------------
 
 
-module audio (   input logic Clk, Reset, 
-					  input logic INIT_FINISH,
-					  input logic data_over,
-					  input logic [16:0] music_frequency,
-					  output logic INIT,
-					  output [16:0] Add
+module audio (   
+	input logic Clk, Reset, 
+	input logic INIT_FINISH,
+	input logic data_over,
+	input logic [16:0] music_frequency,
+	output logic INIT_BGM,
+	output [16:0] Add
 );
 
 logic [15:0] counter;
 logic [15:0] inner_counter;
 enum logic {WAIT,RUN} current_state, next_state;
 logic [16:0] inner_Add;
-
+logic [16:0] num;
+assign num = 17'd80549;
 
 always_ff @ (posedge Clk)
 	begin
@@ -47,14 +49,14 @@ always_comb
 					if (INIT_FINISH == 4'd01)
 						begin
 							next_state = RUN;
-							INIT = 1'd01;
+							INIT_BGM = 1'd01;
 						end
 					else
 						begin
 							next_state = WAIT;
 							
 						end
-					INIT = 1'd01;	
+					INIT_BGM = 1'd01;	
 					inner_counter = 16'd0;
 					inner_Add = 17'd0;
 				end
@@ -64,16 +66,16 @@ always_comb
 			RUN:
 			begin 
 				next_state = RUN;
-				INIT = 1'd01;
+				INIT_BGM = 1'd01;
 				
 				if (counter< music_frequency+1 )
 					inner_counter = counter+16'd1;
 				else
 					inner_counter = 16'd0;
 					
-				if (counter== music_frequency && Add<=17'd96865 && data_over!=0)
+				if (counter== music_frequency && Add <= num && data_over!=0)
 					inner_Add = Add+17'd1;
-				else if (Add < 17'd80549)
+				else if (Add < num)
 					inner_Add = Add;
 				else
 					inner_Add = 17'd0;
