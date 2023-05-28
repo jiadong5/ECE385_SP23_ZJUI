@@ -19,7 +19,7 @@ module gamestart(
 
     parameter [8:0] Height = 9'd30;
     parameter [8:0] Width = 9'd180;
-    parameter [8:0] Obj_X_Center = 9'd160;
+    parameter [8:0] Obj_X_Center = 9'd168;
     parameter [8:0] Obj_Y_Center = 9'd80;
 
     logic[8:0] Obj_X_Pos, Obj_Y_Pos;

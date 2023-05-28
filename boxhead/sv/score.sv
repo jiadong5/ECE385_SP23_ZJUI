@@ -17,8 +17,8 @@ module score (
     logic [8:0] Obj_X_Pos0, Obj_Y_Pos0; // Position of right digit
     logic [7:0] Ten_Digit, Unit_Digit;
 
-    assign Obj_X_Pos1 = 200;
-    assign Obj_Y_Pos1 = 16;
+    assign Obj_X_Pos1 = 220;
+    assign Obj_Y_Pos1 = 24;
     assign Obj_X_Pos0 = Obj_X_Pos1 + Width;
     assign Obj_Y_Pos0 = Obj_Y_Pos1;
     // S

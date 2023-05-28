@@ -267,7 +267,7 @@ module boxhead( input               CLOCK_50,
     logic [9:0] Enemy_Total_Damage_God [`ENEMY_NUM];
     logic [12:0] All_Enemy_Total_Damage;
     logic [12:0] All_Enemy_Total_Damage_God;
-    parameter [9:0] Player_Full_Blood = 10'd100;
+    parameter [9:0] Player_Full_Blood = 10'd50;
     parameter [9:0] Player_Full_Blood_God = 10'd300;
     logic [9:0] Player_Blood;
 

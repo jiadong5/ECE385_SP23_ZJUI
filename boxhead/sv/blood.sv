@@ -15,11 +15,11 @@ module blood (
     parameter [8:0] Width = 13;
     parameter [8:0] Height = 13;
     parameter [8:0] TotalWidth = Width * 10;
-    parameter [8:0] Player_Full_Blood_NoGod = 9'd100;
+    parameter [8:0] Player_Full_Blood_NoGod = 9'd50;
 
     logic [8:0] Obj_X_Pos, Obj_Y_Pos; // Position of left digit
 
-    assign Obj_X_Pos = 40;
+    assign Obj_X_Pos = 5;
     assign Obj_Y_Pos = 16;
 
     int DistX,DistY;

@@ -6,14 +6,14 @@ module gameover(
           Game_Over_On,
     input [8:0] PixelX,PixelY,
 
-    output is_obj,
+    output logic is_obj,
     output logic [14:0] Obj_address
 );
 
     parameter [8:0] Height = 9'd31;
     parameter [8:0] Width = 9'd203;
     parameter [8:0] Obj_X_Center = 9'd160;
-    parameter [8:0] Obj_Y_Center = 9'd80;
+    parameter [8:0] Obj_Y_Center = 9'd100;
 
 
     logic[8:0] Obj_X_Pos, Obj_Y_Pos;

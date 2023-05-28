@@ -18,8 +18,8 @@ module gamelevel (input Clk,
     logic [3:0] Game_Level;
 
     // Position of L
-    assign Obj_X_Pos1 = 240;
-    assign Obj_Y_Pos1 = 16;
+    assign Obj_X_Pos1 = 280;
+    assign Obj_Y_Pos1 = 24;
     assign Obj_X_Pos0 = Obj_X_Pos1 + Width;
     assign Obj_Y_Pos0 = Obj_Y_Pos1;
 

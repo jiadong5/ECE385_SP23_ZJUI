@@ -25,8 +25,30 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     
     // parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
     // parameter [8:0] Obj_Y_Center = 10'd60;  // Center position on the Y axis
-    parameter [8:0] Obj_X_Center = 10'd70 * (id + 1);
-    parameter [8:0] Obj_Y_Center = 10'd40 * (id + 1);
+    // parameter [8:0] Obj_X_Center = 10'd70 * (id + 1);
+    // parameter [8:0] Obj_Y_Center = 10'd40 * (id + 1);
+    logic [8:0] Obj_X_Center;
+    logic [8:0] Obj_Y_Center;
+    always_comb begin
+        case (id)
+        0: begin
+            Obj_X_Center = 9'd5;
+            Obj_Y_Center = 9'd65;
+        end
+        1: begin
+            Obj_X_Center = 9'd315;
+            Obj_Y_Center = 9'd65;
+        end
+        2: begin
+            Obj_X_Center = 9'd315;
+            Obj_Y_Center = 9'd180;
+        end
+        3: begin
+            Obj_X_Center = 9'd5;
+            Obj_Y_Center = 9'd180;
+        end
+        endcase
+    end
 
 
     parameter [8:0] Height = 10'd26;         // Height of object
