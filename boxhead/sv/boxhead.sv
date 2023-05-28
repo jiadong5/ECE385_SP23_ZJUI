@@ -222,6 +222,7 @@ module boxhead( input               CLOCK_50,
     logic [14:0] score_address;
     logic [14:0] level_address;
     logic [8:0] blood_address;
+    logic [11:0] blackboard_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
@@ -234,6 +235,7 @@ module boxhead( input               CLOCK_50,
     logic [4:0] score_index;
     logic [4:0] level_index;
     logic [4:0] blood_index;
+    logic [4:0] blackboard_index;
 
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
@@ -246,6 +248,7 @@ module boxhead( input               CLOCK_50,
     logic is_score;
     logic is_level;
     logic is_blood;
+    logic is_blackboard;
 
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
@@ -563,6 +566,20 @@ module boxhead( input               CLOCK_50,
         .data_Out0(score_index),
         .read_address1(level_address),
         .data_Out1(level_index)
+    );
+
+    blackboard blackboard_inst(
+        .Clk(Clk),
+        .Reset(Reset_h),
+        .PixelX(PixelX),
+        .PixelY(PixelY),
+        .is_obj(is_blackboard),
+        .Obj_address(blackboard_address)
+    );
+    blackboardROM blackboardROM_inst(
+        .Clk(Clk),
+        .read_address(blackboard_address),
+        .data_Out(blackboard_index)
     );
     
     blood blood_inst(
