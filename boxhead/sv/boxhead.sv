@@ -353,7 +353,7 @@ module boxhead( input               CLOCK_50,
                 .Obj_address(enemy_address[i]),
                 .Obj_X_Pos(Enemy_X[i]),
                 .Obj_Y_Pos(Enemy_Y[i]),
-                .Enemy_Attack_Ready(Enemy_Attack_Ready[i])
+                .Enemy_Attack_Ready_in(Enemy_Attack_Ready[i])
             );
         end
     endgenerate    
@@ -393,6 +393,7 @@ module boxhead( input               CLOCK_50,
         .data_Out(attack_index)
     );
 
+    logic Enemy_Attack_Valid [`ENEMY_NUM];
     genvar k;
     generate 
         for (k = 0; k < `ENEMY_NUM; k++) begin: enemy_attack
@@ -408,7 +409,8 @@ module boxhead( input               CLOCK_50,
                 // Output
                 .is_obj(is_enemy_attack[k]),
                 .Obj_address(enemy_attack_address[k]),
-                .Obj_On(Enemy_Attack_On[k])
+                .Obj_On(Enemy_Attack_On[k]),
+                .Enemy_Attack_Valid(Enemy_Attack_Valid[k])
             );
         end
     endgenerate
@@ -462,6 +464,7 @@ module boxhead( input               CLOCK_50,
                 .Enemy_Attack_On(Enemy_Attack_On[j]),
                 .Godmode_On(Godmode_On),
                 .Enemy_Respawn_Unit_Time(Enemy_Respawn_Unit_Time),
+                .Enemy_Attack_Valid(Enemy_Attack_Valid[j]),
                 // Output
                 .Enemy_Alive(Enemy_Alive[j]),
                 .Enemy_Score(Enemy_Score[j]),

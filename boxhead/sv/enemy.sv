@@ -20,7 +20,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                output logic [13:0] Obj_address,
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
-               output logic Enemy_Attack_Ready
+               output logic Enemy_Attack_Ready_in
               );
     
     // parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
@@ -68,7 +68,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
     logic [8:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
     logic [1:0] Obj_Direction_in, Obj_Direction;
-    logic Enemy_Attack_Ready_in;
+    // logic Enemy_Attack_Ready_in;
 
     logic Enemy_Player_On, Enemy_Player_On_in;
 
@@ -95,7 +95,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         if(Enemy_Is_Attacked)
             Enemy_Stay_Counter_in = 3'b1;
         else if (game_frame_clk_rising_edge) begin
-            if (Enemy_Stay_Counter)
+            if ((Enemy_Stay_Counter) && (Enemy_Stay_Counter != 3'd6))
                 Enemy_Stay_Counter_in = Enemy_Stay_Counter + 1;
             else if (Enemy_Stay_Counter == 3'd6)
                 Enemy_Stay_Counter_in = 3'd0;
@@ -120,7 +120,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             Obj_X_Motion <= 10'd0;
             Obj_Y_Motion <= 10'd0;
             Obj_Direction <= 2'd0;
-            Enemy_Attack_Ready <= 1'b0;
+            // Enemy_Attack_Ready <= 1'b0;
             Enemy_Player_On <= 1'b0;
         end
         else
@@ -130,7 +130,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             Obj_X_Motion <= Obj_X_Motion_in;
             Obj_Y_Motion <= Obj_Y_Motion_in;
             Obj_Direction <= Obj_Direction_in;
-            Enemy_Attack_Ready <= Enemy_Attack_Ready_in;
+            // Enemy_Attack_Ready <= Enemy_Attack_Ready_in;
             Enemy_Player_On <= Enemy_Player_On_in;
         end
     end
@@ -153,7 +153,8 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         Obj_X_Motion_in = 10'd0;
         Obj_Y_Motion_in = 10'd0;
         Obj_Direction_in = Obj_Direction;
-        Enemy_Attack_Ready_in = Enemy_Attack_Ready;
+        // Enemy_Attack_Ready_in = Enemy_Attack_Ready;
+        Enemy_Attack_Ready_in = 1'b0;
 
         if (~is_alive)
             Enemy_Attack_Ready_in = 1'b0;

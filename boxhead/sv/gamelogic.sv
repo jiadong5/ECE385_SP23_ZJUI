@@ -18,6 +18,7 @@ module gamelogic #(parameter id)
                       Enemy_Attack_On,
                       Godmode_On,
     input logic [9:0] Enemy_Respawn_Unit_Time,
+    input logic       Enemy_Attack_Valid,
 
     // output logic [6:0] Player_Blood,
     //                    Enemy_Blood,
@@ -151,7 +152,7 @@ module gamelogic #(parameter id)
             Enemy_Total_Damage_in = Enemy_Total_Damage_God;
         else
             Enemy_Total_Damage_in = Enemy_Total_Damage;
-        if (Enemy_Attack_On & game_frame_clk_rising_edge) begin
+        if (Enemy_Attack_Valid & game_frame_clk_rising_edge) begin
             if (Godmode_On)
                 Enemy_Total_Damage_in = Enemy_Total_Damage_God + Enemy_Damage; 
             else

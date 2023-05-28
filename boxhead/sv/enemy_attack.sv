@@ -12,7 +12,8 @@ module enemy_attack(input Clk,
 
                     output logic is_obj,
                     output logic [9:0] Obj_address,
-                    output logic Obj_On
+                    output logic Obj_On,
+                    output logic Enemy_Attack_Valid
 );
 
     parameter [8:0] Width = 10'd18;
@@ -20,10 +21,30 @@ module enemy_attack(input Clk,
 
     logic [8:0] Obj_X_Pos, Obj_Y_Pos;
     logic [4:0] CoolDown_Counter,CoolDown_Counter_in;
-    logic [4:0] LastTime_Counter, LastTime_Counter_in;
+    logic [2:0] LastTime_Counter, LastTime_Counter_in;
 
     assign Obj_X_Pos = Player_X;
     assign Obj_Y_Pos = Player_Y;
+
+    // How long enemy's attack affect last
+    always_ff @ (posedge Clk) begin
+        if (Reset)
+            LastTime_Counter <= 3'd0;
+        else 
+            LastTime_Counter <= LastTime_Counter_in;
+    end
+
+    always_comb begin
+        LastTime_Counter_in = LastTime_Counter;
+        if (Enemy_Attack_Ready)
+            LastTime_Counter_in = 3'd1;
+        else if (game_frame_clk_rising_edge) begin
+            if((LastTime_Counter) && (LastTime_Counter != 3'd3))
+                LastTime_Counter_in = LastTime_Counter + 1'b1;
+            else if (LastTime_Counter == 3'd3)
+                LastTime_Counter_in = 3'd0;
+        end
+    end
 
     // Update registers
     always_ff @ (posedge Clk) begin
@@ -39,26 +60,31 @@ module enemy_attack(input Clk,
     // Record cooling down time
     always_comb begin
         CoolDown_Counter_in = CoolDown_Counter;
-        if(~Enemy_Attack_Ready) begin
-            CoolDown_Counter_in = `COOLDOWN_TIME;
-        end
-        else if (game_frame_clk_rising_edge) begin
-            if(CoolDown_Counter == `COOLDOWN_TIME)
-                CoolDown_Counter_in = 0;
-            else
+        if (Enemy_Attack_Ready)
+            CoolDown_Counter_in = 4'd1;
+        if (game_frame_clk_rising_edge) begin
+            if ((CoolDown_Counter) && (CoolDown_Counter != `COOLDOWN_TIME))
                 CoolDown_Counter_in = CoolDown_Counter + 1'b1;
+            else if (CoolDown_Counter == `COOLDOWN_TIME)
+                CoolDown_Counter_in = 4'd0;
         end
 
     end
 
     // Check if should show enemy attack
     always_comb begin
-        if((CoolDown_Counter == `COOLDOWN_TIME) && (Enemy_Attack_Ready)) begin
-        // if(Enemy_Attack_Ready) begin
+        if((LastTime_Counter >= 1)) begin
             Obj_On = 1'b1;
         end
         else begin
             Obj_On = 1'b0;
+        end
+
+        if((Obj_On) && (CoolDown_Counter == `COOLDOWN_TIME - 1)) begin
+            Enemy_Attack_Valid = 1'b1;
+        end
+        else begin
+            Enemy_Attack_Valid = 1'b0;
         end
     end
 

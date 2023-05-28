@@ -14,7 +14,6 @@ module blood (
 
     parameter [8:0] Width = 13;
     parameter [8:0] Height = 13;
-    parameter [8:0] TotalWidth = Width * 5;
     parameter [8:0] Player_Full_Blood_NoGod = 9'd50;
 
     logic [8:0] Obj_X_Pos, Obj_Y_Pos; // Position of left digit
@@ -32,7 +31,7 @@ module blood (
         Obj_address = 0;
 
         if (Godmode_On) begin
-            if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + TotalWidth)) &&
+            if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + 10 * Width)) &&
                 (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + 3 * Height))) begin
                     is_obj = 1'b1;
                     /////// Shit code
@@ -81,7 +80,7 @@ module blood (
         end
         // Normal Mode
         else begin
-            if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + TotalWidth)) &&
+            if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + 5 * Width)) &&
                 (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height))) begin
                     is_obj = 1'b1;
                     if (DistX <= (Player_Blood / 10) * Width ) begin
