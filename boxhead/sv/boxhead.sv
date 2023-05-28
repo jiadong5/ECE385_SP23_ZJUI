@@ -193,6 +193,8 @@ module boxhead( input               CLOCK_50,
     parameter [9:0] Player_Full_Blood = 7'd100;
     logic [9:0] Player_Blood;
 
+    logic Godmode_On;
+
     assign PixelX = DrawX[9:1];
     assign PixelY = DrawY[9:1];
 
@@ -371,6 +373,7 @@ module boxhead( input               CLOCK_50,
                 .Player_Direction(Player_Direction),
                 .Attack_On(Attack_On),
                 .Enemy_Attack_On(Enemy_Attack_On[j]),
+                .Godmode_On(Godmode_On),
                 // Output
                 .Enemy_Alive(Enemy_Alive[j]),
                 .Enemy_Score(Enemy_Score[j]),
@@ -464,6 +467,15 @@ module boxhead( input               CLOCK_50,
         .Reset(Reset_h),
         .enemy_attack_index(existed_enemy_attack_index),
         .is_enemy_attack(existed_is_enemy_attack)
+    );
+
+    godmode godmode_inst(
+        .Clk(Clk),
+        .Reset(Reset_h),
+        .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
+        .keycode(keycode),
+        // Output
+        .Godmode_On(Godmode_On)
     );
 
     // Display keycode on hex display

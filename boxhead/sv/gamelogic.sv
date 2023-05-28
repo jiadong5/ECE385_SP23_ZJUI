@@ -17,6 +17,7 @@ module gamelogic #(parameter id)
     input logic [1:0] Player_Direction,
     input logic       Attack_On,
                       Enemy_Attack_On,
+                      Godmode_On,
 
     // output logic [6:0] Player_Blood,
     //                    Enemy_Blood,
@@ -30,7 +31,7 @@ module gamelogic #(parameter id)
     parameter [8:0] Enemy_Height = 10'd26;
     parameter [8:0] Enemy_Width = 10'd26;
     parameter [6:0] Player_Damage = 7'd10;
-    parameter [9:0] Enemy_Damage = 10'd00;
+    parameter [9:0] Actual_Enemy_Damage = 10'd10;
     parameter [6:0] Enemy_Full_Blood = 7'd100;
 
     logic [9:0] Enemy_Total_Damage_in;
@@ -41,6 +42,15 @@ module gamelogic #(parameter id)
     logic [7:0] Enemy_Score_in;
     logic Enemy_Alive_in;
     logic Enemy_Is_Attacked_in;
+
+    logic [9:0] Enemy_Damage;
+    always_comb begin
+        if(Godmode_On) 
+            Enemy_Damage = 10'd0;
+        else
+            Enemy_Damage = Actual_Enemy_Damage;
+    end
+
 
     always_ff @(posedge Clk) begin
         if (Reset) begin
