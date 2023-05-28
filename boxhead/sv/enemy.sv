@@ -97,8 +97,10 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         if (Reset)
         begin
             // CenterX - Width / 2. CenterY - Height / 2
-            Obj_X_Pos <= Obj_X_Center - Width[8:1];
-            Obj_Y_Pos <= Obj_Y_Center - Height[8:1];
+            // Obj_X_Pos <= Obj_X_Center - Width[8:1];
+            // Obj_Y_Pos <= Obj_Y_Center - Height[8:1];
+            Obj_X_Pos <= Obj_X_Center;
+            Obj_Y_Pos <= Obj_Y_Center;
             Obj_X_Motion <= 10'd0;
             Obj_Y_Motion <= 10'd0;
             Obj_Direction <= 2'd0;
