@@ -2,15 +2,15 @@
 
 module scoreROM
 (
-		input [14:0] read_address,
+		input [14:0] read_address0,read_address1,
 		input Clk,
-		output logic [4:0] data_Out
+		output logic [4:0] data_Out0,data_Out1
 );
 
 // 40 * 46 * 10 = 18400. 2^15 = 32678
 // logic [4:0] mem [0:18399];
-// 20 * 25 * 10 = 5000. 2^13 = 8192
-logic [4:0] mem [0:4999];
+// 20 * 25 * 12 = 6000. 2^13 = 8192
+logic [4:0] mem [0:5999];
 
 initial
 begin
@@ -24,11 +24,14 @@ begin
 	$readmemh("sprite/7.txt", mem, 20 * 25 * 7);
 	$readmemh("sprite/8.txt", mem, 20 * 25 * 8);
 	$readmemh("sprite/9.txt", mem, 20 * 25 * 9);
+	$readmemh("sprite/L.txt", mem, 20 * 25 * 10);
+	$readmemh("Sprite/S.txt", mem, 20 * 25 * 11);
 end
 
 
 always_ff @ (posedge Clk) begin
-	data_Out<= mem[read_address];
+	data_Out0 <= mem[read_address0];
+	data_Out1 <= mem[read_address1];
 end
 
 endmodule

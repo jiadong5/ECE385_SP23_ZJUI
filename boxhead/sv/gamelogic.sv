@@ -1,7 +1,6 @@
 
 `define ENEMY_NUM 4
 
-`define RESPAWN_TIME 40
 module gamelogic #(parameter id)
 (
     input logic Clk,
@@ -18,11 +17,12 @@ module gamelogic #(parameter id)
     input logic       Attack_On,
                       Enemy_Attack_On,
                       Godmode_On,
+    input logic [9:0] Enemy_Respawn_Unit_Time,
 
     // output logic [6:0] Player_Blood,
     //                    Enemy_Blood,
     output logic       Enemy_Alive,
-    output logic [7:0] Enemy_Score,
+    output logic [9:0] Enemy_Score,
     output logic [9:0] Enemy_Total_Damage,
     output logic [9:0] Enemy_Total_Damage_God,
     output logic       Enemy_Is_Attacked
@@ -94,7 +94,7 @@ module gamelogic #(parameter id)
         // Enemy respawn
         if (~Enemy_Alive) begin
             if (game_frame_clk_rising_edge) begin
-                if (Rebirth_Time == (`RESPAWN_TIME * (id[0] + 1))) begin
+                if (Rebirth_Time == (Enemy_Respawn_Unit_Time * (id[0] + 1))) begin
                     Rebirth_Time_in = 10'd0;
                     Enemy_Blood_in = Enemy_Full_Blood;
                 end

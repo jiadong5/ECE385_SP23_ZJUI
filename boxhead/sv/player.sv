@@ -17,6 +17,7 @@ module  player ( input       Clk,                // 50 MHz clock
                input [15:0]   keycode,
                input [8:0]   PixelX, PixelY,     
                input  logic Attack_On,
+               input logic Godmode_On,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                output logic [12:0] Obj_address,
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
@@ -32,10 +33,11 @@ module  player ( input       Clk,                // 50 MHz clock
     parameter [8:0] Obj_X_Max = 10'd319;     // Rightmost point on the X axis
     parameter [8:0] Obj_Y_Min = 10'd52;       // Topmost point on the Y axis
     parameter [8:0] Obj_Y_Max = 10'd205;     // Bottommost point on the Y axis
-    parameter [8:0] Obj_X_Step = 10'd3;      // Step size on the X axis
-    parameter [8:0] Obj_Y_Step = 10'd3;      // Step size on the Y axis
+    parameter [8:0] Actual_Obj_X_Step = 10'd3;      // Step size on the X axis
+    parameter [8:0] Actual_Obj_Y_Step = 10'd3;      // Step size on the Y axis
 
     
+    logic [8:0] Obj_X_Step, Obj_Y_Step;
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
     logic [8:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
     logic [1:0] Obj_Direction_in;
@@ -45,6 +47,16 @@ module  player ( input       Clk,                // 50 MHz clock
     // logic [1:0] Obj_Up_Count_in, Obj_Down_Count_in, Obj_Left_Count_in, Obj_Right_Count_in;
     logic [1:0] Obj_Step_Count;
     
+    always_comb begin
+        if(Godmode_On) begin
+            Obj_X_Step = 2 * Actual_Obj_X_Step;
+            Obj_Y_Step = 2 * Actual_Obj_Y_Step;
+        end 
+        else begin
+            Obj_X_Step = Actual_Obj_X_Step;
+            Obj_Y_Step = Actual_Obj_Y_Step;
+        end
+    end
     // Update registers
     always_ff @ (posedge Clk)
     begin
