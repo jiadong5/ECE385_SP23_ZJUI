@@ -90,7 +90,7 @@ module godmode (input Clk,
                     Next_state = S_4;
             end
             S_5 : begin
-                if (keycode == `LEFT)
+                if (keycode == `RIGHT)
                     Next_state = S_6;
                 else if (keycode == `SPACE)
                     Next_state = S_0;
@@ -99,7 +99,7 @@ module godmode (input Clk,
             end
 
             S_6 : begin
-                if (keycode == `RIGHT)
+                if (keycode == `LEFT)
                     Next_state = S_7;
                 else if (keycode == `SPACE)
                     Next_state = S_0;

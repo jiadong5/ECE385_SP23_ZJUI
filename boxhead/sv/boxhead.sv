@@ -484,10 +484,13 @@ module boxhead( input               CLOCK_50,
                 .Player_Y(Player_Y),
                 .Attack_X(Attack_X),
                 .Attack_Y(Attack_Y),
+                .Attack2_X(Attack2_X),
+                .Attack2_Y(Attack2_Y),
                 .Enemy_X(Enemy_X[j]),
                 .Enemy_Y(Enemy_Y[j]),
                 .Player_Direction(Player_Direction),
                 .Attack_On(Attack_On),
+                .Attack2_On(Attack2_On),
                 .Enemy_Attack_On(Enemy_Attack_On[j]),
                 .Godmode_On(Godmode_On),
                 .Enemy_Respawn_Unit_Time(Enemy_Respawn_Unit_Time),
@@ -497,7 +500,7 @@ module boxhead( input               CLOCK_50,
                 .Enemy_Score(Enemy_Score[j]),
                 .Enemy_Total_Damage(Enemy_Total_Damage[j]),
                 .Enemy_Total_Damage_God(Enemy_Total_Damage_God[j]),
-                .Enemy_Is_Attacked_in(Enemy_Is_Attacked[j])
+                .Enemy_Is_Attacked(Enemy_Is_Attacked[j])
             );
         end
     endgenerate

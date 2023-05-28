@@ -25,8 +25,8 @@ module  attack2 ( input       Clk,                // 50 MHz clock
 
     parameter [8:0] Size = 10'd25;         // Length of Short side of Obj
     parameter [8:0] Long = 10'd80;          // Length of Long side of Obj
-    parameter [8:0] Obj_X_Step = 9'd4;
-    parameter [8:0] Obj_Y_Step = 9'd4;
+    parameter [8:0] Obj_X_Step = 9'd5;
+    parameter [8:0] Obj_Y_Step = 9'd5;
 
     logic [8:0] Obj_X_Motion, Obj_X_Motion_in;
     logic [8:0] Obj_Y_Motion, Obj_Y_Motion_in;
