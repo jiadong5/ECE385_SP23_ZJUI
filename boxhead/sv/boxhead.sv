@@ -497,8 +497,10 @@ module boxhead( input               CLOCK_50,
     );
 
     // Display keycode on hex display
-    HexDriver hex_inst_0 (Total_Score[3:0], HEX0);
-    HexDriver hex_inst_1 (Total_Score[7:4], HEX1);
+    HexDriver hex_inst_0 (keycode[3:0], HEX0);
+    HexDriver hex_inst_1 (keycode[7:4], HEX1);
+    HexDriver hex_inst_2 (keycode[11:8],HEX2);
+    HexDriver hex_inst_3 (keycode[15:12],HEX3);
 
     HexDriver hex_inst_4 (Player_Blood[3:0], HEX4);
     HexDriver hex_inst_5 (Player_Blood[7:4], HEX5);

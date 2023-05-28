@@ -97,8 +97,10 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
 
     always_comb begin
         Enemy_Player_On_in = Enemy_Player_On;
-        if((keycode[7:0] == `G || keycode[15:8] == `G) && (game_frame_clk_rising_edge) && (id == 0))
-            Enemy_Player_On_in = ~Enemy_Player_On;
+        if (game_frame_clk_rising_edge) begin
+            if((keycode[7:0] == `G || keycode[15:8] == `G) && (id == 0))
+                Enemy_Player_On_in = ~Enemy_Player_On;
+        end
     end
     
     // Movement change of the object based on keycode
