@@ -88,10 +88,31 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         if (game_frame_clk_rising_edge & is_alive)
         begin
 
+            // Fall back when attacked
+            if (Enemy_Is_Attacked) begin
+                case (Obj_Direction)
+                    // Front (Down)
+                    2'd0: begin
+                        Obj_Y_Motion_in = (~(Obj_Y_Step + 1'b1) + 1'b1);
+                    end
+                    // Left
+                    2'd1: begin
+                        Obj_X_Motion_in = Obj_X_Step + 1'b1;
+                    end
+                    // Back (up)
+                    2'd2: begin
+                        Obj_Y_Motion_in = Obj_Y_Step + 1'b1;
 
+                    end
+                    // Right
+                    2'd3: begin
+                        Obj_X_Motion_in = (~(Obj_X_Step + 1'b1) + 1'b1);
+                    end
+                endcase
+            end
             // Walk Right
             // If is at left of player and last step is vertical
-            if ((Obj_X_Pos + Width < Player_X)) begin
+            else if ((Obj_X_Pos + Width < Player_X)) begin
                 Obj_X_Motion_in = Obj_X_Step;
                 Obj_Y_Motion_in = 1'b0;
                 Obj_Direction_in = 2'd3;
@@ -130,7 +151,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion_in;
             Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion_in;
 
-            if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0)) 
+            if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0) && (~Enemy_Is_Attacked)) 
                 Enemy_Attack_Ready_in = 1'b1;
             else
                 Enemy_Attack_Ready_in = 1'b0;
@@ -153,7 +174,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     assign DistY = PixelY - Obj_Y_Pos;
     always_comb begin
         if ((PixelX >= Obj_X_Pos) && (PixelX < (Obj_X_Pos + Width)) &&
-            (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) && (is_alive) && (~Enemy_Is_Attacked)) begin
+            (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) && (is_alive)) begin
             is_obj = 1'b1;
 
             // Compute Object address based on its position, direction and walk step count

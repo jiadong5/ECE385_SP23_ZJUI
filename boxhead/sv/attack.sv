@@ -25,11 +25,17 @@ module  attack ( input       Clk,                // 50 MHz clock
     logic[1:0] attack_counter;       // Used to transform between two forms of attack
     logic attack_form;
 
+    logic[1:0] attack_interval_counter; // Used to set attack interval
+
     always_ff @ (posedge game_frame_clk_rising_edge) begin
-        if(Reset)
+        if(Reset) begin
             attack_counter <= 1'b0;
-        else
+            attack_interval_counter <= 1'b0;
+        end
+        else begin
             attack_counter <= attack_counter + 1'b1;
+            attack_interval_counter <= attack_interval_counter + 1'b1;
+        end
     end
 
     always_comb begin
@@ -41,8 +47,8 @@ module  attack ( input       Clk,                // 50 MHz clock
 
 
 
-
-
+    
+    // Assign position based on player direction
     always_comb begin
         case (Player_Direction)
             // Front (Down)
@@ -70,12 +76,15 @@ module  attack ( input       Clk,                // 50 MHz clock
     end
 
     // Update registers
-    always_ff @ (posedge Clk)
+    always_ff @ (posedge game_frame_clk_rising_edge)
     begin
         if (Reset)
             Obj_On <= 1'b0;
-        else
+        else if (attack_interval_counter <= 2'd1) begin
             Obj_On <= Obj_On_in;
+        end
+        else 
+            Obj_On <= 1'b0;
     end
 
     // If Object is displayed based on keycode
@@ -83,7 +92,7 @@ module  attack ( input       Clk,                // 50 MHz clock
     begin
         Obj_On_in = 1'b0;
         // Press space
-        if (keycode == 10'd44)
+        if ((keycode == 10'd44))
             Obj_On_in = 1'b1;
     end
 
