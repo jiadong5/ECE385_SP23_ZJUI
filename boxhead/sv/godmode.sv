@@ -1,11 +1,11 @@
 
 
-`define UP 26
-`define DOWN 22
-`define LEFT 4
-`define RIGHT 7
-`define J 13
-`define K 14
+`define UP 82
+`define DOWN 81
+`define LEFT 80
+`define RIGHT 79
+`define Z 29
+`define X 27
 `define SPACE 44
 module godmode (input Clk,
                       Reset,
@@ -103,25 +103,25 @@ module godmode (input Clk,
                     Next_state = S_7;
             end
             S_8 : begin
-                if (keycode == `J && (game_frame_clk_rising_edge))
+                if (keycode == `Z && (game_frame_clk_rising_edge))
                     Next_state = S_9;
                 else
                     Next_state = S_8;
             end
             S_9 : begin
-                if (keycode == `K && (game_frame_clk_rising_edge))
+                if (keycode == `X && (game_frame_clk_rising_edge))
                     Next_state = S_10;
                 else
                     Next_state = S_9;
             end
             S_10 : begin
-                if (keycode == `J && (game_frame_clk_rising_edge))
+                if (keycode == `Z && (game_frame_clk_rising_edge))
                     Next_state = S_11;
                 else
                     Next_state = S_10;
             end
             S_11 : begin
-                if (keycode == `K && (game_frame_clk_rising_edge))
+                if (keycode == `X && (game_frame_clk_rising_edge))
                     Next_state = S_12;
                 else
                     Next_state = S_11;

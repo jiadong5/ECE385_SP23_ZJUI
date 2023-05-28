@@ -6,9 +6,9 @@ module blood (
                 input [9:0] Player_Blood,
                 input [8:0] PixelX, PixelY,
                 
-                output is_obj,
-                output [4:0] Obj_Index,    // Index of color palette
-                output [8:0] Obj_address
+                output logic is_obj,
+                output logic [4:0] Obj_Index,    // Index of color palette
+                output logic [8:0] Obj_address
 );
 
     parameter [8:0] Width = 13;
