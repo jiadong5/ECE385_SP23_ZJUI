@@ -30,7 +30,7 @@ module gamelogic #(parameter id)
     parameter [8:0] Enemy_Height = 10'd26;
     parameter [8:0] Enemy_Width = 10'd26;
     parameter [6:0] Player_Damage = 7'd10;
-    parameter [9:0] Enemy_Damage = 10'd10;
+    parameter [9:0] Enemy_Damage = 10'd00;
     parameter [6:0] Enemy_Full_Blood = 7'd100;
 
     logic [9:0] Enemy_Total_Damage_in;
