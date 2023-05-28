@@ -8,19 +8,28 @@
 //      UIUC ECE Department                                              --
 //-------------------------------------------------------------------------
 
-module music (	input logic  Clk,
-				input logic  [16:0]Add,
-				output logic [16:0]music_content
+module ele_sound (	
+    input logic  Clk,
+	input logic  [16:0] ele_add,
+    input logic  ele_enable,
+	output logic [16:0] ele_content
 );
 				  
-	logic [16:0] music_memory [0:80549];	// The length of the txt file
+	logic [16:0] music_memory [0:5900];	// The length of the txt file
 	initial 
 	begin 
-		$readmemh("littleroot_town.txt",music_memory);
+		$readmemh("ele.txt",music_memory);
 	end
 	
 	always_ff @ (posedge Clk)
 		begin
-			music_content <= music_memory[Add];
+            if(ele_enable == 4'd01)
+                begin
+                    ele_content <= music_memory[ele_add];
+                end
+            else
+                begin
+                    ele_content <= 17'd0;
+                end
 		end
 endmodule

@@ -128,10 +128,6 @@ module boxhead( input               CLOCK_50,
     logic [16:0] pika_frequency;
     logic INIT_pika;
 
-    // test pika_enable
-    // assign pika_enable = 4'd01;
-    // assign pika_enable = 4'd00;
-
     always_comb begin
         pika_frequency = 16'd31;
     end
@@ -143,15 +139,49 @@ module boxhead( input               CLOCK_50,
     pika_sound pikaROM (.*, .pika_content(pika_content));
     pika_audio pikaAUD (.*, .Reset(Reset_h));
 
+    // Gengar attacked sound
+    logic gengar_enable;
+    logic [16:0] gengar_add;
+    logic [16:0] gengar_content;
+    logic [16:0] gengar_frequency;
+    logic INIT_gengar;
+
+    always_comb begin
+        gengar_frequency = 16'd20;
+    end
+    
+    // Gengar memory loading:
+    gengar_sound gengarROM (.*, .gengar_content(gengar_content));
+    gengar_audio gengarAUD (.*, .Reset(Reset_h));
+
+    // electrical attack sound
+    logic ele_enable;
+    logic [16:0] ele_add;
+    logic [16:0] ele_content;
+    logic [16:0] ele_frequency;
+    logic INIT_ele;
+
+    always_comb begin
+        ele_frequency = 16'd20;
+    end
+    
+    // electrical attack effect memory loading:
+    ele_sound eleROM (.*, .ele_content(ele_content));
+    ele_audio eleAUD (.*, .Reset(Reset_h));
+
+    // test sound effects enable trigger
+    // assign pika_enable = 4'd00;
+    // assign gengar_enable = 4'd00;
+    // assign ele_enable = 4'd01;
+
     // generate overall control
     // signal interacting with interface
     
-
-    assign music_content =  pika_content + BGM_content;
+    assign music_content =  pika_content + BGM_content + gengar_content + ele_content;
 
 
     always_comb begin
-        INIT = INIT_BGM | INIT_pika;
+        INIT = INIT_BGM | INIT_pika | INIT_gengar | INIT_ele;
     end
 
 
@@ -247,7 +277,7 @@ module boxhead( input               CLOCK_50,
         .blank(VGA_BLANK_N),
         .sync(VGA_SYNC_N)
     );
-    // Comment to increase compile time
+    // Comment to decrease compile time
     // backgroundROM backgroundROM_inst(
     //     .*,
     //     .read_address(bkg_address),

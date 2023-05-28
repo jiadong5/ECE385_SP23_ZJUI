@@ -23,7 +23,7 @@ logic [15:0] inner_counter;
 enum logic {WAIT,RUN} current_state, next_state;
 logic [16:0] inner_Add;
 logic [16:0] num;
-assign num = 17'd10000;
+assign num = 17'd80549;
 
 always_ff @ (posedge Clk)
 	begin
