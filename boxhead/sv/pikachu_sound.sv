@@ -8,19 +8,28 @@
 //      UIUC ECE Department                                              --
 //-------------------------------------------------------------------------
 
-module music (	input logic  Clk,
-				input logic  [16:0]Add,
-				output logic [16:0]music_content
+module pika_sound (	
+    input logic  Clk,
+	input logic  [16:0] pika_add,
+    input logic  pika_enable,
+	output logic [16:0] pika_content
 );
 				  
-	logic [16:0] music_memory [0:10000];	// The length of the txt file
+	logic [16:0] music_memory [0:11929];	// The length of the txt file
 	initial 
 	begin 
-		$readmemh("littleroot_town.txt",music_memory);
+		$readmemh("Pi-ka.txt",music_memory);
 	end
 	
 	always_ff @ (posedge Clk)
 		begin
-			music_content <= music_memory[Add];
+            if(pika_enable == 4'd01)
+                begin
+                    pika_content <= music_memory[pika_add];
+                end
+            else
+                begin
+                    pika_content <= 17'd0;
+                end
 		end
 endmodule
