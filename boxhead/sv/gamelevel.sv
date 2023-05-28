@@ -18,13 +18,13 @@ module gamelevel (input Clk,
     logic [3:0] Game_Level;
 
     // Position of L
-    assign Obj_X_Pos1 = 280;
+    assign Obj_X_Pos1 = 270;
     assign Obj_Y_Pos1 = 24;
     assign Obj_X_Pos0 = Obj_X_Pos1 + Width;
     assign Obj_Y_Pos0 = Obj_Y_Pos1;
 
     always_comb begin
-        Game_Level = 4'd0;
+        Game_Level = 4'd9;
         if (Total_Score <= 10'd10)
             Game_Level = 4'd1;
         else if (Total_Score <= 10'd15)

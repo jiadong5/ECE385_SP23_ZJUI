@@ -72,20 +72,36 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
 
     logic Enemy_Player_On, Enemy_Player_On_in;
 
-    logic [2:0] Enemy_Stay_Counter; // When enemy is attacked, it steps back and stay still for some time
+    logic [2:0] Enemy_Stay_Counter,Enemy_Stay_Counter_in; // When enemy is attacked, it steps back and stay still for some time
 
     // Record time enemy should stay still
-    always_ff @ (posedge game_frame_clk_rising_edge) begin
+    always_ff @ (posedge Clk) begin
         if (Reset)
             Enemy_Stay_Counter <= 3'b0;
-        else if (Enemy_Is_Attacked)
-            Enemy_Stay_Counter <= 3'b1;
-        else if (Enemy_Stay_Counter)
-            Enemy_Stay_Counter <= Enemy_Stay_Counter + 1;
-        else if (Enemy_Stay_Counter == 3'd6)
-            Enemy_Stay_Counter <= 3'd0;
         else 
-            Enemy_Stay_Counter <= Enemy_Stay_Counter;
+            Enemy_Stay_Counter <= Enemy_Stay_Counter_in;
+        // else if (Enemy_Is_Attacked)
+        //     Enemy_Stay_Counter <= 3'b1;
+        // else if (Enemy_Stay_Counter)
+        //     Enemy_Stay_Counter <= Enemy_Stay_Counter + 1;
+        // else if (Enemy_Stay_Counter == 3'd6)
+        //     Enemy_Stay_Counter <= 3'd0;
+        // else 
+        //     Enemy_Stay_Counter <= Enemy_Stay_Counter;
+    end
+
+    always_comb begin
+        Enemy_Stay_Counter_in = Enemy_Stay_Counter;
+        if(Enemy_Is_Attacked)
+            Enemy_Stay_Counter_in = 3'b1;
+        else if (game_frame_clk_rising_edge) begin
+            if (Enemy_Stay_Counter)
+                Enemy_Stay_Counter_in = Enemy_Stay_Counter + 1;
+            else if (Enemy_Stay_Counter == 3'd6)
+                Enemy_Stay_Counter_in = 3'd0;
+        end
+
+
     end
 
     // Count how many steps object has walked in one direction
@@ -148,7 +164,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         begin
 
             // Fall back when attacked
-            if (Enemy_Is_Attacked) begin
+            if (Enemy_Stay_Counter == 1) begin
                 case (Obj_Direction)
                     // Front (Down)
                     2'd0: begin
@@ -168,7 +184,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                     end
                 endcase
             end
-            else if (Enemy_Stay_Counter != 0 ) begin
+            else if (Enemy_Stay_Counter > 1 ) begin
                 Obj_X_Motion_in = 1'b0;
                 Obj_Y_Motion_in = 1'b0;
             end
