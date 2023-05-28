@@ -149,8 +149,8 @@ module boxhead( input               CLOCK_50,
     logic [14:0] game_over_address;
     logic [17:0] game_start_address;
     logic [14:0] score_address;
+    logic [14:0] level_address;
     logic [8:0] blood_address;
-    logic [8:0] level_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
@@ -240,6 +240,7 @@ module boxhead( input               CLOCK_50,
         .Reset(Reset_h),
         .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
         .keycode(keycode),
+        .Godmode_On(Godmode_On),
         .Attack_On(Attack_On),
         .is_obj(is_player),
         .Obj_address(player_address),
@@ -525,6 +526,6 @@ module boxhead( input               CLOCK_50,
     HexDriver hex_inst_4 (Player_Blood[3:0], HEX4);
     HexDriver hex_inst_5 (Player_Blood[7:4], HEX5);
     
-    HexDriver hex_inst_6 (Enemy_Total_Damage[0][3:0], HEX6);
-    HexDriver hex_inst_7 (Enemy_Total_Damage[0][7:4], HEX7);
+    HexDriver hex_inst_6 (Enemy_Respawn_Unit_Time[3:0], HEX6);
+    HexDriver hex_inst_7 (Enemy_Respawn_Unit_Time[7:4], HEX7);
 endmodule

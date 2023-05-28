@@ -2,7 +2,7 @@
 
 module score (
                 input Clk,
-                input [7:0] Total_Score,
+                input [9:0] Total_Score,
                 input [8:0] PixelX, PixelY,
                 
                 output logic is_obj,
