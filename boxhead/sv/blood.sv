@@ -37,8 +37,13 @@ module blood (
                     is_obj = 1'b1;
                     /////// Shit code
                     if (Player_Blood <= 100) begin
-                        if (DistX <= (Player_Blood / 10) * Width ) begin
-                            Obj_address = (DistX % Width) + (DistY % Height) * Width;
+                        if ( DistY <= Height) begin
+                            if (DistX <= (Player_Blood / 10) * Width ) begin
+                                Obj_address = (DistX % Width) + (DistY % Height) * Width;
+                            end
+                            else begin
+                                Obj_address = (DistX % Width) + (DistY % Height) * Width + Width * Height;
+                            end
                         end
                         else begin
                             Obj_address = (DistX % Width) + (DistY % Height) * Width + Width * Height;
@@ -47,7 +52,7 @@ module blood (
                     else if (Player_Blood <= 200) begin
                         if (DistY <= Height) 
                             Obj_address = (DistX % Width) + (DistY % Height) * Width;
-                        else begin
+                        else if (DistY <= Height * 2) begin
                             if (DistX <= ((Player_Blood - 100) / 10) * Width ) begin
                                 Obj_address = (DistX % Width) + (DistY % Height) * Width;
                             end
@@ -55,6 +60,9 @@ module blood (
                                 Obj_address = (DistX % Width) + (DistY % Height) * Width + Width * Height;
                             end
                         end
+                        else 
+                            Obj_address = (DistX % Width) + (DistY % Height) * Width + Width * Height;
+
                     end
                     else begin
                         if(DistY <= Height * 2)
