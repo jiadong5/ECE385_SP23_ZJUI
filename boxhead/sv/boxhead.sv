@@ -215,6 +215,7 @@ module boxhead( input               CLOCK_50,
     logic [12:0] player_address;
     logic [13:0] enemy_address [`ENEMY_NUM];
     logic [8:0] attack_address;
+    logic [10:0] attack2_address;
     logic [8:0] enemy_attack_address [`ENEMY_NUM];
     logic [8:0] existed_enemy_attack_address;
     logic [14:0] game_over_address;
@@ -228,6 +229,7 @@ module boxhead( input               CLOCK_50,
     logic [4:0] player_index;
     logic [4:0] enemy_index [`ENEMY_NUM];
     logic [4:0] attack_index;
+    logic [4:0] attack2_index;
     // logic [4:0] enemy_attack_index [`ENEMY_NUM];
     logic [4:0] existed_enemy_attack_index;
     logic [4:0] game_over_index;
@@ -240,6 +242,7 @@ module boxhead( input               CLOCK_50,
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
     logic is_attack;
+    logic is_attack2;
     logic is_enemy_attack [`ENEMY_NUM];
     logic existed_is_enemy_attack;
     logic is_game_over; // Not determine if game is over. Instead used as sprite
@@ -253,10 +256,12 @@ module boxhead( input               CLOCK_50,
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
     logic Attack_On;
+    logic Attack2_On;
     logic Enemy_Attack_On [`ENEMY_NUM];
     logic Game_Over_On;
     logic Game_Start_On; // Indicate whether start interface is displayed
     logic [8:0] Attack_X, Attack_Y;
+    logic [8:0] Attack2_X, Attack2_Y;
     logic Enemy_Alive [`ENEMY_NUM];
     logic [8:0] Enemy_X [`ENEMY_NUM];
     logic [8:0] Enemy_Y [`ENEMY_NUM];
@@ -390,10 +395,29 @@ module boxhead( input               CLOCK_50,
         .Obj_Y_Pos(Attack_Y)
     );
 
+    attack2 attack2_inst(
+        .*,
+        .Reset(Reset_h),
+        .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
+        .keycode(keycode),
+        // Output
+        .is_obj(is_attack2),
+        .Obj_address(attack2_address),
+        .Obj_On(Attack2_On),
+        .Obj_X_Pos(Attack2_X),
+        .Obj_Y_Pos(Attack2_Y)
+    );
+
     attackROM attackROM_inst(
         .Clk(Clk),
         .read_address(attack_address),
         .data_Out(attack_index)
+    );
+
+    attack2ROM attack2ROM_inst(
+        .Clk(Clk),
+        .read_address(attack2_address),
+        .data_Out(attack2_index)
     );
 
     logic Enemy_Attack_Valid [`ENEMY_NUM];
