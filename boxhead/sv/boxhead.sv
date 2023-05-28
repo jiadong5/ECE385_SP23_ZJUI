@@ -222,6 +222,7 @@ module boxhead( input               CLOCK_50,
     logic [14:0] score_address;
     logic [14:0] level_address;
     logic [8:0] blood_address;
+    logic [11:0] blackboard_address;
 
     logic [4:0] bkg_index;
     logic [4:0] player_index;
@@ -234,6 +235,7 @@ module boxhead( input               CLOCK_50,
     logic [4:0] score_index;
     logic [4:0] level_index;
     logic [4:0] blood_index;
+    logic [4:0] blackboard_index;
 
     logic is_player;
     logic is_enemy [`ENEMY_NUM];
@@ -246,6 +248,7 @@ module boxhead( input               CLOCK_50,
     logic is_score;
     logic is_level;
     logic is_blood;
+    logic is_blackboard;
 
     logic [8:0] Player_X, Player_Y;
     logic [1:0] Player_Direction;
@@ -267,7 +270,7 @@ module boxhead( input               CLOCK_50,
     logic [9:0] Enemy_Total_Damage_God [`ENEMY_NUM];
     logic [12:0] All_Enemy_Total_Damage;
     logic [12:0] All_Enemy_Total_Damage_God;
-    parameter [9:0] Player_Full_Blood = 10'd100;
+    parameter [9:0] Player_Full_Blood = 10'd50;
     parameter [9:0] Player_Full_Blood_God = 10'd300;
     logic [9:0] Player_Blood;
 
@@ -353,7 +356,7 @@ module boxhead( input               CLOCK_50,
                 .Obj_address(enemy_address[i]),
                 .Obj_X_Pos(Enemy_X[i]),
                 .Obj_Y_Pos(Enemy_Y[i]),
-                .Enemy_Attack_Ready(Enemy_Attack_Ready[i])
+                .Enemy_Attack_Ready_in(Enemy_Attack_Ready[i])
             );
         end
     endgenerate    
@@ -393,6 +396,7 @@ module boxhead( input               CLOCK_50,
         .data_Out(attack_index)
     );
 
+    logic Enemy_Attack_Valid [`ENEMY_NUM];
     genvar k;
     generate 
         for (k = 0; k < `ENEMY_NUM; k++) begin: enemy_attack
@@ -408,7 +412,8 @@ module boxhead( input               CLOCK_50,
                 // Output
                 .is_obj(is_enemy_attack[k]),
                 .Obj_address(enemy_attack_address[k]),
-                .Obj_On(Enemy_Attack_On[k])
+                .Obj_On(Enemy_Attack_On[k]),
+                .Enemy_Attack_Valid(Enemy_Attack_Valid[k])
             );
         end
     endgenerate
@@ -462,12 +467,13 @@ module boxhead( input               CLOCK_50,
                 .Enemy_Attack_On(Enemy_Attack_On[j]),
                 .Godmode_On(Godmode_On),
                 .Enemy_Respawn_Unit_Time(Enemy_Respawn_Unit_Time),
+                .Enemy_Attack_Valid(Enemy_Attack_Valid[j]),
                 // Output
                 .Enemy_Alive(Enemy_Alive[j]),
                 .Enemy_Score(Enemy_Score[j]),
                 .Enemy_Total_Damage(Enemy_Total_Damage[j]),
                 .Enemy_Total_Damage_God(Enemy_Total_Damage_God[j]),
-                .Enemy_Is_Attacked(Enemy_Is_Attacked[j])
+                .Enemy_Is_Attacked_in(Enemy_Is_Attacked[j])
             );
         end
     endgenerate
@@ -560,6 +566,20 @@ module boxhead( input               CLOCK_50,
         .data_Out0(score_index),
         .read_address1(level_address),
         .data_Out1(level_index)
+    );
+
+    blackboard blackboard_inst(
+        .Clk(Clk),
+        .Reset(Reset_h),
+        .PixelX(PixelX),
+        .PixelY(PixelY),
+        .is_obj(is_blackboard),
+        .Obj_address(blackboard_address)
+    );
+    blackboardROM blackboardROM_inst(
+        .Clk(Clk),
+        .read_address(blackboard_address),
+        .data_Out(blackboard_index)
     );
     
     blood blood_inst(

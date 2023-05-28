@@ -20,13 +20,35 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                output logic [13:0] Obj_address,
                output logic [8:0] Obj_X_Pos, Obj_Y_Pos,
-               output logic Enemy_Attack_Ready
+               output logic Enemy_Attack_Ready_in
               );
     
     // parameter [8:0] Obj_X_Center = 10'd100;  // Center position on the X axis
     // parameter [8:0] Obj_Y_Center = 10'd60;  // Center position on the Y axis
-    parameter [8:0] Obj_X_Center = 10'd70 * (id + 1);
-    parameter [8:0] Obj_Y_Center = 10'd40 * (id + 1);
+    // parameter [8:0] Obj_X_Center = 10'd70 * (id + 1);
+    // parameter [8:0] Obj_Y_Center = 10'd40 * (id + 1);
+    logic [8:0] Obj_X_Center;
+    logic [8:0] Obj_Y_Center;
+    always_comb begin
+        case (id)
+        0: begin
+            Obj_X_Center = 9'd5;
+            Obj_Y_Center = 9'd65;
+        end
+        1: begin
+            Obj_X_Center = 9'd315;
+            Obj_Y_Center = 9'd65;
+        end
+        2: begin
+            Obj_X_Center = 9'd315;
+            Obj_Y_Center = 9'd180;
+        end
+        3: begin
+            Obj_X_Center = 9'd5;
+            Obj_Y_Center = 9'd180;
+        end
+        endcase
+    end
 
 
     parameter [8:0] Height = 10'd26;         // Height of object
@@ -46,24 +68,40 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
     logic [8:0] Obj_X_Motion, Obj_Y_Motion; // Current position, left upper point of object
     logic [8:0] Obj_X_Pos_in, Obj_X_Motion_in, Obj_Y_Pos_in, Obj_Y_Motion_in; // Next position
     logic [1:0] Obj_Direction_in, Obj_Direction;
-    logic Enemy_Attack_Ready_in;
+    // logic Enemy_Attack_Ready_in;
 
     logic Enemy_Player_On, Enemy_Player_On_in;
 
-    logic [2:0] Enemy_Stay_Counter; // When enemy is attacked, it steps back and stay still for some time
+    logic [2:0] Enemy_Stay_Counter,Enemy_Stay_Counter_in; // When enemy is attacked, it steps back and stay still for some time
 
     // Record time enemy should stay still
-    always_ff @ (posedge game_frame_clk_rising_edge) begin
+    always_ff @ (posedge Clk) begin
         if (Reset)
             Enemy_Stay_Counter <= 3'b0;
-        else if (Enemy_Is_Attacked)
-            Enemy_Stay_Counter <= 3'b1;
-        else if (Enemy_Stay_Counter)
-            Enemy_Stay_Counter <= Enemy_Stay_Counter + 1;
-        else if (Enemy_Stay_Counter == 3'd6)
-            Enemy_Stay_Counter <= 3'd0;
         else 
-            Enemy_Stay_Counter <= Enemy_Stay_Counter;
+            Enemy_Stay_Counter <= Enemy_Stay_Counter_in;
+        // else if (Enemy_Is_Attacked)
+        //     Enemy_Stay_Counter <= 3'b1;
+        // else if (Enemy_Stay_Counter)
+        //     Enemy_Stay_Counter <= Enemy_Stay_Counter + 1;
+        // else if (Enemy_Stay_Counter == 3'd6)
+        //     Enemy_Stay_Counter <= 3'd0;
+        // else 
+        //     Enemy_Stay_Counter <= Enemy_Stay_Counter;
+    end
+
+    always_comb begin
+        Enemy_Stay_Counter_in = Enemy_Stay_Counter;
+        if(Enemy_Is_Attacked)
+            Enemy_Stay_Counter_in = 3'b1;
+        else if (game_frame_clk_rising_edge) begin
+            if ((Enemy_Stay_Counter) && (Enemy_Stay_Counter != 3'd6))
+                Enemy_Stay_Counter_in = Enemy_Stay_Counter + 1;
+            else if (Enemy_Stay_Counter == 3'd6)
+                Enemy_Stay_Counter_in = 3'd0;
+        end
+
+
     end
 
     // Count how many steps object has walked in one direction
@@ -75,12 +113,14 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         if (Reset)
         begin
             // CenterX - Width / 2. CenterY - Height / 2
-            Obj_X_Pos <= Obj_X_Center - Width[8:1];
-            Obj_Y_Pos <= Obj_Y_Center - Height[8:1];
+            // Obj_X_Pos <= Obj_X_Center - Width[8:1];
+            // Obj_Y_Pos <= Obj_Y_Center - Height[8:1];
+            Obj_X_Pos <= Obj_X_Center;
+            Obj_Y_Pos <= Obj_Y_Center;
             Obj_X_Motion <= 10'd0;
             Obj_Y_Motion <= 10'd0;
             Obj_Direction <= 2'd0;
-            Enemy_Attack_Ready <= 1'b0;
+            // Enemy_Attack_Ready <= 1'b0;
             Enemy_Player_On <= 1'b0;
         end
         else
@@ -90,7 +130,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             Obj_X_Motion <= Obj_X_Motion_in;
             Obj_Y_Motion <= Obj_Y_Motion_in;
             Obj_Direction <= Obj_Direction_in;
-            Enemy_Attack_Ready <= Enemy_Attack_Ready_in;
+            // Enemy_Attack_Ready <= Enemy_Attack_Ready_in;
             Enemy_Player_On <= Enemy_Player_On_in;
         end
     end
@@ -113,7 +153,8 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         Obj_X_Motion_in = 10'd0;
         Obj_Y_Motion_in = 10'd0;
         Obj_Direction_in = Obj_Direction;
-        Enemy_Attack_Ready_in = Enemy_Attack_Ready;
+        // Enemy_Attack_Ready_in = Enemy_Attack_Ready;
+        Enemy_Attack_Ready_in = 1'b0;
 
         if (~is_alive)
             Enemy_Attack_Ready_in = 1'b0;
@@ -124,7 +165,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
         begin
 
             // Fall back when attacked
-            if (Enemy_Is_Attacked) begin
+            if (Enemy_Stay_Counter == 1) begin
                 case (Obj_Direction)
                     // Front (Down)
                     2'd0: begin
@@ -144,7 +185,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                     end
                 endcase
             end
-            else if (Enemy_Stay_Counter != 0 ) begin
+            else if (Enemy_Stay_Counter > 1 ) begin
                 Obj_X_Motion_in = 1'b0;
                 Obj_Y_Motion_in = 1'b0;
             end

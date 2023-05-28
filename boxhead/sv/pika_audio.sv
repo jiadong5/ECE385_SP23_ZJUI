@@ -15,8 +15,9 @@ module pika_audio (
 	input logic data_over,
 	input logic [16:0] pika_frequency,
     input logic pika_enable,
+	input logic Game_Over_On,
 	output logic INIT_pika,
-	output [16:0] pika_add
+	output logic [16:0] pika_add
 );
 
 logic [15:0] counter;
@@ -71,25 +72,25 @@ always_comb
                         begin
                             next_state = WAIT;
                         end
-					INIT_pika = 1'd01;	
+					INIT_pika = 1'd1;	
 					inner_counter = 16'd0;
 					inner_Add = 17'd0;
 				end
 			RUN:
 			begin
-				INIT_pika = 1'd01;
+				INIT_pika = 1'd1;
 				
 				if (counter< pika_frequency+1)
 					inner_counter = counter+16'd1;
 				else
 					inner_counter = 16'd0;
 					
-				if (counter== pika_frequency && pika_add<=17'd11929 && data_over!=0)
+				if (counter== pika_frequency && pika_add<=17'd11929 && data_over!=0 && (~Game_Over_On))
                     begin
                         next_state = RUN;
 					    inner_Add = pika_add+17'd1;
                     end
-				else if (pika_add < 17'd11929)
+				else if (pika_add < 17'd11929 && (~Game_Over_On))
                     begin
                         next_state = RUN;
 				    	inner_Add = pika_add;

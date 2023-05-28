@@ -18,6 +18,7 @@ module color_mapper
                 is_score,
                 is_level,
                 is_blood,
+                is_blackboard,
     input logic is_enemy [`ENEMY_NUM],
     input logic[4:0] bkg_index,
                      player_index,
@@ -28,6 +29,7 @@ module color_mapper
                      score_index,
                      level_index,
                      blood_index,
+                     blackboard_index,
     input logic[4:0] enemy_index [`ENEMY_NUM],
 
     output logic [7:0] VGA_R,
@@ -68,6 +70,8 @@ module color_mapper
             fgd_index = level_index;
         else if ((is_score) && (score_index))
             fgd_index = score_index;
+        else if ((is_blackboard) && (blackboard_index))
+            fgd_index = blackboard_index;
         else if ((is_game_start) && (game_start_index))
             fgd_index = game_start_index;
         else if ((is_game_over) && (game_over_index))
