@@ -11,6 +11,7 @@ module color_mapper
                 VGA_BLANK_N,
                 game_frame_clk_rising_edge,
     input logic is_attack,
+                is_attack2,
                 is_player,
                 is_enemy_attack,
                 is_game_over,
@@ -23,6 +24,7 @@ module color_mapper
     input logic[4:0] bkg_index,
                      player_index,
                      attack_index,
+                     attack2_index,
                      enemy_attack_index,
                      game_over_index,
                      game_start_index,
@@ -80,6 +82,8 @@ module color_mapper
             fgd_index = enemy_attack_index;
         else if ((is_attack) && (attack_index))
             fgd_index = attack_index;
+        else if ((is_attack2) && (attack2_index))
+            fgd_index = attack2_index;
         // If background is player and it's not red(sprite background color)
         // else if(((is_player) && (player_index)) ||
         //         ((is_attack) && (!attack_index) && (player_index)) )
@@ -98,7 +102,7 @@ module color_mapper
 
         cycling_fgd_index = 5'd0;
         // Palette Cycling for attack
-        if((is_attack) && (attack_index)) begin
+        if(((is_attack) && (attack_index)) || ((is_attack2) && (attack2_index))) begin
             cycling_fgd_index = (fgd_index + cycling_counter - 1) % `CYCLING_COLOR_NUM + 1;
         case (cycling_fgd_index)
             5'd00 : fgd_color = 24'h010101;
@@ -106,10 +110,10 @@ module color_mapper
             5'd01 : fgd_color = 24'hFFFFFF; // White
             5'd02 : fgd_color = 24'hD8B000; // Orange
             5'd03 : fgd_color = 24'hF8F000; // Yellow
+            5'd04 : fgd_color = 24'h1F97D6; // Blue
             // New color
-            5'd04 : fgd_color = 24'hE9C22D; // Yellow
-            5'd05 : fgd_color = 24'hF2EDB1; // Light Yellow
-            5'd06 : fgd_color = 24'h1F97D6; // Blue
+            5'd05 : fgd_color = 24'hE9C22D; // Yellow
+            5'd06 : fgd_color = 24'hF2EDB1; // Light Yellow
             5'd07 : fgd_color = 24'h6B91AF; // Light Blue
             5'd08 : fgd_color = 24'h05518B; // Deep Blue
             5'd09 : fgd_color = 24'hE6E3E3; // Grey white

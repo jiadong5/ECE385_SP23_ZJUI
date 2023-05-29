@@ -16,6 +16,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
                input [8:0]   PixelX, PixelY,     
                input [8:0]   Player_X, Player_Y,
                input         Enemy_Is_Attacked,
+               input         Enemy_Is_Attacked2,
                input  logic  is_alive,
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                output logic [13:0] Obj_address,
@@ -92,7 +93,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
 
     always_comb begin
         Enemy_Stay_Counter_in = Enemy_Stay_Counter;
-        if(Enemy_Is_Attacked)
+        if(Enemy_Is_Attacked | Enemy_Is_Attacked2)
             Enemy_Stay_Counter_in = 3'b1;
         else if (game_frame_clk_rising_edge) begin
             if ((Enemy_Stay_Counter) && (Enemy_Stay_Counter != 3'd6))
@@ -230,7 +231,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             Obj_X_Pos_in = Obj_X_Pos + Obj_X_Motion_in;
             Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion_in;
 
-            if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0) && (~Enemy_Is_Attacked) && (Enemy_Stay_Counter == 0) && (~Enemy_Player_On)) 
+            if ((Obj_X_Motion_in == 0) && (Obj_Y_Motion_in == 0) && (~Enemy_Is_Attacked) && (~Enemy_Is_Attacked2) && (Enemy_Stay_Counter == 0) && (~Enemy_Player_On)) 
                 Enemy_Attack_Ready_in = 1'b1;
             else if ((Enemy_Player_On) && (Obj_X_Pos + Width + Attack_Distance >= Player_X) && 
                     (Obj_X_Pos <= Player_X + Player_Width + Attack_Distance) && 
@@ -261,7 +262,7 @@ module  enemy #(parameter id) ( input       Clk,                // 50 MHz clock
             (PixelY >= Obj_Y_Pos) && (PixelY < (Obj_Y_Pos + Height)) && (is_alive)) begin
             is_obj = 1'b1;
 
-            if(Enemy_Is_Attacked || (Enemy_Stay_Counter != 0))
+            if(Enemy_Is_Attacked || Enemy_Is_Attacked2 || (Enemy_Stay_Counter != 0))
                 Obj_address = DistX + DistY * Width + Width * Height * (4 * Obj_Direction + 3);
             // Compute Object address based on its position, direction and walk step count
             else if (~Obj_Step_Count[0])
