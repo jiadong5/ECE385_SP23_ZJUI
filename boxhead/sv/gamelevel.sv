@@ -52,7 +52,7 @@ module gamelevel (input Clk,
         4'd6:
             Enemy_Respawn_Unit_Time = 10'd5;
         default:
-            Enemy_Respawn_Unit_Time = 10'd40;
+            Enemy_Respawn_Unit_Time = 10'd5;
         endcase
     end
 

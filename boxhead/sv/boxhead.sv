@@ -294,7 +294,7 @@ module boxhead( input               CLOCK_50,
     assign pika_enable = Enemy_Attack_On[0] | Enemy_Attack_On[1] | Enemy_Attack_On[2] | Enemy_Attack_On[3];
     assign gengar_enable = Enemy_Is_Attacked[0] | Enemy_Is_Attacked[1] | Enemy_Is_Attacked[2] | Enemy_Is_Attacked[3] | 
                             Enemy_Is_Attacked2[0] | Enemy_Is_Attacked2[1] | Enemy_Is_Attacked2[2] | Enemy_Is_Attacked2[3];
-    assign ele_enable = Attack_On;
+    assign ele_enable = Attack_On | Attack2_On;
 
 
     vga_controller vga_controller_inst(
