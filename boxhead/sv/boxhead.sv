@@ -659,6 +659,6 @@ module boxhead( input               CLOCK_50,
     HexDriver hex_inst_4 (Player_Blood[3:0], HEX4);
     HexDriver hex_inst_5 (Player_Blood[7:4], HEX5);
     
-    HexDriver hex_inst_6 (Enemy_Respawn_Unit_Time[3:0], HEX6);
-    HexDriver hex_inst_7 (Enemy_Respawn_Unit_Time[7:4], HEX7);
+    HexDriver hex_inst_6 (Total_Score[3:0], HEX6);
+    HexDriver hex_inst_7 (Total_Score[7:4], HEX7);
 endmodule

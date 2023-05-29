@@ -19,9 +19,9 @@ module gamelevel (input Clk,
 
     // Position of L
     assign Obj_X_Pos1 = 267;
-    assign Obj_Y_Pos1 = 24;
+    assign Obj_Y_Pos1 = 26;
     assign Obj_X_Pos0 = Obj_X_Pos1 + Width;
-    assign Obj_Y_Pos0 = Obj_Y_Pos1;
+    assign Obj_Y_Pos0 = 24;
 
     always_comb begin
         Game_Level = 4'd9;

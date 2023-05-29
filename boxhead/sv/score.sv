@@ -2,7 +2,7 @@
 
 module score (
                 input Clk,
-                input [9:0] Total_Score,
+                input logic [9:0] Total_Score,
                 input [8:0] PixelX, PixelY,
                 
                 output logic is_obj,
@@ -23,10 +23,18 @@ module score (
     assign Obj_Y_Pos0 = Obj_Y_Pos1;
     // S
     assign Obj_X_Pos2 = Obj_X_Pos1 - Width;
-    assign Obj_Y_Pos2 = Obj_Y_Pos1;
+    assign Obj_Y_Pos2 = Obj_Y_Pos1 - 2;
 
-    assign Ten_Digit = Total_Score / 10;
-    assign Unit_Digit = Total_Score % 10;
+    always_comb begin
+        if(Total_Score <= 10'd99) begin
+            Ten_Digit = Total_Score / 10;
+            Unit_Digit = Total_Score % 10;
+        end
+        else begin
+            Ten_Digit = 9;
+            Unit_Digit = 9;
+        end
+    end
 
     int DistX1, DistY1;
     int DistX0, DistY0;
