@@ -267,6 +267,8 @@ module boxhead( input               CLOCK_50,
     logic [8:0] Enemy_Y [`ENEMY_NUM];
     logic Enemy_Attack_Ready [`ENEMY_NUM];
     logic Enemy_Is_Attacked [`ENEMY_NUM];
+    logic Enemy_Is_Attacked2 [`ENEMY_NUM];
+    logic [3:0] Game_Level;
 
     logic [9:0] Enemy_Score [`ENEMY_NUM];
     logic [9:0] Total_Score;
@@ -290,7 +292,8 @@ module boxhead( input               CLOCK_50,
     // Audio interface
     // Pika is attacked
     assign pika_enable = Enemy_Attack_On[0] | Enemy_Attack_On[1] | Enemy_Attack_On[2] | Enemy_Attack_On[3];
-    assign gengar_enable = Enemy_Is_Attacked[0] | Enemy_Is_Attacked[1] | Enemy_Is_Attacked[2] | Enemy_Is_Attacked[3];
+    assign gengar_enable = Enemy_Is_Attacked[0] | Enemy_Is_Attacked[1] | Enemy_Is_Attacked[2] | Enemy_Is_Attacked[3] | 
+                            Enemy_Is_Attacked2[0] | Enemy_Is_Attacked2[1] | Enemy_Is_Attacked2[2] | Enemy_Is_Attacked2[3];
     assign ele_enable = Attack_On;
 
 
@@ -356,6 +359,7 @@ module boxhead( input               CLOCK_50,
                 .Player_X(Player_X),
                 .Player_Y(Player_Y),
                 .Enemy_Is_Attacked(Enemy_Is_Attacked[i]),
+                .Enemy_Is_Attacked2(Enemy_Is_Attacked2[i]),
                 // Output
                 .is_obj(is_enemy[i]),
                 .Obj_address(enemy_address[i]),
@@ -387,6 +391,7 @@ module boxhead( input               CLOCK_50,
         .Reset(Reset_h),
         .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
         .keycode(keycode),
+        .Game_Level(Game_Level),
         // Output
         .is_obj(is_attack),
         .Obj_address(attack_address),
@@ -400,6 +405,7 @@ module boxhead( input               CLOCK_50,
         .Reset(Reset_h),
         .game_frame_clk_rising_edge(game_frame_clk_rising_edge),
         .keycode(keycode),
+        .One_Enemy_Is_Attacked2(Enemy_Is_Attacked2[0] | Enemy_Is_Attacked2[1] | Enemy_Is_Attacked2[2] | Enemy_Is_Attacked2[3]),
         // Output
         .is_obj(is_attack2),
         .Obj_address(attack2_address),
@@ -500,7 +506,8 @@ module boxhead( input               CLOCK_50,
                 .Enemy_Score(Enemy_Score[j]),
                 .Enemy_Total_Damage(Enemy_Total_Damage[j]),
                 .Enemy_Total_Damage_God(Enemy_Total_Damage_God[j]),
-                .Enemy_Is_Attacked(Enemy_Is_Attacked[j])
+                .Enemy_Is_Attacked(Enemy_Is_Attacked[j]),
+                .Enemy_Is_Attacked2(Enemy_Is_Attacked2[j])
             );
         end
     endgenerate
@@ -522,7 +529,7 @@ module boxhead( input               CLOCK_50,
             end
         end
         else begin
-            if (All_Enemy_Total_Damage <= Player_Full_Blood) begin
+            if (All_Enemy_Total_Damage < Player_Full_Blood) begin
                 Player_Blood = Player_Full_Blood - All_Enemy_Total_Damage;
                 Game_Over_On = 1'b0;
             end
@@ -582,6 +589,7 @@ module boxhead( input               CLOCK_50,
         .PixelX(PixelX),
         .PixelY(PixelY),
         .Total_Score(Total_Score),
+        .Game_Level(Game_Level),
         .is_obj(is_level),
         .Obj_address(level_address),
         .Enemy_Respawn_Unit_Time(Enemy_Respawn_Unit_Time)

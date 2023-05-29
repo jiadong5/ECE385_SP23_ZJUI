@@ -6,6 +6,7 @@ module gamelevel (input Clk,
                   input [9:0] Total_Score,
                   output logic is_obj,
                   output logic [14:0] Obj_address,
+                  output logic [3:0] Game_Level,
                   output logic [9:0] Enemy_Respawn_Unit_Time
 );
 
@@ -15,7 +16,6 @@ module gamelevel (input Clk,
     logic [8:0] Obj_X_Pos1, Obj_Y_Pos1;
     logic [8:0] Obj_X_Pos0, Obj_Y_Pos0;
 
-    logic [3:0] Game_Level;
 
     // Position of L
     assign Obj_X_Pos1 = 267;
@@ -44,9 +44,9 @@ module gamelevel (input Clk,
         4'd2:
             Enemy_Respawn_Unit_Time = 10'd40;
         4'd3:
-            Enemy_Respawn_Unit_Time = 10'd30;
+            Enemy_Respawn_Unit_Time = 10'd25;
         4'd4:
-            Enemy_Respawn_Unit_Time = 10'd20;
+            Enemy_Respawn_Unit_Time = 10'd15;
         4'd5:
             Enemy_Respawn_Unit_Time = 10'd10;
         4'd6:

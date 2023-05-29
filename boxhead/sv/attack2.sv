@@ -15,6 +15,8 @@ module  attack2 ( input       Clk,                // 50 MHz clock
                input [8:0] Player_X, Player_Y,
                input [1:0] Player_Direction,
                input [8:0]   PixelX, PixelY,     
+               input logic One_Enemy_Is_Attacked2,
+               input [3:0] Game_Level,
 
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                              Obj_On,
@@ -95,14 +97,16 @@ module  attack2 ( input       Clk,                // 50 MHz clock
             Obj_Y_Pos_in = Obj_Y_Pos + Obj_Y_Motion;
             if (Obj_Step_Count == 20)
                 Obj_Step_Count_in = 9'd0;
-            else 
+            else if (One_Enemy_Is_Attacked2)
+                Obj_Step_Count_in = 9'd0;
+            else
                 Obj_Step_Count_in = Obj_Step_Count + 1'b1;
         end
 
     end
 
     // Update registers
-    always_ff @ (posedge game_frame_clk_rising_edge)
+    always_ff @ (posedge Clk)
     begin
         if (Reset)
             Obj_On <= 1'b0;
@@ -119,9 +123,12 @@ module  attack2 ( input       Clk,                // 50 MHz clock
             Obj_On_in = 1'b1;
         else if (Obj_Step_Count == 20) 
             Obj_On_in = 1'b0;
+        else if (One_Enemy_Is_Attacked2)
+            Obj_On_in = 1'b0;
     end
 
 
+    // Draw
     int DistX, DistY;
     always_comb begin
         DistX = PixelX - Obj_X_Pos;

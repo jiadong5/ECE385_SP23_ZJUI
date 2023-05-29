@@ -14,6 +14,7 @@ module  attack ( input       Clk,                // 50 MHz clock
                input [8:0] Player_X, Player_Y,
                input [1:0] Player_Direction,
                input [8:0]   PixelX, PixelY,     
+               input [3:0] Game_Level,
 
                output logic  is_obj,             // Whether current pixel belongs to ball or background
                              Obj_On,
@@ -48,8 +49,6 @@ module  attack ( input       Clk,                // 50 MHz clock
         else
             attack_form = 1'b0;
     end
-
-
 
     
     // Assign position based on player direction
@@ -96,7 +95,7 @@ module  attack ( input       Clk,                // 50 MHz clock
     begin
         Obj_On_in = 1'b0;
         // Press space
-        if ((keycode[7:0] == `Z) | (keycode[15:8] == `Z))
+        if (((keycode[7:0] == `Z) | (keycode[15:8] == `Z)) && (Game_Level >= 4'd3))
             Obj_On_in = 1'b1;
     end
 
