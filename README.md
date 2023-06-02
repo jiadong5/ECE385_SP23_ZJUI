@@ -4,14 +4,14 @@
 
 All ECE385 labs and final project "Pokehead", a simple yet fancy shooting game with inspiration from "BoxHead" but with "Pokemon" theme that runs on FPGA.
 
-![screenshot0](./img/game_screenshot0.png)
-![screenshot1](./img/game_screenshot1.png)
-![screenshot2](./img/game_screenshot2.png)
+<img src="./img/game_screenshot0.png" width="400px">
+<img src="./img/game_screenshot1.png" width="400px">
+<img src="./img/game_screenshot2.png" width="400px">
 
 ## Features 
 
 - VGA display
-- Fancy Character display and Interaction
+- Fancy Character Movement and Interaction
 - Score recording and game level change. Endless game!
 - Audio and sound effect
 - Multiplayer 
