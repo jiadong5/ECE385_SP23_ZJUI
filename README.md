@@ -42,5 +42,8 @@ The setup step is the same as lab8, but make sure a headphone is also connected.
 
 For more information about the final project, please refer to the [final report](./reports/final_report.pdf)
 
+## Academic Integrity Statement
+By submitting your own lab with this statement, you declare you have written up the lab entirely by yourself, including both code and markdown cells. You also agree that you should not share your code with anyone else. Any violation of the academic integrity requirement may cause an academic integrity report to be filed that could go into your student record. See Students' Quick Reference Guide to Academic Integrity for more information.
 
+**Don't Copy and Cheat in ZJU UIUC courses**
 
